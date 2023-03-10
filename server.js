@@ -68,13 +68,14 @@ app.post('/api/login', async (req, res, next) =>
   {
     id = results[0]._id;
     fn = results[0].firstName;
+    email = results[0].email;
     ln = results[0].lastName;
     fav = results[0].favorites;
     created = results[0].createdRecipes;
   }else{
     error = 'Invalid username/password';
   }
-  var ret = { id:id, firstName:fn, lastName:ln, favorites:fav, createdRecipes:created, error:error};
+  var ret = { id:id, firstName:fn, lastName:ln, email:email, favorites:fav, createdRecipes:created, error:error};
   res.status(200).json(ret);
 });
 

@@ -66,7 +66,7 @@ app.post('/api/login', async (req, res, next) =>
   console.log(results);
   if( results.length > 0 )
   {
-    id = results[0].userID;
+    id = results[0]._id;
     fn = results[0].firstName;
     ln = results[0].lastName;
     fav = results[0].favorites;

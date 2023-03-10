@@ -33,8 +33,8 @@ function CardUI()
         let js = JSON.stringify(obj);
         try
         {
-            const response = fetch(buildPath('api/addcard'),{method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
-            let txt = response.text();
+            const response = await fetch(buildPath('api/addcard'),{method:'POST',body:js,headers:{'Content-Type': 'application/json'}});
+            let txt = await response.text();
             let res = JSON.parse(txt);
             if( res.error.length > 0 )
             {

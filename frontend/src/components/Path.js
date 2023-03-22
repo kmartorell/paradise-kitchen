@@ -1,4 +1,4 @@
-const app_name = 'cop4331-10'
+const app_name = 'paradise-kitchen'
 exports.buildPath = function buildPath(route)
 {
   if (process.env.NODE_ENV === 'production')

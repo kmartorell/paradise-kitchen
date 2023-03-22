@@ -5,21 +5,29 @@ const UserSchema = new Schema({
   UserId: {
     type: Number
   },
-  FirstName: {
+  firstName: {
     type: String,
     required: true
   },
-  LastName: {
+  lastName: {
     type: String,
     required: true
   },
-  Login: {
+  email: {
     type: String,
     required: true
   },
-  Password: {
+  login: {
     type: String,
     required: true
+  },
+  password: {
+    type: String,
+    required: true
+  },
+  favorites: {
+    type: Array,
+    required: false
   }
 });
-module.exports = user = mongoose.model("Users", UserSchema);
+module.exports = Users = mongoose.model("users", UserSchema);

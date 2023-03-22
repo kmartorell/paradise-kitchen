@@ -67,7 +67,7 @@ exports.setApp = function ( app, client )
   {
     // incoming: userId, color
     // outgoing: error
-    const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, jwtToken } = req.body;
+    const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken } = req.body;
 
     // try
     // {
@@ -83,7 +83,7 @@ exports.setApp = function ( app, client )
     //   console.log(e.message);
     // }
 
-    const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients});
+    const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:createdby});
     var error = '';
 
     try
@@ -108,6 +108,29 @@ exports.setApp = function ( app, client )
     // {
     //   console.log(e.message);
     // }
+
+    var ret = { error: error, jwtToken: refreshedToken };
+    res.status(200).json(ret);
+  });
+
+  app.post('/api/updaterecipe', async (req, res, next) =>
+  {
+    const {id, name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken } = req.body;
+
+    const updateRecipe = new Recipe({_id:id, Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:createdby});
+    var error = '';
+
+    try
+    {
+      updateRecipe.updateOne({_id: id}, {$set: {Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:createdby}})
+      error = "update success";
+    }
+    catch(e)
+    {
+      error = e.toString();
+    }
+
+    var refreshedToken = null;
 
     var ret = { error: error, jwtToken: refreshedToken };
     res.status(200).json(ret);

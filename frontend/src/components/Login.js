@@ -5,6 +5,7 @@ import Logo from '../images/logoNoBackground.png'
 import '../css/login.css'
 import { login } from './loginAnimation';
 import { register } from './loginAnimation';
+import Register from './Register';
 
 function Login()
 {
@@ -78,7 +79,7 @@ function Login()
                 <input type="password" name="password" id="loginPassword" placeholder="Password" ref={(c) =>
                 loginPassword = c} />
 
-                <input type="button" value="Login" onClick={doLogin} />
+                <input type="button" value="Login" onClick={Login} />
             </div>
 
             <div id="register" class="input-group" action="">
@@ -96,7 +97,7 @@ function Login()
                 <input type="password" name="password" id="registerPassword" onclick="showPasswordReq()" placeholder="Password" />
 
                 <div id="registerButtonBox">
-                    <input type="button" value="Register" onclick="doRegister()" />
+                    <input type="button" value="Register" onclick={Register} />
                 </div>
                 <div id="req"></div>
 

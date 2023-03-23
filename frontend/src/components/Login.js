@@ -16,9 +16,11 @@ function Login()
     const [message,setMessage] = useState('');
     const doLogin = async event =>
     {
+        console.log("In DO login");
         event.preventDefault();
         var obj = {login:loginName.value,password:loginPassword.value};
         var js = JSON.stringify(obj);
+        console.log("This is JSON: " + js);
         var config =
         {
             method: 'post',
@@ -33,7 +35,9 @@ function Login()
         .then(function (response)
         {
             var res = response.data;
-            if (res.error)
+            console.log("Response is: " , response);
+    
+            if (res.status == 500)
             {
                 setMessage('User/Password combination incorrect');
             }
@@ -79,7 +83,7 @@ function Login()
                 <input type="password" name="password" id="loginPassword" placeholder="Password" ref={(c) =>
                 loginPassword = c} />
 
-                <input type="button" value="Login" onClick={Login} />
+                <input type="button" value="Login" onClick={doLogin} />
             </div>
 
             <div id="register" class="input-group" action="">
@@ -100,7 +104,7 @@ function Login()
                 <input type="password" name="password" id="registerPassword" onclick="showPasswordReq()" placeholder="Password" />
 
                 <div id="registerButtonBox">
-                    <input type="button" value="Register" onclick={Register} />
+                    <input type="button" value="Register" onClick={Register} />
                 </div>
                 <div id="req"></div>
 

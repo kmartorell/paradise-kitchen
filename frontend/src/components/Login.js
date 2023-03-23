@@ -90,6 +90,9 @@ function Login()
                 <label for="Last Name">Last Name</label>
                 <input type="text" name="nameLast" id="registerNameLast" placeholder="Last Name" />
 
+                <label for="Email">Email</label>
+                <input type="text" name="email" id="registerEmail" onclick="showLoginReq()" placeholder="johndoe@gmail.com" />
+
                 <label for="Username">Username</label>
                 <input type="text" name="username" id="registerUsername" onclick="showLoginReq()" placeholder="Username" />
 

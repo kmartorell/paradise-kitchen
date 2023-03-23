@@ -2,18 +2,14 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    margin: 0;
-    min-height: 100%;
 }
 
-.app {
-    width: 100%;
+html {
     background-image: url('../images/food2.jpg');
     background-position: center;
     background-size: cover;
     background-attachment: fixed;
-    text-align: center;
-    padding: 1em;
+   
 }
 
 #paradiseText {
@@ -21,21 +17,19 @@ body {
     text-decoration: none;
     font-weight: bold;
     font-size: 2rem;
-    position: relative; left: 290px; top: -10px;
+    position: absolute; top: 18%; left: 40%;
 }
 
 #paradiseLogo {
-    position: relative; left: 525px; top: -20px;
-    width: 200px;
-    height: 200px
+    position: absolute; top: -30px; left: 41%;
+    width: 250px;
+    height: 190px
 }
 
 .form-container {
     width: 380px;
-    position: relative; top: -70px;
+    position: absolute; top: 25%; left: 37%;
     background-color: white;
-    margin: 6% auto;
-    padding: 5px;
     border-radius: 30px;
     overflow: hidden;
     transition: .5s;

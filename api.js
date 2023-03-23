@@ -114,22 +114,22 @@ exports.setApp = function ( app, client )
     res.status(200).json(ret);
   });
 
-  app.post('/api/readrecipe', async (req, res, next) =>
+  app.post('/api/searchrecipe', async (req, res, next) =>
   {
     const {name, jwtToken} = req.body;
 
     //console.log(JSON.stringify(req.body));
-    const readRecipe = await Recipe.findOne({Name:{"$regex": '^' + name, "$options": "i"}});
+    const readRecipe = await Recipe.findMany({Name:{"$regex": '^' + name, "$options": "i"}});
     var error = '';
-
+    console.log(readRecipe);
     try
     {
       if(readRecipe != null)
         error = "read success";
       else
         error = "read fail";
-      var ret = {id: readRecipe._id, name: readRecipe.Name, minutes: readRecipe.Minutes, submitted: readRecipe.Submitted, tags: readRecipe.Tags, nutrition: readRecipe.Nutrition, n_steps: readRecipe.N_Steps, steps: readRecipe.Steps, 
-        description: readRecipe.Description, ingredients: readRecipe.Ingredients, n_ingredients: readRecipe.N_Ingredients, createdby: readRecipe.CreatedBy, error: error};
+        var ret = {id: readRecipe._id, name: readRecipe.Name, minutes: readRecipe.Minutes, submitted: readRecipe.Submitted, tags: readRecipe.Tags, nutrition: readRecipe.Nutrition, n_steps: readRecipe.N_Steps, steps: readRecipe.Steps, 
+          description: readRecipe.Description, ingredients: readRecipe.Ingredients, n_ingredients: readRecipe.N_Ingredients, createdby: readRecipe.CreatedBy, error: error};
     }
     catch(e)
     {

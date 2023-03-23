@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useJwt } from "react-jwt";
 import axios from 'axios'
+import Logo from '../images/logoNoBackground.png'
+import '../css/login.css'
+
 
 function Login()
 {
@@ -53,16 +56,53 @@ function Login()
     }
     
     return(
-        <div id="loginDiv">
-        <span id="inner-title">PLEASE LOG IN</span><br />
-        <input type="text" id="loginName" placeholder="Username" ref={(c) => loginName = c} /><br
-        />
-        <input type="password" id="loginPassword" placeholder="Password" ref={(c) =>
-        loginPassword = c} /><br />
-        <input type="submit" id="loginButton" class="buttons" value = "Do It"
-        onClick={doLogin} />
-        <span id="loginResult">{message}</span>
+
+        <div class="app">
+        <header>
+            <img src={Logo} alt="Paradise Logo" id="paradiseLogo" />
+            <a href="https://github.com/kmartorell/paradise-kitchen" id="paradiseText">Paradise Kitchen</a>
+        </header>
+        <div id="form-container" class="form-container">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" id="toggle-login" class="toggle-btn" onclick="login"><strong>Sign In</strong></button>
+                <button type="button" id="toggle-register" class="toggle-btn" onclick="register"><strong>Sign Up</strong></button>
+            </div>
+
+            <div id="login" class="input-group" action="">
+                <span class="text" id="loginResult" >{message}</span>
+                <label for="Username"><strong>Username</strong></label>
+                <input type="text" name="username" id="loginName" placeholder="Username" ref={(c) => loginName = c} />
+                <label for="Password"><strong>Password</strong></label>
+                <input type="password" name="password" id="loginPassword" placeholder="Password" ref={(c) =>
+                loginPassword = c} />
+
+                <input type="button" value="Login" onClick={doLogin} />
+            </div>
+
+            <div id="register" class="input-group" action="">
+                <span class="text" id="signUpResult"></span>
+                <label for="First Name">First Name</label>
+                <input type="text" name="nameFirst" id="registerNameFirst" placeholder="First Name" />
+
+                <label for="Last Name">Last Name</label>
+                <input type="text" name="nameLast" id="registerNameLast" placeholder="Last Name" />
+
+                <label for="Username">Username</label>
+                <input type="text" name="username" id="registerUsername" onclick="showLoginReq()" placeholder="Username" />
+
+                <label for="Password">Password</label>
+                <input type="password" name="password" id="registerPassword" onclick="showPasswordReq()" placeholder="Password" />
+
+                <div id="registerButtonBox">
+                    <input type="button" value="Register" onclick="doRegister()" />
+                </div>
+                <div id="req"></div>
+
+            </div>
+        </div>
         </div>
     );
 };
+
 export default Login;

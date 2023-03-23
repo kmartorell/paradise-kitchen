@@ -3,7 +3,8 @@ import { useJwt } from "react-jwt";
 import axios from 'axios'
 import Logo from '../images/logoNoBackground.png'
 import '../css/login.css'
-
+import { login } from './loginAnimation';
+import { register } from './loginAnimation';
 
 function Login()
 {
@@ -65,8 +66,8 @@ function Login()
         <div id="form-container" class="form-container">
             <div class="button-box">
                 <div id="btn"></div>
-                <button type="button" id="toggle-login" class="toggle-btn" onclick="login"><strong>Sign In</strong></button>
-                <button type="button" id="toggle-register" class="toggle-btn" onclick="register"><strong>Sign Up</strong></button>
+                <button type="button" id="toggle-login" class="toggle-btn" onClick={login}><strong>Sign In</strong></button>
+                <button type="button" id="toggle-register" class="toggle-btn" onClick={register}><strong>Sign Up</strong></button>
             </div>
 
             <div id="login" class="input-group" action="">

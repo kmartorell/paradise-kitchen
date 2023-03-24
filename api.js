@@ -43,7 +43,7 @@ exports.setApp = function ( app, client )
 
     }
 
-    //var ret = { id:id, firstName:fn, lastName:ln, email:email, favorites:fav, error:error};
+    var ret = { id:id, firstName:fn, lastName:ln, email:email, favorites:fav, error:error};
     
 
     res.setHeader('Access-Control-Allow-Origin', '*');

@@ -61,13 +61,14 @@ function Login()
         });
     }
     
+
     return(
 
-        <div class="app">
-        <header>
+    <div class="app">
+        <div id="logo-Words">
             <img src={Logo} alt="Paradise Logo" id="paradiseLogo" />
-            <a href="https://github.com/kmartorell/paradise-kitchen" id="paradiseText">Paradise Kitchen</a>
-        </header>
+            <a id="paradiseText">Paradise Kitchen</a>
+        </div>
         <div id="form-container" class="form-container">
             <div class="button-box">
                 <div id="btn"></div>
@@ -89,28 +90,26 @@ function Login()
             <div id="register" class="input-group" action="">
                 <span class="text" id="signUpResult"></span>
                 <label for="First Name">First Name</label>
-                <input type="text" name="nameFirst" id="registerNameFirst" placeholder="First Name" />
+                <input type="text" name="nameFirst" id="registerNameFirst" placeholder="First Name"/>
 
                 <label for="Last Name">Last Name</label>
-                <input type="text" name="nameLast" id="registerNameLast" placeholder="Last Name" />
+                <input type="text" name="nameLast" id="registerNameLast" placeholder="Last Name"/>
 
                 <label for="Email">Email</label>
-                <input type="text" name="email" id="registerEmail" onclick="showLoginReq()" placeholder="johndoe@gmail.com" />
+                <input type="text" name="email" id="registerEmail" placeholder="johndoe@gmail.com"/>
 
                 <label for="Username">Username</label>
-                <input type="text" name="username" id="registerUsername" onclick="showLoginReq()" placeholder="Username" />
+                <input type="text" name="username" id="registerUsername" placeholder="Username"/>
 
                 <label for="Password">Password</label>
-                <input type="password" name="password" id="registerPassword" onclick="showPasswordReq()" placeholder="Password" />
+                <input type="password" name="password" id="registerPassword"  placeholder="Password"/>
 
                 <div id="registerButtonBox">
                     <input type="button" value="Register" onClick={Register} />
                 </div>
-                <div id="req"></div>
-
             </div>
         </div>
-        </div>
+    </div>
     );
 };
 

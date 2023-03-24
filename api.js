@@ -84,19 +84,19 @@ exports.setApp = function ( app, client )
     // outgoing: error
     const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken } = req.body;
 
-    // try
-    // {
-    //   if( token.isExpired(jwtToken))
-    //   {
-    //     var r = {error:'The JWT is no longer valid', jwtToken: ''};
-    //     res.status(200).json(r);
-    //     return;
-    //   }
-    // }
-    // catch(e)
-    // {
-    //   console.log(e.message);
-    // }
+    try
+    {
+      if( token.isExpired(jwtToken))
+      {
+        var r = {error:'The JWT is no longer valid', jwtToken: ''};
+        res.status(200).json(r);
+        return;
+      }
+    }
+    catch(e)
+    {
+      console.log(e.message);
+    }
 
     const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:createdby});
     var error = '';
@@ -115,35 +115,81 @@ exports.setApp = function ( app, client )
 
     var refreshedToken = null;
 
-    // try
-    // {
-    //   refreshedToken = token.refresh(jwtToken);
-    // }
-    // catch(e)
-    // {
-    //   console.log(e.message);
-    // }
+    try
+    {
+      refreshedToken = token.refresh(jwtToken);
+    }
+    catch(e)
+    {
+      console.log(e.message);
+    }
 
     var ret = { error: error, jwtToken: refreshedToken };
     res.status(200).json(ret);
   });
 
-  app.post('/api/searchrecipe', async (req, res, next) =>
+  app.post('/api/readrecipe', async (req, res, next) =>
   {
-    const {name, jwtToken} = req.body;
+    const {id, jwtToken} = req.body;
 
     //console.log(JSON.stringify(req.body));
-    const readRecipe = await Recipe.findMany({Name:{"$regex": '^' + name, "$options": "i"}});
-    var error = '';
+    const regex = {"$regex": id};
+    const readRecipe = await Recipe.findById(id);
     console.log(readRecipe);
+    var error = '';
     try
     {
-      if(readRecipe != null)
+      if(readRecipe != null){
         error = "read success";
-      else
-        error = "read fail";
         var ret = {id: readRecipe._id, name: readRecipe.Name, minutes: readRecipe.Minutes, submitted: readRecipe.Submitted, tags: readRecipe.Tags, nutrition: readRecipe.Nutrition, n_steps: readRecipe.N_Steps, steps: readRecipe.Steps, 
           description: readRecipe.Description, ingredients: readRecipe.Ingredients, n_ingredients: readRecipe.N_Ingredients, createdby: readRecipe.CreatedBy, error: error};
+      }
+      else{
+        error = "read fail";
+        var ret = {error:error};
+      }
+    }
+    catch(e)
+    {
+      error = e.toString();
+      var ret = { error: error, jwtToken: refreshedToken };
+    }
+
+    var refreshedToken = null;
+
+    
+    res.status(200).json(ret);
+  });
+
+  app.post('/api/searchrecipe', async (req, res, next) =>
+  {
+    const {text, jwtToken} = req.body;
+
+    //console.log(JSON.stringify(req.body));
+    const regex = {"$regex": text, "$options": "i"};
+    const searchRecipe = await Recipe.find({$or:[
+        {Name:regex},
+        {Tags:regex},
+        {Description:regex},
+        {Ingredients:regex},
+      ]});
+    console.log(searchRecipe);
+    var error = '';
+    try
+    {
+      if(searchRecipe.length > 0){
+        error = "search success";
+        var ret = [];
+        for(var i = 0; i < searchRecipe.length; i++){
+          ret[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
+            description: searchRecipe[i].Description, ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error};
+        }
+        
+      }
+      else{
+        error = "search fail";
+        var ret = {error:error};
+      }
     }
     catch(e)
     {
@@ -221,14 +267,54 @@ exports.setApp = function ( app, client )
     res.status(200).json(ret);
   });
 
+  app.post('/api/showfavorites', async (req, res, next) =>
+  {
+    const {userId, jwtToken} = req.body;
+
+    const user = await User.findById(userId);
+    const favoriteIds = user.favorites;
+    const favorites = [];
+
+    for(var i = 0; i < favoriteIds.length; i++){
+      favorites.push(await Recipe.findById(favoriteIds[i]));
+    }
+    favorites
+    var error = '';
+    try
+    {
+      if(favorites.length > 0){
+        error = "show favorites success";
+        var ret = [];
+        for(var i = 0; i < favorites.length; i++){
+          ret[i] = {id: favorites[i]._id, name: favorites[i].Name, minutes: favorites[i].Minutes, submitted: favorites[i].Submitted, tags: favorites[i].Tags, nutrition: favorites[i].Nutrition, n_steps: favorites[i].N_Steps, steps: favorites[i].Steps, 
+            description: favorites[i].Description, ingredients: favorites[i].Ingredients, n_ingredients: favorites[i].N_Ingredients, createdby: favorites[i].CreatedBy, error: error};
+        }
+        
+      }
+      else{
+        error = "show favorites fail";
+        var ret = {error:error};
+      }
+    }
+    catch(e)
+    {
+      error = e.toString();
+      var ret = { error: error, jwtToken: refreshedToken };
+    }
+
+    var refreshedToken = null;
+
+    
+    res.status(200).json(ret);
+  });
+
   app.post('/api/addfavorite', async (req, res, next) =>
   {
     const {userId, recipeId, jwtToken } = req.body;
     //console.log(JSON.stringify(req.body));
 
-    const addFavorite = await User.findByIdAndUpdate(userId, {$push: {favorites: recipeId}});
+    const addFavorite = await User.findByIdAndUpdate(userId, {$addToSet: {favorites: recipeId}});
     var error = '';
-
     if(recipeId != null)
     {
       try
@@ -246,6 +332,38 @@ exports.setApp = function ( app, client )
   else
   {
     error = "add favorite failed";
+    var ret = { error: error, jwtToken: refreshedToken };
+  }
+    var refreshedToken = null;
+
+    res.status(200).json(ret);
+  });
+
+
+  app.post('/api/removefavorite', async (req, res, next) =>
+  {
+    const {userId, recipeId, jwtToken } = req.body;
+    //console.log(JSON.stringify(req.body));
+
+    const removeFavorite = await User.findByIdAndUpdate(userId, {$pull: {favorites: recipeId}});
+    var error = '';
+    if(recipeId != null)
+    {
+      try
+      {
+        //console.log();
+        error = "remove favorite success";
+        var ret = {error: error, jwtToken: refreshedToken};
+      }
+      catch(e)
+      {
+        error = e.toString();
+        var ret = { error: error, jwtToken: refreshedToken };
+      }
+  }
+  else
+  {
+    error = "remove favorite failed";
     var ret = { error: error, jwtToken: refreshedToken };
   }
     var refreshedToken = null;

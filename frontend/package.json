@@ -62,8 +62,5 @@
   },
   "browser": {
     "crypto": false
-  },
-  "engine": {
-    "node": "16.x"
   }
 }

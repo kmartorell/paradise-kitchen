@@ -193,3 +193,13 @@ input:required {
         margin-left: 1.2em;
     }
 }
+
+#forgotPasswordButton{
+    border: none;
+    color: red;
+    background-color: white;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: underline;
+}

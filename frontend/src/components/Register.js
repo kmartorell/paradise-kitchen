@@ -157,7 +157,7 @@ function Register()
                     </div>
                 </div>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Register" onClick={doRegister} />
+                        <input type="submit" value="Register" id="RegisterButton" onClick={doRegister} />
                 </div>
             </div>
         </div>

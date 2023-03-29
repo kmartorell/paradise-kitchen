@@ -90,7 +90,7 @@ function Login()
                 }
                 
                 localStorage.setItem('user_data', JSON.stringify(user));
-                window.location.href = '/cards';
+                window.location.href = '/landing';
             }
         }).catch(function (error)
         {
@@ -127,7 +127,7 @@ function Login()
                     </div>
                 </div>
                 <div id="loginButtonBox">
-                        <input type="submit" value="Login" onClick={doLogin} />
+                        <input type="submit" value="Login" id="LoginButton" onClick={doLogin} />
                 </div>
             </div>
         </div>

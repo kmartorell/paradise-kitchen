@@ -6,6 +6,7 @@ import '../css/login.css'
 import { login } from './loginAnimation';
 import { register } from './loginAnimation';
 import Register from './Register_old';
+import forgotPassword from './ForgotPassword';
 
 function Login()
 {
@@ -125,6 +126,9 @@ function Login()
                         <input type="password" name="password" id="loginPassword" placeholder="Password" ref={(c) =>
                         loginPassword = c} />
                     </div>
+                </div>
+                <div id="forgotPassword">
+                    <button id="forgotPasswordButton" onClick={forgotPassword}>Forgot Password?</button>
                 </div>
                 <div id="loginButtonBox">
                         <input type="submit" value="Login" onClick={doLogin} />

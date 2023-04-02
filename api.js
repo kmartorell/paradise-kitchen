@@ -110,22 +110,34 @@ exports.setApp = function ( app, client )
   {
     // incoming: email
     // outgoing: message
-    var error = '';
+    let error = '';
     var id = -1;
     var fn = '';
     var ln = '';
     var fav = [];
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
 
     const { email } = req.body;
     const user = await User.findOne({email:email});
 
     if(user){
       console.log(user);
-      error = "Success!";
+      error = 'success';
     }
     else{
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
+
+    let ret = { error: error };
 
     mailOptions.text = mailOptions.text + "Current Password: " + user.password;
     mailOptions.to = user.email;
@@ -135,7 +147,7 @@ exports.setApp = function ( app, client )
         console.error('there was an error: ', err);
       } else {
         console.log('here is the res: ', response);
-        res.status(200).json('recovery email sent');
+        res.status(200).json(ret);
       }
     });
 

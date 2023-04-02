@@ -6,7 +6,7 @@ import '../css/login.css'
 import { login } from './loginAnimation';
 import { register } from './loginAnimation';
 import Register from './Register_old';
-import forgotPassword from './ForgotPassword';
+import ForgotPassword from './ForgotPassword';
 
 function Login()
 {
@@ -128,7 +128,7 @@ function Login()
                     </div>
                 </div>
                 <div id="forgotPassword">
-                    <button id="forgotPasswordButton" onClick={forgotPassword}>Forgot Password?</button>
+                    <a href='/forgotPassword'><button id="forgotPasswordButton">Forgot Password?</button></a>
                 </div>
                 <div id="loginButtonBox">
                         <input type="submit" value="Login" onClick={doLogin} />

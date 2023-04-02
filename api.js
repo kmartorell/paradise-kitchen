@@ -5,6 +5,25 @@ const User = require("./models/user.js");
 //load recipe model
 const Recipe = require("./models/recipes.js");
 const { response } = require('express');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  user: "smtp.gmail.com",
+  port: 465,
+  auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_APP_PASSWORD,
+  },
+});
+
+const mailOptions = {
+  from: process.env.EMAIL_USER,
+  to: "",
+  subject: 'Password Reminder',
+  text:
+    'You are receiving this because you have requested the password for your account.\n\n'
+};
 
 exports.setApp = function ( app, client )
 {
@@ -86,6 +105,42 @@ exports.setApp = function ( app, client )
     );
     res.status(200).json(ret);
   });
+
+  app.post('/api/forgotPassword', async (req, res, next) => 
+  {
+    // incoming: email
+    // outgoing: message
+    var error = '';
+    var id = -1;
+    var fn = '';
+    var ln = '';
+    var fav = [];
+
+    const { email } = req.body;
+    const user = await User.findOne({email:email});
+
+    if(user){
+      console.log(user);
+      error = "Success!";
+    }
+    else{
+      return res.status(404).json({ emailnotfound: "Email not found" });
+    }
+
+    mailOptions.text = mailOptions.text + "Current Password: " + user.password;
+    mailOptions.to = user.email;
+
+    transporter.sendMail(mailOptions, (err, response) => {
+      if (err) {
+        console.error('there was an error: ', err);
+      } else {
+        console.log('here is the res: ', response);
+        res.status(200).json('recovery email sent');
+      }
+    });
+
+  });
+
 
   app.post('/api/addrecipe', async (req, res, next) =>
   {

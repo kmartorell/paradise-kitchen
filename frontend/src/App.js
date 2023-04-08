@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage'
 import CardPage from './pages/CardPage';
 import LandingPage from './pages/LandingPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Route path="/login" index element={<LoginPage />} />
         <Route path="/register" index element={<RegisterPage />} />
         <Route path="/landing" index element={<LandingPage />} />
+        <Route path="/forgotPassword" index element={<ForgotPasswordPage />} />
         <Route path="/cards" index element={<CardPage />} />
       </Routes>
     </BrowserRouter>

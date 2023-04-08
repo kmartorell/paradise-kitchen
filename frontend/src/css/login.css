@@ -154,6 +154,14 @@ input[type = submit] {
     cursor: pointer;
 }
 
+#LoginButton:hover{
+    background: rgb(255, 98, 0);
+}
+
+#RegisterButton:hover{
+    background: rgb(255, 98, 0);
+}
+
 input:invalid {
     background-color: #ffdddd;
   }
@@ -192,4 +200,22 @@ input:required {
     #network {
         margin-left: 1.2em;
     }
+}
+
+#forgotPasswordButton{
+    border: none;
+    color: red;
+    background-color: white;
+    font-weight: bold;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.verifyEmailBox{
+    display: none;
+}
+
+.fullyRegister{
+    display: none;
 }

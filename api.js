@@ -5,6 +5,25 @@ const User = require("./models/user.js");
 //load recipe model
 const Recipe = require("./models/recipes.js");
 const { response } = require('express');
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  user: "smtp.gmail.com",
+  port: 465,
+  auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_APP_PASSWORD,
+  },
+});
+
+const mailOptions = {
+  from: process.env.EMAIL_USER,
+  to: "",
+  subject: '',
+  text: ''
+    
+};
 
 exports.setApp = function ( app, client )
 {
@@ -85,6 +104,98 @@ exports.setApp = function ( app, client )
       'GET, POST, PATCH, DELETE, OPTIONS'
     );
     res.status(200).json(ret);
+  });
+
+  app.post('/api/forgotPassword', async (req, res, next) => 
+  {
+    // incoming: email
+    // outgoing: message
+    let error = '';
+    var id = -1;
+    var fn = '';
+    var ln = '';
+    var fav = [];
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+
+    const { email } = req.body;
+    const user = await User.findOne({email:email});
+
+    if(user){
+      console.log(user);
+      error = 'success';
+    }
+    else{
+      return res.status(404).json({ emailnotfound: "Email not found" });
+    }
+
+    let ret = { error: error };
+
+    mailOptions.text = 'You are receiving this because you have requested the password for your account.\n\n' + "Current Password: " + user.password;
+    mailOptions.to = user.email;
+    mailOptions.subject = 'Password Reminder';
+
+    transporter.sendMail(mailOptions, (err, response) => {
+      if (err) {
+        console.error('there was an error: ', err);
+      } else {
+        console.log('here is the res: ', response);
+        res.status(200).json(ret);
+      }
+    });
+  });
+
+  app.post('/api/verifyEmail', async (req, res, next) => 
+  {
+    // incoming: email
+    // outgoing: message
+    let error = '';
+    var id = -1;
+    var fn = '';
+    var ln = '';
+    var fav = [];
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+
+    const { email, emailCode } = req.body;
+
+    if(email){
+      error = 'success';
+    }
+    else{
+      return res.status(404).json({ emailnotfound: "Email not found" });
+    }
+
+    let ret = { error: error };
+
+    mailOptions.subject = "Email Verification";
+    mailOptions.text = "Here is the code to verify your email: " + emailCode;
+    mailOptions.to = email;
+
+    transporter.sendMail(mailOptions, (err, response) => {
+      if (err) {
+        console.error('there was an error: ', err);
+      } else {
+        console.log('here is the res: ', response);
+        res.status(200).json(ret);
+      }
+    });
   });
 
   app.post('/api/addrecipe', async (req, res, next) =>

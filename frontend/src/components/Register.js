@@ -3,7 +3,87 @@ import { useJwt } from "react-jwt";
 import axios from 'axios'
 import Logo from '../images/logoNoBackground.png'
 import '../css/login.css'
-import { login } from './loginAnimation';
+
+let minm = 100000;
+let maxm = 999999;
+let emailCode =  Math.floor(Math.random() * (maxm - minm + 1)) + minm;
+
+function showEmailForm()
+{
+    document.querySelector(".form-container").style.display = "none";
+    document.querySelector(".verifyEmailBox").style.display = "inline-block";
+
+    let emailToCheck = document.querySelector("#registerEmail").value;
+
+    const newUser = { /* Gathers User input to Register */
+        email: emailToCheck,
+        emailCode: emailCode
+    }
+
+    let js = JSON.stringify(newUser);
+    var bp = require('./Path.js');
+    var storage = require('../tokenStorage.js');
+
+    let config =
+        {
+            method: 'post',
+            url: bp.buildPath('api/verifyEmail'),
+            headers:
+            {
+            'Content-Type': 'application/json'
+            
+            },
+            data: js
+        };
+    
+        axios(config)
+        .then(function (response)
+        {
+            var res = response.data;
+            console.log("Response is: " , response);
+
+            if (res.error != 'success')
+            {
+                console.log("Failed to send email.")
+            }
+            else
+            {
+                storage.storeToken(res);
+                console.log("User successfully sent an email.");
+            }
+        })
+
+        .catch(function (error)
+        {
+            console.log(error);
+        });
+}
+
+function doVerifyEmail()
+{
+    let isEmptyField = false;
+        
+    if(document.getElementById("emailCode").value == ''){
+        document.getElementById("emailCode").placeholder='Please enter a code!';
+        document.getElementById('emailCode').style.borderColor = "red";
+        isEmptyField = true;
+    }else {
+        document.getElementById('emailCode').style.borderColor = "green";
+    }
+
+    if(isEmptyField){
+        return;
+    }
+
+    if(document.getElementById("emailCode").value == emailCode){
+        document.querySelector(".verifyEmailBox").style.display = "none";
+        document.querySelector(".fullyRegister").style.display = "inline-block";
+    }
+    else{
+        document.getElementById("emailCode").placeholder='Code not correct. Try again.';
+        document.getElementById('emailCode').style.borderColor = "red";
+    }
+}
 
 function Register()
 {
@@ -68,51 +148,52 @@ function Register()
         if(isEmptyField){
             return;
         }
-        let js = JSON.stringify(newUser);
-        console.log("This is JSON: " + js);
 
-        let config =
-        {
-            method: 'post',
-            url: bp.buildPath('api/register'),
-            headers:
-            {
-            'Content-Type': 'application/json'
-            },
-            data: js
-        };
-        console.log(config);
-        axios(config)
-        .then(function (response)
-        {
-            var res = response.data;
-            console.log("Response is: " , response);
+            let js = JSON.stringify(newUser);
+            console.log("This is JSON: " + js);
 
-            if (res.error != 'success')
+            let config =
             {
-                //setMessage('Failed to register. Please try again.');
-                console.log("Failed to register.")
-            }
-            else
+                method: 'post',
+                url: bp.buildPath('api/register'),
+                headers:
+                {
+                'Content-Type': 'application/json'
+                },
+                data: js
+            };
+            console.log(config);
+            axios(config)
+            .then(function (response)
             {
-                storage.storeToken(res);
-                /*var jwt = require('jsonwebtoken');
-                var ud = jwt.decode(storage.retrieveToken(),{complete:true});
-                var userId = ud.payload.userId;
-                var firstName = ud.payload.firstName;
-                var lastName = ud.payload.lastName;
-                var user = {firstName:firstName,lastName:lastName,id:userId}
-                localStorage.setItem('user_data', JSON.stringify(user));
-                */
-                console.log("User successfully registered.");
-                window.location.href = '/login';
-            }
-        })
+                var res = response.data;
+                console.log("Response is: " , response);
 
-        .catch(function (error)
-        {
-            console.log(error);
-        });
+                if (res.error != 'success')
+                {
+                    //setMessage('Failed to register. Please try again.');
+                    console.log("Failed to register.")
+                }
+                else
+                {
+                    storage.storeToken(res);
+                    /*var jwt = require('jsonwebtoken');
+                    var ud = jwt.decode(storage.retrieveToken(),{complete:true});
+                    var userId = ud.payload.userId;
+                    var firstName = ud.payload.firstName;
+                    var lastName = ud.payload.lastName;
+                    var user = {firstName:firstName,lastName:lastName,id:userId}
+                    localStorage.setItem('user_data', JSON.stringify(user));
+                    */
+                    console.log("User successfully registered.");
+                    window.location.href = '/login';
+                }
+            })
+
+            .catch(function (error)
+            {
+                console.log(error);
+            });
     }
 
     return(
@@ -157,7 +238,30 @@ function Register()
                     </div>
                 </div>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Register" onClick={doRegister} />
+                        <input type="submit" value="Register" onClick={showEmailForm} />
+                </div>
+            </div>
+            <div class="verifyEmailBox">
+                <div id="form-container" class="form-container">
+                    <span class="text" id="emailResult">An email was sent to verify your email.</span>
+                    <div id="register" class="input-group register-input" action="">
+                        
+                        <div class='input-item'>
+                            <label for="Email"><strong>Input Code from Email Below</strong></label>
+                            <input type="text" name="email" id="emailCode" placeholder="123456"/>
+                        </div>
+                    </div>
+                    <div id="registerButtonBox">
+                            <input type="submit" value="Confirm Email" onClick={doVerifyEmail} />
+                    </div>
+                </div>
+            </div>
+            <div class="fullyRegister">
+                <div id="form-container" class="form-container">
+                    <span class="text" id="emailResult">Email confirmed! Click below to finish register.</span>
+                    <div id="registerButtonBox">
+                            <input type="submit" value="Register" onClick={doRegister} />
+                    </div>
                 </div>
             </div>
         </div>

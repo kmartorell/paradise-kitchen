@@ -203,3 +203,11 @@ input:required {
     cursor: pointer;
     text-decoration: underline;
 }
+
+.verifyEmailBox{
+    display: none;
+}
+
+.fullyRegister{
+    display: none;
+}

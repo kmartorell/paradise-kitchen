@@ -20,9 +20,9 @@ const transporter = nodemailer.createTransport({
 const mailOptions = {
   from: process.env.EMAIL_USER,
   to: "",
-  subject: 'Password Reminder',
-  text:
-    'You are receiving this because you have requested the password for your account.\n\n'
+  subject: '',
+  text: ''
+    
 };
 
 exports.setApp = function ( app, client )
@@ -139,8 +139,9 @@ exports.setApp = function ( app, client )
 
     let ret = { error: error };
 
-    mailOptions.text = mailOptions.text + "Current Password: " + user.password;
+    mailOptions.text = 'You are receiving this because you have requested the password for your account.\n\n' + "Current Password: " + user.password;
     mailOptions.to = user.email;
+    mailOptions.subject = 'Password Reminder';
 
     transporter.sendMail(mailOptions, (err, response) => {
       if (err) {

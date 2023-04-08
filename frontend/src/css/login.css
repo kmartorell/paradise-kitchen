@@ -154,6 +154,14 @@ input[type = submit] {
     cursor: pointer;
 }
 
+#LoginButton:hover{
+    background: rgb(255, 98, 0);
+}
+
+#RegisterButton:hover{
+    background: rgb(255, 98, 0);
+}
+
 input:invalid {
     background-color: #ffdddd;
   }

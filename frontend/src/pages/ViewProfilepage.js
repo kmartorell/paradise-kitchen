@@ -1,0 +1,14 @@
+import React from 'react';
+import ProfileNavBar from '../components/ProfileNavBar.js';
+import ProfileBody from '../components/ProfileBody.js';
+
+const landingPage = () =>
+{
+    return(
+        <div>
+            <ProfileNavBar />.
+            <ProfileBody />
+        </div>
+    );
+}
+export default landingPage;

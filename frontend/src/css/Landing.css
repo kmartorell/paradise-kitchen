@@ -74,3 +74,26 @@
 #logoutButton:Hover{
   background: rgb(255, 98, 0);
 }
+
+.landingButtons{
+  background: orange;
+    border: none;
+    width: 35%;
+    color: white;
+    font-weight: bold;
+    margin-top: 1.2em;
+    padding: 1em 0;
+    border-radius: 50px;
+    font-size: 1.3em;
+    cursor: pointer;
+}
+
+#searchLanding{
+  position: relative; right: 40px; top: 50px;
+  display: inline-block;
+}
+
+#favoriteLanding{
+  position: relative; top: 50px; left: 25px;
+  display:inline-block;
+}

@@ -14,6 +14,11 @@ function PageTitle()
                 <h1 id="HomePageWords">
                     Welcome, {firstName} {lastName}!
                 </h1>
+                <button class="landingButtons" id="searchLanding">Search Recipes</button>
+                <button class="landingButtons" id="favoriteLanding">Favorite Recipes</button>
+
+                
+                
                 
           </center>
    );

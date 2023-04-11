@@ -1,0 +1,77 @@
+.navigation {
+    height: 60px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0.5rem 0rem;
+    background-color: #fff;
+    color: black;
+    box-shadow: 0 2px 2px 2px rgba(9, 9, 9, 0.378);
+  }
+
+.brand-name {
+  text-decoration: none;
+  color: black;
+  font-size: 1.3rem;
+  margin-left: 1rem;
+}
+.navigation-menu {
+  margin-left: auto;
+}
+
+.navigation-menu ul {
+  display: flex;
+  padding: 0;
+}
+.navigation-menu li {
+  list-style-type: none;
+  margin: 0 1rem;
+}
+.navigation-menu li a {
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
+
+#ParadiseLogo{
+    max-width: 175%;
+    max-height: 175%;
+}
+
+#ParadiseKitchenWords{
+   font-weight: Bold;
+}
+
+#ReturnButton{
+    width: 125px;
+    height: 40px;
+    background: orange;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#ReturnButton:Hover{
+  background: rgb(255, 98, 0);
+}
+
+#logoutButton{
+    width: 125px;
+    height: 40px;
+    background: orange;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#logoutButton:Hover{
+  background: rgb(255, 98, 0);
+}

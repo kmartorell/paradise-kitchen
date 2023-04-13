@@ -16,6 +16,7 @@ function ForgotPassword()
 
         const newUser = { /* Gathers User input to Register */
         email: document.getElementById("forgotPasswordEmail").value,
+        login: document.getElementById("forgotPasswordUsername").value
         }
 
         let isEmptyField = false;
@@ -91,6 +92,10 @@ return(
                 <span class="text" id="signUpResult"></span>
                 <div id="register" class="input-group register-input" action="">
                     
+                    <div class='input-item'>
+                        <label for="Username"><strong>Input Username to Recover Password</strong></label>
+                        <input type="text" name="username" id="forgotPasswordUsername" placeholder="johndoe"/>
+                    </div>
                     <div class='input-item'>
                         <label for="Email"><strong>Input Email to Recover Password</strong></label>
                         <input type="text" name="email" id="forgotPasswordEmail" placeholder="johndoe@gmail.com"/>

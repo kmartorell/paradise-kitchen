@@ -142,8 +142,8 @@ exports.setApp = function ( app, client )
       'GET, POST, PATCH, DELETE, OPTIONS'
     );
 
-    const { email } = req.body;
-    const user = await User.findOne({email:email});
+    const { email,login } = req.body;
+    const user = await User.findOne({email:email,login:login});
 
     if(user){
       console.log(user);

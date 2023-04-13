@@ -218,4 +218,9 @@ input:required {
 
 .fullyRegister{
     display: none;
+    width: 80%;
+}
+
+.usernameInUse{
+    display:none;
 }

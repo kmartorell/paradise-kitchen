@@ -87,6 +87,7 @@ function doVerifyEmail()
 
 function Register()
 {
+    const [message,setMessage] = useState('');
     const doRegister = async event =>{
         console.log("In Register");
         event.preventDefault();
@@ -169,7 +170,11 @@ function Register()
                 var res = response.data;
                 console.log("Response is: " , response);
 
-                if (res.error != 'success')
+                if(res.error == 'exists'){
+                    document.querySelector(".fullyRegister").style.display = "none";
+                    document.querySelector(".usernameInUse").style.display = "inline-block";
+                }
+                else if (res.error != 'success')
                 {
                     //setMessage('Failed to register. Please try again.');
                     console.log("Failed to register.")
@@ -263,6 +268,9 @@ function Register()
                             <input type="submit" value="Register" onClick={doRegister} />
                     </div>
                 </div>
+            </div>
+            <div class="usernameInUse">
+                <span class="text" id="usernameInUseText">Username already in use. Refresh to try again.</span>
             </div>
         </div>
 

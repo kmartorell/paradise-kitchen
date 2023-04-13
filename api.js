@@ -84,10 +84,26 @@ exports.setApp = function ( app, client )
     // outgoing: if success or error
     var error = '';
     const { firstName, lastName, email, login, password } = req.body;
+    const checkUserExists = await User.findOne({login:login});
+    if(checkUserExists){
+      error = 'exists';
+      res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+      var ret = { error: error };
+      res.status(200).json(ret);
+      return;
+    }
     const newUser = new User({firstName:firstName, lastName:lastName, email:email, login:login,password:password, favorites:[]});
     try{
       newUser.save();
-      error = 'success'
+      error = 'success';
     }
     catch(e)
     {

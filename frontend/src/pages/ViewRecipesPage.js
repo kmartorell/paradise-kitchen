@@ -2,7 +2,7 @@ import React from 'react';
 import ViewNavBar from '../components/ViewNavBar.js';
 import ViewBody from '../components/ViewBody.js';
 
-const landingPage = () =>
+const ViewRecipesPage = () =>
 {
     return(
         <div>
@@ -11,4 +11,4 @@ const landingPage = () =>
         </div>
     );
 }
-export default landingPage;
+export default ViewRecipesPage;

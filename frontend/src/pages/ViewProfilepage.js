@@ -2,7 +2,7 @@ import React from 'react';
 import ProfileNavBar from '../components/ProfileNavBar.js';
 import ProfileBody from '../components/ProfileBody.js';
 
-const landingPage = () =>
+const ViewProfilePage = () =>
 {
     return(
         <div>
@@ -11,4 +11,4 @@ const landingPage = () =>
         </div>
     );
 }
-export default landingPage;
+export default ViewProfilePage;

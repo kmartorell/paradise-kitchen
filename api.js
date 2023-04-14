@@ -302,6 +302,18 @@ exports.setApp = function ( app, client )
   {
     const {text, jwtToken} = req.body;
 
+    
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+    
+    
     //console.log(JSON.stringify(req.body));
     const regex = {"$regex": text, "$options": "i"};
     const searchRecipe = await Recipe.find({$or:[

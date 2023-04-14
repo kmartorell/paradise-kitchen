@@ -3,26 +3,21 @@ import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, 
 import Images from './Images';
 import axios from 'axios';
 
-const Login = ({navigation, route}) =>
+const ForgotPassword = ({navigation}) =>
 {
-    if(!route.params){
-        route.params = {message:''};
-    }
-    const [username, onChangeUserName] = React.useState('');
-    const [password, onChangePassword] = React.useState('');
+    const [email, onChangeEmail] = React.useState('');
     const [data, setData] = React.useState('');
 
-    const doLogin = async ({navigation}, username,password) =>
+    const doForgotPassword = async ({navigation}, email) =>
     {
-        fetch('https://paradise-kitchen.herokuapp.com/api/login', {
+        fetch('https://paradise-kitchen.herokuapp.com/api/forgotPassword', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    login: username,
-                    password: password,
+                    email: email,
                 })
     
             })    
@@ -36,24 +31,24 @@ const Login = ({navigation, route}) =>
     };
 
     useEffect(() => {
+        console.log(data);
         if(data){
-            if(data["id"] != -1)
-                navigation.navigate('Landing', {id:data['id'], firstName:data['firstName'], lastName:data['lastName'], email:data['email'], login:data['login'], favorites:data['favorites']});
+            if(data.error == 'success')
+                navigation.navigate('Login', {message:"Password email sent. Please check your email."});
             else
-                createInvalidLoginAlert();
+                createInvalidEmailAlert();
         }
     }, [data]);
 
 
 
 
-    const createInvalidLoginAlert = () =>{
-        Alert.alert('Login Failed', 'Your username or password is incorrect.\n Please try again.', [
+    const createInvalidEmailAlert = () =>{
+        Alert.alert('Forgot Password Failed', 'The email you typed in does not match an email in our records.', [
         {text: 'OK', onPress: () => console.log('OK Pressed')},
         ]);
 
-        onChangeUserName('');
-        onChangePassword('');
+        onChangeEmail('');
 
     };
 
@@ -63,37 +58,23 @@ const Login = ({navigation, route}) =>
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
             <SafeAreaView style={styles.container}>
                 <Image source={Images.logo} style={styles.logo} />
-                <Text style={styles.header}>Paradise Kitchen</Text>
+                <Text style={styles.header}>Forgot Password</Text>
                 <View style={styles.mainLogin}>
                     <View style={styles.formButtons}>
                         <View style={styles.loginBox}>
-                            <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
-                        </View>
-                        <View style={styles.registerBox}>
-                            <Button color="black" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
+                            <Button color="black" title="Back" onPress={() => navigation.navigate('Login')}/>
                         </View>
                     </View>
-                    <Text style={styles.message}>{route.params.message}</Text>
-                    <Text style={styles.subheader}>Username</Text>
+                    <Text style={styles.subheader}>Email</Text>
                     <TextInput
                         style={styles.input}
-                        onChangeText={onChangeUserName}
-                        value={username}
-                        placeholder="User Name"
+                        onChangeText={onChangeEmail}
+                        value={email}
+                        placeholder="Email"
                     />
-                    <Text style={styles.subheader}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangePassword}
-                        value={password}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                    />
-                    <Button style={styles.forgotPassword} color="red" title="Forgot Password?"onPress={() => navigation.navigate('Forgot Password')}/>
                     <View style={styles.submitButton}>
-                        <Button style={styles.login} color="white" title="Login"onPress={() => doLogin({navigation}, username,password)}/>
+                        <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email)}/>
                     </View>
-                    
                 </View>
                 
             </SafeAreaView>
@@ -137,12 +118,12 @@ const styles = StyleSheet.create({
     formButtons:{
         marginTop:10,
         flexDirection:'row',
-        alignItems:'center',
-        justifyContent:'center',
+        alignItems:'left',
+        justifyContent:'left',
         shadowColor:'black',
         shadowOpacity:0.25,
         shadowRadius:10,
-        width:'60%',
+        width:'90%',
     },
     subheader: {
         fontSize: 20,
@@ -156,11 +137,10 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: 'green',
         textAlign: 'center',
-        marginTop:16,
     },
     loginBox:{
         backgroundColor:'orange',
-        width:'70%',
+        width:'40%',
         borderRadius:20,
         marginRight:-16,
         zIndex:99,
@@ -184,4 +164,4 @@ const styles = StyleSheet.create({
     }
   });
 
-export default Login;
+export default ForgotPassword;

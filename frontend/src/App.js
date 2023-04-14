@@ -9,7 +9,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import SearchRecipes from './pages/SearchRecipesPage';
 import ViewRecipes from './pages/ViewRecipesPage';
 import CreateRecipes from './pages/CreateRecipesPage';
-import ViewProfile from './pages/ViewProfilePage';
+// import ViewProfile from './pages/ViewProfilePage';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         <Route path="/search" index element={<SearchRecipes />} />
         <Route path="/create" index element={<CreateRecipes />} />
         <Route path="/view" index element={<ViewRecipes />} />
-        <Route path="/profile" index element={<ViewProfile />} />
+        {/* <Route path="/profile" index element={<ViewProfile />} /> */}
       </Routes>
     </BrowserRouter>
   );

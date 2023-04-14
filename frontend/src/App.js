@@ -24,8 +24,8 @@ function App() {
         <Route path="/cards" index element={<CardPage />} />
         <Route path="/search" index element={<SearchRecipes />} />
         <Route path="/create" index element={<CreateRecipes />} />
-        <Route path="/view" index element={<ViewRecipes />} />
         <Route path="/profile" index element={<ViewProfile />} />
+        <Route path="/view" index element={<ViewRecipes />} />
       </Routes>
     </BrowserRouter>
   );

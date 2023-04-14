@@ -108,6 +108,7 @@ exports.setApp = function ( app, client )
 
   app.post('/api/forgotPassword', async (req, res, next) => 
   {
+    console.log("Getting hre");
     // incoming: email
     // outgoing: message
     let error = '';
@@ -134,7 +135,7 @@ exports.setApp = function ( app, client )
       error = 'success';
     }
     else{
-      return res.status(404).json({ emailnotfound: "Email not found" });
+      return res.status(404).json({ error: "Email not found" });
     }
 
     let ret = { error: error };

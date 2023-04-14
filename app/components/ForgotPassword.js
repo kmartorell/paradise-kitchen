@@ -40,9 +40,6 @@ const ForgotPassword = ({navigation}) =>
         }
     }, [data]);
 
-
-
-
     const createInvalidEmailAlert = () =>{
         Alert.alert('Forgot Password Failed', 'The email you typed in does not match an email in our records.', [
         {text: 'OK', onPress: () => console.log('OK Pressed')},

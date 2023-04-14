@@ -6,7 +6,7 @@ const ViewProfilePage = () =>
 {
     return(
         <div>
-            <ProfileNavBar />.
+            <ProfileNavBar />
             <ProfileBody />
         </div>
     );

@@ -10,5 +10,5 @@ const landingPage = () =>
             <LandingBody />
         </div>
     );
-}
+};
 export default landingPage;

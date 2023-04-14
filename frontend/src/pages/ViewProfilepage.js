@@ -10,6 +10,5 @@ const ViewProfilePage = () =>
             <ProfileBody />
         </div>
     );
-}
-
+};
 export default ViewProfilePage;

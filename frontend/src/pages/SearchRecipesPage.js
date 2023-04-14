@@ -10,5 +10,5 @@ const SearchPage = () =>
             <SearchBody/>
         </div>
     );
-}
+};
 export default SearchPage;

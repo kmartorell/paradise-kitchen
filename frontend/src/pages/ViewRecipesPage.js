@@ -10,5 +10,5 @@ const ViewRecipesPage = () =>
             <ViewBody />
         </div>
     );
-}
+};
 export default ViewRecipesPage;

@@ -8,9 +8,9 @@ import LandingPage from './pages/LandingPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import SearchRecipes from './pages/SearchRecipesPage';
 import ViewRecipes from './pages/ViewRecipesPage';
-import CreateRecipes from './pages/CreateRecipesPage';
-// import ViewProfile from './pages/ViewProfilePage';
 import ViewProfile from './pages/ViewProfilePage';
+import CreateRecipes from './pages/CreateRecipesPage';
+
 
 function App() {
   return (

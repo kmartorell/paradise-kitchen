@@ -1,13 +1,13 @@
 import React from 'react';
 import CreateNavBar from '../components/CreateNavBar.js';
-import CreateBody from '../components/CreateBody.js';
+import PageTitle from '../components/CreateBody.js';
 
 const landingPage = () =>
 {
     return(
         <div>
             <CreateNavBar />
-            <CreateBody />
+            <PageTitle />
         </div>
     );
 };

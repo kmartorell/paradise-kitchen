@@ -6,6 +6,7 @@ const User = require("./models/user.js");
 const Recipe = require("./models/recipes.js");
 const { response } = require('express');
 const nodemailer = require('nodemailer');
+const { ObjectId } = require('mongoose/lib/schema.js');
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -44,6 +45,7 @@ exports.setApp = function ( app, client )
     console.log(user);
     if(user){
       id = user._id;
+      console.log("Id from login is: "+id);
       fn = user.firstName;
       email = user.email;
       ln = user.lastName;
@@ -219,8 +221,19 @@ exports.setApp = function ( app, client )
   {
     // incoming: userId, color
     // outgoing: error
-    const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken } = req.body;
+    const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby} = req.body;
+   // name = req.body.name;
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
 
+    /*
     try
     {
       if( token.isExpired(jwtToken))
@@ -234,9 +247,15 @@ exports.setApp = function ( app, client )
     {
       console.log(e.message);
     }
+    */
 
-    const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:createdby});
+    var hexValue = createdby;
+    var intValue = -1;
+    intValue = parseInt(hexValue, 16);
+    console.log("Int value is: "+intValue);
+    const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:intValue});
     var error = '';
+    console.log("New recipe is: "+newRecipe);
 
     try
     {
@@ -250,6 +269,7 @@ exports.setApp = function ( app, client )
       error = e.toString();
     }
 
+    /*
     var refreshedToken = null;
 
     try
@@ -261,7 +281,8 @@ exports.setApp = function ( app, client )
       console.log(e.message);
     }
 
-    var ret = { error: error, jwtToken: refreshedToken };
+    */
+    var ret = { error: error};
     res.status(200).json(ret);
   });
 
@@ -455,7 +476,7 @@ exports.setApp = function ( app, client )
 
     
     res.status(200).json(ret);
-  });
+  })
 
   app.post('/api/addfavorite', async (req, res, next) =>
   {

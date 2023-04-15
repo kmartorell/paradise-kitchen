@@ -17,7 +17,7 @@ function Login()
     const [message,setMessage] = useState('');
     const doLogin = async event =>
     {
-
+        console.log("checking");
         console.log("In DO login");
 
         const user = { /* Gathers User input to Register */
@@ -83,11 +83,13 @@ function Login()
                 var user = {};
                 if(ud){
                     var userId = ud.payload.userId;
+                    console.log("user id type is: "+typeof(userId));
                     var firstName = ud.payload.firstName;
                     var lastName = ud.payload.lastName;
                     user = {firstName:firstName,lastName:lastName,id:userId}
                 }else{
                     user = {firstName:res.firstName,lastName:res.lastName,id:res.id}
+                    console.log("user id type is: "+typeof(user.id));
                 }
                 
                 localStorage.setItem('user_data', JSON.stringify(user));

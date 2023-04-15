@@ -1,1 +1,35 @@
+.tags{
+    position: relative; right: 10px;
+}
 
+.nutritionFacts{
+    position: relative; left: 10px;
+}
+
+.stepsFacts{
+    position: relative; right: 10px;
+}
+
+.ingredientsFacts{
+    position: relative; left: 10px;
+}
+
+.RecipeName{
+    position: relative; top: 20px; right: 10px;
+}
+
+.RecipeMinutes{
+    position: relative; top: 20px; left: 10px;
+}
+
+#recipeDescription{
+    width: 150%;
+}
+
+.increase{
+    background-color: orange;
+}
+
+.decrease{
+    background-color: orange;
+}

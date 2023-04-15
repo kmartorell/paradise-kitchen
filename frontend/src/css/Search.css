@@ -140,6 +140,7 @@
     height: 140px;
     margin: 10px;
     border: none;
+    padding: none;
     margin-top: 15px;
     box-shadow: 0.2px 0.2px 2px 2px rgba(0, 0, 0, 0.188) , -0.2px -0.2px 2px 2px rgba(0, 0, 0, 0.188);
     background-color:lightblue;
@@ -153,36 +154,35 @@
 
 
 
-
-
 /* Popup styles */
 .popup-box {
   position: absolute;
   width: 100%;
-  height: 50%;
+  max-height: 50%;
   top: 0;
   left: 0;
- 
+  
 }
  
 .popbox {
   position: relative;
-  width: 70%;
+  width: 60%;
   height: 520px;
   background: #fff;
   border-radius: 30px;
   padding: 20px;
-  border: 1px solid black;
+  padding-bottom: 0px;
+  border: 2px solid black;
   margin-top: 35px;
+  box-shadow: 0 0 0 99999px rgba(0, 0, 0, .5);
 }
  
-
 
 #PopupButton{
     width: 125px;
     height: 45px;
     position:relative;
-    top: 130px;
+    top: 20px;
     left: 5px;
     margin: 5px;
     background: orange;
@@ -202,7 +202,7 @@
     width: 125px;
     height: 45px;
     position:relative;
-    top: 140px;
+    top: 30px;
     left: 25px;
     margin: 5px;
     background: orange;
@@ -216,4 +216,116 @@
 
 #PopupCloseButton:hover{
     background: rgb(255, 98, 0);
+}
+
+#PopupContent{
+    position: relative;
+    height: 80%;
+    overflow: auto;
+}
+
+#NonTitleContents{
+    overflow: auto;
+    position: relative;
+    top: 20px;
+}
+
+#RecipeName{
+    font-weight: bolder;
+    font-size:larger;
+    text-decoration-line:underline;
+    
+}
+
+
+
+#TagsContent{
+    font-weight:bold;
+}
+#Tags{
+    color: rgb(0, 166, 255);
+    max-width: 400px;
+}
+
+/* FirstSeparator ----------------- STARTS */
+#FirstSeparator{
+    display: flex; 
+    justify-content: center;
+}
+
+
+#Tagsminutes{
+  font-weight:bold;
+  flex-basis: 25%
+}
+#Minutes{
+  color: red;
+}
+
+#TagsN_ingredients{
+    font-weight:bold;
+    flex-basis: 25%
+}
+#N_ingredients{
+    color: red;
+}
+
+#TagsN_Steps{
+    font-weight:bold;
+    flex-basis: 25%
+}
+#N_Steps{
+    color: red;
+}
+
+/* FirstSeparator ------------------ ENDS */
+
+
+#TagsDescription{
+    font-weight:bold;
+
+}
+#Description{
+    font-weight:normal;
+    max-width: 600px;
+}
+
+
+/* SecondSeparator -------------- STARTS */
+
+#SecondSeparator{
+    display: flex; 
+    justify-content: center;
+}
+
+#TagsIngredients-List{
+    font-weight:bold;
+    white-space: pre-line;
+    flex-basis: 40%
+}
+#Ingredients-List{
+    font-weight:normal;
+    max-width:250px;
+}
+
+
+#TagsNutrition{
+    font-weight:bold;
+    white-space: pre-line;
+    flex-basis: 40%
+}
+#Nutrition{
+    font-weight:normal;
+    max-width:250px;
+}
+
+/* SecondSeparator -------------- ENDS */
+
+#TagsSteps{
+    font-weight:bold;
+    white-space: pre-line;
+}
+#Steps{
+    font-weight:normal;
+    max-width: 600px;
 }

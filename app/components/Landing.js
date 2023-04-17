@@ -11,7 +11,7 @@ const Landing = ({navigation, route}) =>
   event.preventDefault();
       localStorage.removeItem("user_data")
       window.location.href = '/';
-  };    
+  };
 
     console.log(route.params.id);
  
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 35,
+    fontSize: 25,
     textAlign: 'center',
   },
   buttonHolder: {

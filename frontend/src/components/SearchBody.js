@@ -1,9 +1,12 @@
-import React, { createElement, useState } from 'react';
+import React, { useState } from 'react';
 import '../css/Search.css';
 import axios from 'axios';
 import $ from 'jquery';
-import Popup from './RecipePopup.js'
+import Popup from './SearchRecipePopup.js'
 
+
+var GlobalID;
+var GlobalDataInput;
 function PageTitle()
 {
    var bp = require('./Path.js');
@@ -47,10 +50,8 @@ function PageTitle()
         else{
             
             data = res;
-            console.log("--InDoSearch--");
+            GlobalDataInput = data;
             console.log(data);
-            console.log("-----");
-
 
             if(data.error == "search fail"){
                 alert("No recipes found!");
@@ -71,6 +72,9 @@ function PageTitle()
 
    const depopulatetable = async event => {
       $("#RecipeBoxes tbody tr").remove(); 
+   }
+   const RemoveInput = async event=> {
+    $("#SearchInput").val('');
    }
 
    var idchecker = 0;
@@ -122,9 +126,7 @@ function PageTitle()
    function fillPopup(e){ // Use e.currentTarget.id to get the id of the button you want.
                           // Data[e.currentTarget.id] to get the object of the recipe
 
-        console.log("+")
-        console.log(data);
-        console.log("+");
+        GlobalID = e.currentTarget.id;
         document.getElementById("RecipeName").innerHTML = "";
         document.getElementById("RecipeName").innerHTML = data[e.currentTarget.id].name;
 
@@ -197,9 +199,78 @@ function PageTitle()
 
    const togglePopup = async event => {
      setIsOpen(!isOpen);
-   }
+   }   
 
-   
+
+    //GlobalID takes the ID in the array of data of the button that was just pressed.
+    function SaveRecipe(){
+
+        var _ud = localStorage.getItem('user_data');
+        var ud = JSON.parse(_ud);
+        var userID = ud.id;
+ 
+        var obj = {userId: userID, recipeId: GlobalDataInput[GlobalID].id};
+        var js = JSON.stringify(obj);
+        var config =
+            {
+            method: 'post',
+            url: bp.buildPath('api/addfavorite'),
+            headers:
+                {
+                'Content-Type': 'application/json'
+                },
+                data: js
+            };
+         axios(config)  
+         .then(function (response)
+         {
+             var res = response.data;
+             console.log("Response is: " , response);
+             alert("Recipe has been added to favorites! ")
+     
+             
+         }).catch(function (error)
+         {
+             console.log(error);
+         });
+
+    }
+
+
+    function EditRecipe(){
+       
+        //GlobalID;  <--- This is the ID index for the recipe (that was clicked on) in the array.
+        //GlobalDataInput; <--- This is the array of recipes shown by search.
+
+        //GlobalDataInput[GlobalID] gets you the info of the specific recipe of the button you just pressed.
+
+        //You could take these as parameters to the edit recipe page and use that for the editing information.
+
+    }
+
+
+    function DeleteRecipe(){
+
+        if (window.confirm('Are you sure you wish to delete this Recipe?')) {
+
+            var obj = {id: GlobalDataInput[GlobalID].id};
+            var js = JSON.stringify(obj);
+            var config =
+            {
+                method: 'post',
+                url: bp.buildPath('api/deleterecipe'),
+                headers:
+                {
+                'Content-Type': 'application/json'
+                },
+                data: js
+            };
+            axios(config)
+
+            window.location.reload();
+        }
+    }   
+
 
    return(
         <center className='SearchPageBox'>
@@ -209,7 +280,7 @@ function PageTitle()
             <div className="SearchInputArea">
                <input type="text" name="search" id="SearchInput" placeholder="Type in a Name, Description, Ingredient or Tag here, Click Search with nothing to see all." ref={(c) => SearchInput = c} />
                <button type="submit" id="SearchButton" value="Search" onClick={doSearch}> Search</button>
-               <button type="submit" id="ResetButton" value="Search" onClick={depopulatetable}> Reset</button>
+               <button type="submit" id="ResetButton" value="Search" onClick={() => {depopulatetable(); RemoveInput();}}> Reset</button>
             </div>
             <div id="RecipeTable">
                 <table id="RecipeBoxes">
@@ -260,7 +331,11 @@ function PageTitle()
 
                                                 </div>    
                                             </div>}
-                handleClose={togglePopup}/>}
+                handleClose={togglePopup}
+                AddRecipe={SaveRecipe}
+                EditRecipe1={EditRecipe}
+                DeleteRecipe1={DeleteRecipe}
+                />}
             </div>
             
         </center>

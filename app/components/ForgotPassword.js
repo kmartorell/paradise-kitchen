@@ -6,11 +6,15 @@ import axios from 'axios';
 const ForgotPassword = ({navigation}) =>
 {
     const [email, onChangeEmail] = React.useState('');
+    const [login, onChangeLogin] = React.useState('');
     const [data, setData] = React.useState('');
 
-    const doForgotPassword = async ({navigation}, email) =>
+    const doForgotPassword = async ({navigation}, email, login, styles) =>
     {
-        fetch('https://paradise-kitchen.herokuapp.com/api/forgotPassword', {
+        if(!email || !login){
+            missingInformation();
+        }else{
+            fetch('https://paradise-kitchen.herokuapp.com/api/forgotPassword', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -18,6 +22,7 @@ const ForgotPassword = ({navigation}) =>
                 },
                 body: JSON.stringify({
                     email: email,
+                    login: login,
                 })
     
             })    
@@ -28,10 +33,10 @@ const ForgotPassword = ({navigation}) =>
             .catch(error => {
               console.error(error);
             });
+        }
     };
 
     useEffect(() => {
-        console.log(data);
         if(data){
             if(data.error == 'success')
                 navigation.navigate('Login', {message:"Password email sent. Please check your email."});
@@ -41,14 +46,23 @@ const ForgotPassword = ({navigation}) =>
     }, [data]);
 
     const createInvalidEmailAlert = () =>{
-        Alert.alert('Forgot Password Failed', 'The email you typed in does not match an email in our records.', [
+        Alert.alert('Forgot Password Failed', 'The email/username you typed in does not match anything in our records.', [
         {text: 'OK', onPress: () => console.log('OK Pressed')},
         ]);
 
         onChangeEmail('');
+        onChangeLogin('');
 
     };
+    const missingInformation = () =>{
+        Alert.alert('Forgot Password Failed', 'Email & Login are required', [
+        {text: 'OK', onPress: () => console.log('OK Pressed')},
+        ]);
 
+        onChangeEmail('');
+        onChangeLogin('');
+
+    };
 
  
     return(
@@ -59,7 +73,7 @@ const ForgotPassword = ({navigation}) =>
                 <View style={styles.mainLogin}>
                     <View style={styles.formButtons}>
                         <View style={styles.loginBox}>
-                            <Button color="black" title="Back" onPress={() => navigation.navigate('Login')}/>
+                            <Button color="white" title="Back" onPress={() => navigation.navigate('Login')}/>
                         </View>
                     </View>
                     <Text style={styles.subheader}>Email</Text>
@@ -69,8 +83,15 @@ const ForgotPassword = ({navigation}) =>
                         value={email}
                         placeholder="Email"
                     />
+                    <Text style={styles.subheader}>Login</Text>
+                    <TextInput
+                        style={styles.input}
+                        onChangeText={onChangeLogin}
+                        value={login}
+                        placeholder="Login"
+                    />
                     <View style={styles.submitButton}>
-                        <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email)}/>
+                        <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email, login, styles)}/>
                     </View>
                 </View>
                 

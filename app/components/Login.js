@@ -70,7 +70,7 @@ const Login = ({navigation, route}) =>
                             <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
                         </View>
                         <View style={styles.registerBox}>
-                            <Button color="black" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
+                            <Button color="black" fontWeight="bold" title="Register" onPress={() =>navigation.navigate('Register')}/>
                         </View>
                     </View>
                     <Text style={styles.message}>{route.params.message}</Text>
@@ -89,7 +89,7 @@ const Login = ({navigation, route}) =>
                         placeholder="Password"
                         secureTextEntry={true}
                     />
-                    <Button style={styles.forgotPassword} color="red" title="Forgot Password?"onPress={() => navigation.navigate('Forgot Password')}/>
+                    <Button style={styles.forgotPassword} color="red" title="Forgot Password?" onPress={() => navigation.navigate('Forgot Password')}/>
                     <View style={styles.submitButton}>
                         <Button style={styles.login} color="white" title="Login"onPress={() => doLogin({navigation}, username,password)}/>
                     </View>

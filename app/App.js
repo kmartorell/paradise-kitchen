@@ -6,6 +6,10 @@ import Login from './components/Login';
 import Register from './components/Register'
 import Landing from './components/Landing'
 import ForgotPassword from './components/ForgotPassword'
+import SearchRecipes from './components/SearchRecipes'
+import YourRecipes from './components/YourRecipes'
+import CreateRecipe from './components/CreateRecipe'
+import ProfilePage from './components/ProfilePage'
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +24,10 @@ const App = () => {
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="Forgot Password" component={ForgotPassword} />
         <Stack.Screen name="Landing" component={Landing} />
+        <Stack.Screen name="SearchRecipes" component={SearchRecipes} />
+        <Stack.Screen name="YourRecipes" component={YourRecipes} />
+        <Stack.Screen name="CreateRecipe" component={CreateRecipe} />
+        <Stack.Screen name="ProfilePage" component={ProfilePage} />
       </Stack.Navigator>
     </NavigationContainer>
   );

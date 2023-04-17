@@ -14,6 +14,8 @@ const Register = ({navigation}) =>
     const [confirmPassword, onChangeConfirmPassword] = React.useState('');
     const [data, setData] = React.useState('');
     const [emailData, setEmailData] = React.useState('');
+    const [message, setMessage] = React.useState('');
+    const [inputBorderColor, setBorderColor] = React.useState('black');
     const [showRegister, setShowRegister] = useState(true);
     const [showEmail, setShowEmail] = useState(false);
     const [showVerify, setShowVerify] = useState(false);
@@ -24,34 +26,61 @@ const Register = ({navigation}) =>
 
     const showEmailForm = async({navigation}, firstName, lastName, email, username, password, confirmPassword) =>
     {
-        // Hide Main form
-        setShowRegister(false);
-        // Open Verify Form
-        setShowEmail(true);
-        // API call to Verify
-        console.log("Verification code is: ", emailCode);
-        fetch('https://paradise-kitchen.herokuapp.com/api/verifyEmail', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email:email,
-                    emailCode:emailCode
-                })
-    
-            })    
-            .then(response => response.json())
-            .then(json => {
-                setEmailData(json);
-            })
-            .catch(error => {
-            console.error(error);
-            });
+        if(!firstName || !lastName || !email || !username || !password || !confirmPassword){
+                console.log("Fields are missing");
+                setMessage('Some fields are missing.\nPlease try again.');
+                setBorderColor('red');
+        }else{
+            setBorderColor('black');
+            let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+            if (reg.test(email) === false) {
+                console.log("Email is Not Correct");
+                setMessage('Email is not valid.\nPlease try again.');
+                onChangeEmail('');    
+                setBorderColor('red');
+            }
+            else {
+                if(password == confirmPassword){
+                    console.log("Email is Correct");
+                    // Hide Main form
+                    setShowRegister(false);
+                    setMessage('');
+
+                    // Open Verify Form
+                    setShowEmail(true);
+                    // API call to Verify
+                    console.log("Verification code is: ", emailCode);
+                    fetch('https://paradise-kitchen.herokuapp.com/api/verifyEmail', {
+                            method: 'POST',
+                            headers: {
+                                'Accept': 'application/json',
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                email:email,
+                                emailCode:emailCode
+                            })
+                
+                        })    
+                        .then(response => response.json())
+                        .then(json => {
+                            setEmailData(json);
+                        })
+                        .catch(error => {
+                        console.error(error);
+                        });
+                }else{
+                    setMessage('Your passwords must match.\nPlease try again.');
+                    setBorderColor('red');
+                    onChangePassword('');
+                    onChangeConfirmPassword('');
+                }
+            }
+        }
     };
     const doVerifyEmail = async(code) =>
     {
+        setBorderColor('black');
         // Check if code is correct.
         if(code == emailData.emailCode){
             setShowEmail(false);
@@ -60,13 +89,14 @@ const Register = ({navigation}) =>
             console.log("Codes do not match");
             console.log(emailCode);
             console.log(code);
-            createCodesNotMatchAlert();
+            setBorderColor('red');
+            onChangeCode('');
+            setMessage('The verification code you entered does not match.\nPlease try again.');
         }
     };
 
     const doRegister = async ({navigation}, firstName, lastName, email, username, password, confirmPassword) =>
     {
-        if(password == confirmPassword){
             fetch('https://paradise-kitchen.herokuapp.com/api/register', {
                     method: 'POST',
                     headers: {
@@ -89,9 +119,6 @@ const Register = ({navigation}) =>
                 .catch(error => {
                 console.error(error);
                 });
-        }else{
-            createPasswordsNotMatchAlert();
-        }
     };
 
     useEffect(() => {
@@ -111,20 +138,9 @@ const Register = ({navigation}) =>
         }
     }, [data]);
 
-
-    const createPasswordsNotMatchAlert = () =>{
-        Alert.alert('Register Failed', 'Your passwords must match.\n Please try again.', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-    };
-    const createCodesNotMatchAlert = () =>{
-        Alert.alert('Verification Failed', 'The verification code you entered does not match', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-
-        onChangeCode('');
-
-    };
+    const getBorderColor = () =>{
+        return inputBorderColor;
+    }
 
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -144,37 +160,38 @@ const Register = ({navigation}) =>
                                     <Button color="white" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
                                 </View>
                             </View>
+                            <Text style={styles.message}>{message}</Text>
                             <Text style={styles.subheader}>First Name</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangeFirstName}
                                 value={firstName}
                                 placeholder="First Name"
                             />
                             <Text style={styles.subheader}>Last Name</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangeLastName}
                                 value={lastName}
                                 placeholder="Last Name"
                             />
                             <Text style={styles.subheader}>Email</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangeEmail}
                                 value={email}
                                 placeholder="Email"
                             />
                             <Text style={styles.subheader}>Username</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangeUserName}
                                 value={username}
                                 placeholder="Username"
                             />
                             <Text style={styles.subheader}>Password</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangePassword}
                                 value={password}
                                 placeholder="Password"
@@ -182,7 +199,7 @@ const Register = ({navigation}) =>
                             />
                             <Text style={styles.subheader}>Confirm Password</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangeConfirmPassword}
                                 value={confirmPassword}
                                 placeholder="Confirm Password"
@@ -199,8 +216,9 @@ const Register = ({navigation}) =>
                         <View style={styles.emailForm}>
                             <Text style={styles.verifyemailmessage}>An email was sent to verify your email.</Text>
                             <Text style={styles.subheader}>Input Code From Email Below</Text>
+                            <Text style={styles.message}>{message}</Text>
                             <TextInput
-                                style={styles.input}
+                                style={[styles.input, {borderColor:getBorderColor()}]}
                                 onChangeText={onChangeCode}
                                 value={code}
                                 placeholder="Verification Code"
@@ -228,7 +246,7 @@ const Register = ({navigation}) =>
 
 
 const styles = StyleSheet.create({
-    input: {
+    input:{
         height: 50,
         width:"90%",
         margin: 12,
@@ -317,8 +335,9 @@ const styles = StyleSheet.create({
     },
     message: {
         fontSize: 20,
-        color: 'green',
+        color: 'red',
         textAlign: 'center',
+        marginTop:20,
     },
     loginBox:{
         width:'70%',

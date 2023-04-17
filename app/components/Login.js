@@ -8,12 +8,16 @@ const Login = ({navigation, route}) =>
     if(!route.params){
         route.params = {message:''};
     }
+    
     const [username, onChangeUserName] = React.useState('');
     const [password, onChangePassword] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState('');
+    const [inputBorderColor, setBorderColor] = React.useState('black');
     const [data, setData] = React.useState('');
-
     const doLogin = async ({navigation}, username,password) =>
     {
+        setErrorMessage('');
+        setBorderColor('black');
         fetch('https://paradise-kitchen.herokuapp.com/api/login', {
                 method: 'POST',
                 headers: {
@@ -37,27 +41,21 @@ const Login = ({navigation, route}) =>
 
     useEffect(() => {
         if(data){
-            if(data["id"] != -1)
+            if(data["id"] != -1){
                 navigation.navigate('Landing', {id:data['id'], firstName:data['firstName'], lastName:data['lastName'], email:data['email'], login:data['login'], favorites:data['favorites']});
-            else
-                createInvalidLoginAlert();
+            }
+            else{
+                setErrorMessage('Your username or password is incorrect.\n Please try again.');
+                setBorderColor('red');
+                onChangeUserName('');
+                onChangePassword('');
+            }
         }
     }, [data]);
 
-
-
-
-    const createInvalidLoginAlert = () =>{
-        Alert.alert('Login Failed', 'Your username or password is incorrect.\n Please try again.', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-
-        onChangeUserName('');
-        onChangePassword('');
-
+    const getBorderColor = () =>{
+        return inputBorderColor;
     };
-
-
  
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -75,16 +73,17 @@ const Login = ({navigation, route}) =>
                             </View>
                         </View>
                         <Text style={styles.message}>{route.params.message}</Text>
+                        <Text style={styles.errorMessage}>{errorMessage}</Text>
                         <Text style={styles.subheader}>Username</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.input, {borderColor:getBorderColor()}]}
                             onChangeText={onChangeUserName}
                             value={username}
                             placeholder="User Name"
                         />
                         <Text style={styles.subheader}>Password</Text>
                         <TextInput
-                            style={styles.input}
+                            style={[styles.input, {borderColor:getBorderColor()}]}
                             onChangeText={onChangePassword}
                             value={password}
                             placeholder="Password"
@@ -158,6 +157,11 @@ const styles = StyleSheet.create({
         color: 'green',
         textAlign: 'center',
         marginTop:16,
+    },
+    errorMessage: {
+        fontSize: 20,
+        color: 'red',
+        textAlign: 'center',
     },
     loginBox:{
         backgroundColor:'orange',

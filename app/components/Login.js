@@ -94,9 +94,7 @@ const Login = ({navigation, route}) =>
                         <View style={styles.submitButton}>
                             <Button style={styles.login} color="white" title="Login"onPress={() => doLogin({navigation}, username,password)}/>
                         </View>
-                        
                     </View>
-                    
                 </SafeAreaView>
             </ScrollView>
       </ImageBackground>

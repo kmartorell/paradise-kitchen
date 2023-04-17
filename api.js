@@ -202,7 +202,7 @@ exports.setApp = function ( app, client )
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
 
-    let ret = { error: error };
+    let ret = { error: error, emailCode: emailCode };
 
     mailOptions.subject = "Email Verification";
     mailOptions.text = "Here is the code to verify your email: " + emailCode;

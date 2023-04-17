@@ -6,32 +6,32 @@ import axios from 'axios';
 const Landing = ({navigation, route}) =>
 {
 
+  const firstName = route.params.firstName;
+
   const doLogout = event => 
   {
   event.preventDefault();
       localStorage.removeItem("user_data")
       window.location.href = '/';
   };    
-
-    console.log(route.params.id);
  
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
           <SafeAreaView style={styles.container}>
               <Image source={Images.logo} style={styles.logo} />
               <View style={styles.mainLanding}>
-                  <Text style={styles.header}>Welcome {route.params.firstName}</Text>
+                  <Text style={styles.header}>Welcome {firstName}</Text>
                   <View style={styles.buttonHolder}>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes')}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes', {firstName: route.params.firstName})}>
                       <Text style={styles.buttonText}>Search Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes')}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {firstName: route.params.firstName})}>
                       <Text style={styles.buttonText}>Your Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe')}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe', {firstName: route.params.firstName})}>
                       <Text style={styles.buttonText}>Create Recipe</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage')}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {firstName: route.params.firstName})}>
                       <Text style={styles.buttonText}>Profile Page</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonStyle} onPress={doLogout}>

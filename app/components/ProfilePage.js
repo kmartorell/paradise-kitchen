@@ -6,10 +6,7 @@ import axios from 'axios';
 const ProfilePage = ({navigation, route}) =>
 {
 
-  const uFirstName = route.params.firstName;
-  const uLastName = route.params.lastName;
-  const uEmail = route.params.email;
-  const uLogin = route.params.login;
+const curUser = route.params.user;
 
   return(
     <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -18,10 +15,10 @@ const ProfilePage = ({navigation, route}) =>
             <View style={styles.mainLanding}>
                 <View style={styles.buttonHolder}>
                   <Text style={styles.header}>Profile Page!</Text>
-                  <Text style={styles.profileSubheader}>Name: {uFirstName} {uLastName}</Text>
-                  <Text style={styles.profileSubheader}>Email: {uEmail}</Text>
-                  <Text style={styles.profileSubheader}>Username: {uLogin}</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName, lastName: route.params.lastName, email: route.params.email, login: route.params.login})}>
+                  <Text style={styles.profileSubheader}>Name: {curUser.firstName} {curUser.lastName}</Text>
+                  <Text style={styles.profileSubheader}>Email: {curUser.email}</Text>
+                  <Text style={styles.profileSubheader}>Username: {curUser.login}</Text>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {user: curUser})}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

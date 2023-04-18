@@ -80,9 +80,32 @@ const SearchRecipes = ({navigation, route}) =>
                 </View>
             </SafeAreaView>
           </ScrollView>
-    </ImageBackground>
+      </ImageBackground>
   );
 };
+
+    {/* return(
+      <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
+          <SafeAreaView style={styles.container}>
+              <Image source={Images.logo} style={styles.logo} />
+              <View style={styles.mainLanding}>
+                  <View style={styles.buttonHolder}>
+                    <Text style={styles.header}>Search Recipes Here!</Text>
+                      <TextInput style = {styles.searchRecipeText} placeholderTextColor='grey' placeholder="Search Name, Description, Ingredient or Tag."/>
+                      <TouchableOpacity style={styles.buttonStyle}>
+                          <Text style={styles.buttonText}>Search</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonStyle}>
+                          <Text style={styles.buttonText}>Reset</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                          <Text style={styles.buttonText}>Home</Text>
+                      </TouchableOpacity>
+                  </View>
+              </View>
+          </SafeAreaView>
+    </ImageBackground> */}
+
 
 
 const styles = StyleSheet.create({
@@ -157,6 +180,13 @@ const styles = StyleSheet.create({
       borderRadius:20,
       marginRight:-16,
       zIndex:99,
+  },
+  searchRecipeText: {
+    color: 'black',
+    fontSize: 15,
+    borderWidth: 1,
+    height: 50,
+    borderRadius: 10,
   },
   registerBox:{
       width:'70%',

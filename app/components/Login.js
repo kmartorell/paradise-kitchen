@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Touchable, TouchableOpacity } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -68,9 +68,9 @@ const Login = ({navigation, route}) =>
                             <View style={styles.loginBox}>
                                 <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
                             </View>
-                            <View style={styles.registerBox}>
-                                <Button color="black" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
-                            </View>
+                                <TouchableOpacity style={styles.registerBox} color="black" onPress={() =>navigation.navigate('Register')}>
+                                    <Text style={styles.buttonText}>Register</Text>
+                                </TouchableOpacity>
                         </View>
                         <Text style={styles.message}>{route.params.message}</Text>
                         <Text style={styles.errorMessage}>{errorMessage}</Text>
@@ -90,9 +90,9 @@ const Login = ({navigation, route}) =>
                             secureTextEntry={true}
                         />
                         <Button style={styles.forgotPassword} color="red"  title="Forgot Password?"onPress={() => navigation.navigate('Forgot Password')}/>
-                        <View style={styles.submitButton}>
-                            <Button style={styles.login} color="white" title="Login"onPress={() => doLogin({navigation}, username,password)}/>
-                        </View>
+                        <TouchableOpacity style={styles.submitButton} title="Login"onPress={() => doLogin({navigation}, username,password)}>
+                            <Text style={styles.loginButtonText}>Login</Text>
+                        </TouchableOpacity>
                     </View>
                 </SafeAreaView>
             </ScrollView>
@@ -114,6 +114,14 @@ const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         height:'100%'
+    },
+    buttonText: {
+        color: 'black',
+        fontSize: 15,
+    },
+    loginButtonText: {
+        color: 'white',
+        fontSize: 25,
     },
     mainLogin: {
         width:'90%',
@@ -185,6 +193,7 @@ const styles = StyleSheet.create({
         marginTop:20,
         marginBottom:12,
         borderRadius:20,
+        alignItems: 'center',
     }
   });
 

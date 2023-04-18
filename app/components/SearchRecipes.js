@@ -203,7 +203,6 @@ const styles = StyleSheet.create({
   recipeList: {
     width:'90%',
     backgroundColor:'white',
-    alignItems:'left',
     padding:22,
     borderRadius:20,
     marginTop:30,

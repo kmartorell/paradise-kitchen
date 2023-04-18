@@ -87,9 +87,9 @@ const ViewRecipe = ({navigation, route}) =>
                 <View style={styles.buttonHolder}>
                   <View style={styles.formButtons}>
                     <View style={styles.backDiv}>
-                      <View style={styles.backBox}>
-                          <Button color="white" title="Back" onPress={() => navigation.navigate('SearchRecipes',{user: route.params.user})}/>
-                      </View>
+                      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('SearchRecipes',{user: route.params.user})}>
+                            <Text style={styles.backButtonText}>Back</Text>
+                      </TouchableOpacity>
                     </View>
                     <View style={styles.favorite}>
                       {favorited &&
@@ -281,13 +281,11 @@ const styles = StyleSheet.create({
     paddingBottom:12,
   },
   metaInfo: {
-    justifyContent:'left',
     width:'100%',
     paddingBottom:12,
   },
   meta: {
     flexDirection:'row',
-    justifyContent:'left'
   },
   data: {
     paddingLeft:12,
@@ -305,7 +303,6 @@ const styles = StyleSheet.create({
     paddingBottom:10
   },
   ingredientsMain: {
-    alignItems:'left',
     paddingBottom:12,
     width:'100%',
     paddingTop:12,
@@ -321,5 +318,16 @@ const styles = StyleSheet.create({
     width:40,
     height:40,
   },
+  backButton:{
+    backgroundColor:'orange',
+    width:"80%",
+    marginBottom:12,
+    borderRadius:20,
+    alignItems: 'center',
+},
+backButtonText: {
+  color: 'white',
+  fontSize: 25,
+},
 });
 export default ViewRecipe;

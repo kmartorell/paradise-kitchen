@@ -6,7 +6,6 @@ import axios from 'axios';
 const Landing = ({navigation, route}) =>
 {
 
-  const firstName = route.params.firstName;
   const [user, setUser] = React.useState('');
 
   const doLogout = event => 
@@ -62,7 +61,7 @@ const Landing = ({navigation, route}) =>
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {user: user})}>
                       <Text style={styles.buttonText}>Profile Page</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={doLogout}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Login')}>
                       <Text style={styles.buttonText}>Log Out</Text>
                     </TouchableOpacity>
                   </View>

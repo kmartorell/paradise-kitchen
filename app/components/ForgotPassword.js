@@ -1,16 +1,25 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView} from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
 const ForgotPassword = ({navigation}) =>
 {
     const [email, onChangeEmail] = React.useState('');
+    const [login, onChangeLogin] = React.useState('');
+    const [message, setMessage] = React.useState('');
+    const [inputBorderColor, setBorderColor] = React.useState('black');
     const [data, setData] = React.useState('');
 
-    const doForgotPassword = async ({navigation}, email) =>
+    const doForgotPassword = async ({navigation}, email, login, styles) =>
     {
-        fetch('https://paradise-kitchen.herokuapp.com/api/forgotPassword', {
+        setBorderColor('black');
+        setMessage('');
+        if(!email || !login){
+            setMessage('Some fields are missing.\nPlease try again.');
+            setBorderColor('red');
+        }else{
+            fetch('https://paradise-kitchen.herokuapp.com/api/forgotPassword', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -18,6 +27,7 @@ const ForgotPassword = ({navigation}) =>
                 },
                 body: JSON.stringify({
                     email: email,
+                    login: login,
                 })
     
             })    
@@ -28,53 +38,60 @@ const ForgotPassword = ({navigation}) =>
             .catch(error => {
               console.error(error);
             });
+        }
     };
 
     useEffect(() => {
-        console.log(data);
         if(data){
-            if(data.error == 'success')
+            if(data.error == 'success'){
                 navigation.navigate('Login', {message:"Password email sent. Please check your email."});
-            else
-                createInvalidEmailAlert();
+            }else{
+                setMessage('The email/username you typed in does not match anything in our records.\nPlease try again.');
+                setBorderColor('red');
+                onChangeEmail('');
+                onChangeLogin('');
+            }
         }
     }, [data]);
 
-    const createInvalidEmailAlert = () =>{
-        Alert.alert('Forgot Password Failed', 'The email you typed in does not match an email in our records.', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-
-        onChangeEmail('');
-
+    const getBorderColor = () =>{
+        return inputBorderColor;
     };
-
-
  
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
-            <SafeAreaView style={styles.container}>
-                <Image source={Images.logo} style={styles.logo} />
-                <Text style={styles.header}>Forgot Password</Text>
-                <View style={styles.mainLogin}>
-                    <View style={styles.formButtons}>
-                        <View style={styles.loginBox}>
-                            <Button color="black" title="Back" onPress={() => navigation.navigate('Login')}/>
+            <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
+                <SafeAreaView style={styles.container}>
+                    <Image source={Images.logo} style={styles.logo} />
+                    <Text style={styles.header}>Forgot Password</Text>
+                    <View style={styles.mainLogin}>
+                        <View style={styles.formButtons}>
+                            <View style={styles.backBox}>
+                                <Button color="white" title="Back" onPress={() => navigation.navigate('Login')}/>
+                            </View>
+                        </View>
+                        <Text style={styles.message}>{message}</Text>
+                        <Text style={styles.subheader}>Email</Text>
+                        <TextInput
+                            style={[styles.input, {borderColor:getBorderColor()}]}
+                            onChangeText={onChangeEmail}
+                            value={email}
+                            placeholder="Email"
+                        />
+                        <Text style={styles.subheader}>Login</Text>
+                        <TextInput
+                            style={[styles.input, {borderColor:getBorderColor()}]}
+                            onChangeText={onChangeLogin}
+                            value={login}
+                            placeholder="Login"
+                        />
+                        <View style={styles.submitButton}>
+                            <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email, login, styles)}/>
                         </View>
                     </View>
-                    <Text style={styles.subheader}>Email</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeEmail}
-                        value={email}
-                        placeholder="Email"
-                    />
-                    <View style={styles.submitButton}>
-                        <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email)}/>
-                    </View>
-                </View>
-                
-            </SafeAreaView>
+                    
+                </SafeAreaView>
+            </ScrollView>
       </ImageBackground>
     );
 };
@@ -101,6 +118,7 @@ const styles = StyleSheet.create({
         padding:22,
         borderRadius:20,
         marginTop:30,
+        marginBottom:250,
 
     },
     logo: {
@@ -132,15 +150,16 @@ const styles = StyleSheet.create({
     },
     message: {
         fontSize: 20,
-        color: 'green',
+        color: 'red',
         textAlign: 'center',
     },
-    loginBox:{
+    backBox:{
         backgroundColor:'orange',
         width:'40%',
         borderRadius:20,
         marginRight:-16,
         zIndex:99,
+        marginBottom:10,
     },
     registerBox:{
         width:'70%',

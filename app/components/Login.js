@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -8,12 +8,16 @@ const Login = ({navigation, route}) =>
     if(!route.params){
         route.params = {message:''};
     }
+    
     const [username, onChangeUserName] = React.useState('');
     const [password, onChangePassword] = React.useState('');
+    const [errorMessage, setErrorMessage] = React.useState('');
+    const [inputBorderColor, setBorderColor] = React.useState('black');
     const [data, setData] = React.useState('');
-
     const doLogin = async ({navigation}, username,password) =>
     {
+        setErrorMessage('');
+        setBorderColor('black');
         fetch('https://paradise-kitchen.herokuapp.com/api/login', {
                 method: 'POST',
                 headers: {
@@ -37,66 +41,61 @@ const Login = ({navigation, route}) =>
 
     useEffect(() => {
         if(data){
-            if(data["id"] != -1)
+            if(data["id"] != -1){
                 navigation.navigate('Landing', {id:data['id'], firstName:data['firstName'], lastName:data['lastName'], email:data['email'], login:data['login'], favorites:data['favorites']});
-            else
-                createInvalidLoginAlert();
+            }
+            else{
+                setErrorMessage('Your username or password is incorrect.\n Please try again.');
+                setBorderColor('red');
+                onChangeUserName('');
+                onChangePassword('');
+            }
         }
     }, [data]);
 
-
-
-
-    const createInvalidLoginAlert = () =>{
-        Alert.alert('Login Failed', 'Your username or password is incorrect.\n Please try again.', [
-        {text: 'OK', onPress: () => console.log('OK Pressed')},
-        ]);
-
-        onChangeUserName('');
-        onChangePassword('');
-
+    const getBorderColor = () =>{
+        return inputBorderColor;
     };
-
-
  
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
-            <SafeAreaView style={styles.container}>
-                <Image source={Images.logo} style={styles.logo} />
-                <Text style={styles.header}>Paradise Kitchen</Text>
-                <View style={styles.mainLogin}>
-                    <View style={styles.formButtons}>
-                        <View style={styles.loginBox}>
-                            <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
+            <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
+                <SafeAreaView style={styles.container}>
+                    <Image source={Images.logo} style={styles.logo} />
+                    <Text style={styles.header}>Paradise Kitchen</Text>
+                    <View style={styles.mainLogin}>
+                        <View style={styles.formButtons}>
+                            <View style={styles.loginBox}>
+                                <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
+                            </View>
+                            <View style={styles.registerBox}>
+                                <Button color="black" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
+                            </View>
                         </View>
-                        <View style={styles.registerBox}>
-                            <Button color="black" fontWeight="bold" title="Register" onPress={() =>navigation.navigate('Register')}/>
+                        <Text style={styles.message}>{route.params.message}</Text>
+                        <Text style={styles.errorMessage}>{errorMessage}</Text>
+                        <Text style={styles.subheader}>Username</Text>
+                        <TextInput
+                            style={[styles.input, {borderColor:getBorderColor()}]}
+                            onChangeText={onChangeUserName}
+                            value={username}
+                            placeholder="User Name"
+                        />
+                        <Text style={styles.subheader}>Password</Text>
+                        <TextInput
+                            style={[styles.input, {borderColor:getBorderColor()}]}
+                            onChangeText={onChangePassword}
+                            value={password}
+                            placeholder="Password"
+                            secureTextEntry={true}
+                        />
+                        <Button style={styles.forgotPassword} color="red"  title="Forgot Password?"onPress={() => navigation.navigate('Forgot Password')}/>
+                        <View style={styles.submitButton}>
+                            <Button style={styles.login} color="white" title="Login"onPress={() => doLogin({navigation}, username,password)}/>
                         </View>
                     </View>
-                    <Text style={styles.message}>{route.params.message}</Text>
-                    <Text style={styles.subheader}>Username</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeUserName}
-                        value={username}
-                        placeholder="User Name"
-                    />
-                    <Text style={styles.subheader}>Password</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangePassword}
-                        value={password}
-                        placeholder="Password"
-                        secureTextEntry={true}
-                    />
-                    <Button style={styles.forgotPassword} color="red" title="Forgot Password?" onPress={() => navigation.navigate('Forgot Password')}/>
-                    <View style={styles.submitButton}>
-                        <Button style={styles.login} color="white" title="Login"onPress={() => doLogin({navigation}, username,password)}/>
-                    </View>
-                    
-                </View>
-                
-            </SafeAreaView>
+                </SafeAreaView>
+            </ScrollView>
       </ImageBackground>
     );
 };
@@ -123,6 +122,7 @@ const styles = StyleSheet.create({
         padding:22,
         borderRadius:20,
         marginTop:30,
+        marginBottom:250,
 
     },
     logo: {
@@ -157,6 +157,11 @@ const styles = StyleSheet.create({
         color: 'green',
         textAlign: 'center',
         marginTop:16,
+    },
+    errorMessage: {
+        fontSize: 20,
+        color: 'red',
+        textAlign: 'center',
     },
     loginBox:{
         backgroundColor:'orange',

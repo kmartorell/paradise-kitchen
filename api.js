@@ -202,7 +202,7 @@ exports.setApp = function ( app, client )
       return res.status(404).json({ emailnotfound: "Email not found" });
     }
 
-    let ret = { error: error };
+    let ret = { error: error, emailCode: emailCode };
 
     mailOptions.subject = "Email Verification";
     mailOptions.text = "Here is the code to verify your email: " + emailCode;
@@ -445,6 +445,16 @@ exports.setApp = function ( app, client )
   {
     const {userId, jwtToken} = req.body;
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+
     const user = await User.findById(userId);
     const favoriteIds = user.favorites;
     const favorites = [];
@@ -487,6 +497,16 @@ exports.setApp = function ( app, client )
     const {userId, recipeId, jwtToken } = req.body;
     //console.log(JSON.stringify(req.body));
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+
     const addFavorite = await User.findByIdAndUpdate(userId, {$addToSet: {favorites: recipeId}});
     var error = '';
     if(recipeId != null)
@@ -518,6 +538,16 @@ exports.setApp = function ( app, client )
   {
     const {userId, recipeId, jwtToken } = req.body;
     //console.log(JSON.stringify(req.body));
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
 
     const removeFavorite = await User.findByIdAndUpdate(userId, {$pull: {favorites: recipeId}});
     var error = '';

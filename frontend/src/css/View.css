@@ -165,7 +165,7 @@
 }
  
 
-#PopupButton{
+#Popup1Button{
     width: 120px;
     height: 45px;
     position:relative;
@@ -185,7 +185,7 @@
     background: rgb(255, 98, 0);
 }
 
-#PopupEditButton{
+#Popup1EditButton{
     width: 115px;
     height: 45px;
     position:relative;
@@ -199,12 +199,13 @@
     border-radius: 30px;
     font-size: 1.2em;
     cursor: pointer;
+    visibility: hidden;
 }
 #PopupEditButton:hover{
     background: rgb(255, 98, 0);
 }
 
-#PopupDeleteButton{
+#Popup1DeleteButton{
     width: 120px;
     height: 45px;
     position:relative;
@@ -218,12 +219,13 @@
     border-radius: 30px;
     font-size: 1.2em;
     cursor: pointer;
+    visibility: hidden;
 }
 #PopupDeleteButton:hover{
     background: rgb(255, 98, 0);
 }
 
-#PopupCloseButton{
+#Popup1CloseButton{
     width: 120px;
     height: 45px;
     position:relative;

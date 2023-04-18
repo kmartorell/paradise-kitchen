@@ -28,8 +28,20 @@
 
 .increase{
     background-color: orange;
+    border-radius: 20px; 
+    padding: 10px 20px; 
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
 }
 
 .decrease{
     background-color: orange;
+    border-radius: 20px; 
+    padding: 10px 20px; 
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin:10px;
 }

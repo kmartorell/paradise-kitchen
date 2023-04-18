@@ -10,6 +10,7 @@ function PageTitle()
     var email = ud.email;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
+    var login = ud.login;
     
 
     console.log(ud);
@@ -24,7 +25,7 @@ function PageTitle()
                 <br/>
                 <h3>Name: {firstName} {lastName}</h3>
                 <h3>Email: {email}</h3>
-                <h3>Username: ********</h3>
+                <h3>Username: {login}</h3>
 
         </center>
    );

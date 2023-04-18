@@ -88,7 +88,7 @@ function Login()
                     var lastName = ud.payload.lastName;
                     user = {firstName:firstName,lastName:lastName,id:userId}
                 }else{
-                    user = {firstName:res.firstName,lastName:res.lastName,id:res.id, email:res.email}
+                    user = {firstName:res.firstName,lastName:res.lastName,id:res.id, email:res.email, login: res.login}
                     console.log("user id type is: "+typeof(user.id));
                 }
                 

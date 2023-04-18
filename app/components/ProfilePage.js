@@ -6,6 +6,11 @@ import axios from 'axios';
 const ProfilePage = ({navigation, route}) =>
 {
 
+  const uFirstName = route.params.firstName;
+  const uLastName = route.params.lastName;
+  const uEmail = route.params.email;
+  const uLogin = route.params.login;
+
   return(
     <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
         <SafeAreaView style={styles.container}>
@@ -13,7 +18,10 @@ const ProfilePage = ({navigation, route}) =>
             <View style={styles.mainLanding}>
                 <View style={styles.buttonHolder}>
                   <Text style={styles.header}>Profile Page!</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                  <Text style={styles.profileSubheader}>Name: {uFirstName} {uLastName}</Text>
+                  <Text style={styles.profileSubheader}>Email: {uEmail}</Text>
+                  <Text style={styles.profileSubheader}>Username: {uLogin}</Text>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName, lastName: route.params.lastName, email: route.params.email, login: route.params.login})}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>
@@ -50,6 +58,12 @@ const styles = StyleSheet.create({
       color: 'green',
       textAlign: 'center',
   },
+  profileSubheader: {
+    fontSize: 20,
+    paddingBottom: 10,
+    color: 'black',
+    textAlign: 'center',
+},
   buttonStyle:{
     backgroundColor:'orange',
     width:"80%",

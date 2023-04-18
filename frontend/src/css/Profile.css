@@ -1,1 +1,12 @@
-
+.ProfilePageBox{ /* landing page screen */
+    margin: 10px;
+    margin-right:350px;
+    margin-left:350px;
+    justify-content: center;
+    padding-bottom: 5%;
+    box-shadow: 0.2px 0.2px 2px 2px rgba(0, 0, 0, 0.188) , -0.2px -0.2px 2px 2px rgba(0, 0, 0, 0.188);
+    background-color:white;
+    border-radius: 30px;
+    position:relative;
+    top: 60px;
+  }

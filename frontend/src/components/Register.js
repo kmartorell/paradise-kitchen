@@ -243,7 +243,7 @@ function Register()
                     </div>
                 </div>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Register" onClick={showEmailForm} />
+                        <button type="button" id="RegisterButton" class="buttons" onClick={showEmailForm}> Register</button>
                 </div>
             </div>
             <div class="verifyEmailBox">

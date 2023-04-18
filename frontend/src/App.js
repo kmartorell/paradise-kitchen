@@ -10,6 +10,7 @@ import SearchRecipes from './pages/SearchRecipesPage';
 import ViewRecipes from './pages/ViewRecipesPage';
 import ViewProfile from './pages/ViewProfilePage';
 import CreateRecipes from './pages/CreateRecipesPage';
+import EditRecipes from './pages/EditRecipesPage';
 
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
         <Route path="/create" index element={<CreateRecipes />} />
         <Route path="/profile" index element={<ViewProfile />} />
         <Route path="/view" index element={<ViewRecipes />} />
+        <Route path="/edit" index element={<EditRecipes />} />
       </Routes>
     </BrowserRouter>
   );

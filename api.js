@@ -382,6 +382,16 @@ exports.setApp = function ( app, client )
     const {id, name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken } = req.body;
     //console.log(JSON.stringify(req.body));
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+
     const updateRecipe = await Recipe.findByIdAndUpdate(id, {$set: {Name: name, Minutes: minutes, Submitted: submitted, Tags: tags, Nutrition: nutrition, N_Steps: n_steps, 
       Steps: steps, Description: description, Ingredients: ingredients, N_Ingredients: n_ingredients, CreatedBy: createdby}}, {new: true});
     var error = '';

@@ -242,8 +242,11 @@ function PageTitle()
         //GlobalID;  <--- This is the ID index for the recipe (that was clicked on) in the array.
         //GlobalDataInput; <--- This is the array of recipes shown by search.
 
+        const recipeInfo = GlobalDataInput[GlobalID];
+        let jsonRecipeInfo = JSON.stringify(recipeInfo);
+        localStorage.setItem('specificrecipe',jsonRecipeInfo);
         //GlobalDataInput[GlobalID] gets you the info of the specific recipe of the button you just pressed.
-
+        window.location.href = '/edit';
         //You could take these as parameters to the edit recipe page and use that for the editing information.
 
     }

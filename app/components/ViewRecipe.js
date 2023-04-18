@@ -13,7 +13,6 @@ const ViewRecipe = ({navigation, route}) =>
 
     const favoriteRecipe = async (userId, recipeId) =>
     {
-      console.log(userId);
       fetch('https://paradise-kitchen.herokuapp.com/api/addfavorite', {
           method: 'POST',
           headers: {
@@ -77,7 +76,6 @@ const ViewRecipe = ({navigation, route}) =>
           setFavorited(true);
         else if(data.error == "remove favorite success")
           setFavorited(false);
-        console.log(data);
       }, [data]);
 
     return(
@@ -150,10 +148,6 @@ const ViewRecipe = ({navigation, route}) =>
 
                     }
                   </View>
-
-                  <TouchableOpacity style={styles.buttonStyle}>
-                      <Text style={styles.buttonText}>Favorite Recipe</Text>
-                  </TouchableOpacity>
 
                   <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
                       <Text style={styles.buttonText}>Home</Text>

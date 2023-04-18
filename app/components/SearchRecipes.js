@@ -12,6 +12,8 @@ const SearchRecipes = ({navigation, route}) =>
 
     const doSearch = async (search) =>
     {
+      if(search == '')
+        onChangeSearch('');
       fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
           method: 'POST',
           headers: {
@@ -57,7 +59,6 @@ const SearchRecipes = ({navigation, route}) =>
     useEffect(() => {
       const doSearch = navigation.addListener('focus',() =>
       {
-        console.log("Doing Search");
         fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
           method: 'POST',
           headers: {
@@ -76,7 +77,6 @@ const SearchRecipes = ({navigation, route}) =>
           console.error(error);
         });
         // Grab user info
-        console.log("Trying to get login info with: ",route.params.user);
         fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
           method: 'POST',
           headers: {
@@ -84,7 +84,7 @@ const SearchRecipes = ({navigation, route}) =>
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              id: route.params.user.id,
+              userId: route.params.user.id,
           })
         })    
         .then(response => response.json())
@@ -97,9 +97,6 @@ const SearchRecipes = ({navigation, route}) =>
       });
       return doSearch;
     }, [navigation]);
-
-    console.log("Results:",results);
-
 
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -125,13 +122,20 @@ const SearchRecipes = ({navigation, route}) =>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>
-
+                { results && 
                 <View style={styles.recipeList}>
                   <Text style={styles.subheader}>Recipe List</Text>
-                    { results && 
+                    { results.error != "search fail" && 
                       results.map(renderCard)
                     }
+                    { results.error == "search fail" && 
+                    <View style={styles.noResultsDiv} >
+                      <Text style={styles.noResults}>No Results Found</Text>
+                    </View>
+                    }
                 </View>
+                }
+                
             </SafeAreaView>
           </ScrollView>
       </ImageBackground>
@@ -310,10 +314,22 @@ const styles = StyleSheet.create({
     paddingTop:4,
     paddingBottom:4
   },  
-  buttonIcon:{
+  buttonIcon: {
     marginTop:'auto',
     width:30,
     height:30
-  }
+  },
+  noResults: {
+    textAlign:'center',
+    justifyContent:'center',
+    fontSize:16,
+  },  
+  noResultsDiv: {
+    paddingTop:20,
+    textAlign:'center',
+    justifyContent:'center',
+    width:'100%'
+  }  
+
 });
 export default SearchRecipes;

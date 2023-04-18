@@ -7,6 +7,7 @@ const Landing = ({navigation, route}) =>
 {
 
   const firstName = route.params.firstName;
+  const [user, setUser] = React.useState('');
 
   const doLogout = event => 
   {
@@ -15,26 +16,50 @@ const Landing = ({navigation, route}) =>
       window.location.href = '/';
   };
 
-    console.log(route.params.id);
+  useEffect(() => {
+    const openLanding = navigation.addListener('focus',() =>
+    {
+      // Grab user info
+      fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
+        method: 'POST',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            userId: route.params.id,
+        })
+      })    
+      .then(response => response.json())
+      .then(json => {
+          setUser(json);
+      })
+      .catch(error => {
+        console.error(error);
+      });
+    });
+    return openLanding;
+  }, [navigation]);
+
  
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
           <SafeAreaView style={styles.container}>
               <Image source={Images.logo} style={styles.logo} />
               <View style={styles.mainLanding}>
-                  <Text style={styles.header}>Welcome {firstName}</Text>
+                  <Text style={styles.header}>Welcome {user.firstName}</Text>
                   <View style={styles.buttonHolder}>
                   <Text style={styles.errorMessage}>{route.params.message}</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes', {user: route.params})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes', {user: user})}>
                       <Text style={styles.buttonText}>Search Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {user: route.params})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {user: user})}>
                       <Text style={styles.buttonText}>Your Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe', {user: route.params})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe', {user: user})}>
                       <Text style={styles.buttonText}>Create Recipe</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {user: route.params})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {user: user})}>
                       <Text style={styles.buttonText}>Profile Page</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonStyle} onPress={doLogout}>

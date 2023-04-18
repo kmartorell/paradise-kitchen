@@ -70,6 +70,20 @@ function PageTitle()
    }
 
 
+   const buttontoggle = async event => {
+
+      var _ud = localStorage.getItem('user_data');
+      var ud = JSON.parse(_ud);
+
+      var ButtonToggleUserID = GlobalDataInput[GlobalID].createdby.toString(16);
+      console.log("--" + ButtonToggleUserID + ":  " + ud.id);
+
+      if(ButtonToggleUserID == ud.id){
+         document.getElementById("PopupEditButton").style.visibility = 'visible';
+         document.getElementById("PopupDeleteButton").style.visibility = 'visible';
+      }
+   }
+
    const depopulatetable = async event => {
       $("#RecipeBoxes tbody tr").remove(); 
    }
@@ -127,6 +141,7 @@ function PageTitle()
                           // Data[e.currentTarget.id] to get the object of the recipe
 
         GlobalID = e.currentTarget.id;
+        buttontoggle();
         document.getElementById("RecipeName").innerHTML = "";
         document.getElementById("RecipeName").innerHTML = data[e.currentTarget.id].name;
 
@@ -345,4 +360,5 @@ function PageTitle()
    );
 };
 export default PageTitle;
+
 

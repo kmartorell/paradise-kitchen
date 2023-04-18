@@ -6,18 +6,21 @@ import axios from 'axios';
 const YourRecipes = ({navigation, route}) =>
 { 
 
-    return(
-      <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
-          <SafeAreaView style={styles.container}>
-              <Image source={Images.logo} style={styles.logo} />
-              <View style={styles.mainLanding}>
-                  <View style={styles.buttonHolder}>
-
-                  </View>
-              </View>
-          </SafeAreaView>
-    </ImageBackground>
-  );
+  return(
+    <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
+        <SafeAreaView style={styles.container}>
+            <Image source={Images.logo} style={styles.logo} />
+            <View style={styles.mainLanding}>
+                <View style={styles.buttonHolder}>
+                  <Text style={styles.header}>View your Recipes Page!</Text>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                        <Text style={styles.buttonText}>Home</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </SafeAreaView>
+  </ImageBackground>
+);
 };
 
 

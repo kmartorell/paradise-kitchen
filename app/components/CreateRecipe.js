@@ -6,6 +6,39 @@ import axios from 'axios';
 const CreateRecipe = ({navigation, route}) =>
 {
 
+  const [numTagInputs,setTagInputs] = React.useState(0);
+  const [numNutritionInputs,setNutritionInputs] = React.useState(0);
+  const [numStepInputs,setStepInputs] = React.useState(0);
+  const [numIngredientInputs,setIngredientInputs] = React.useState(0);
+
+  const decrementTagInputs = () => {
+     if(numTagInputs > 0)
+     {
+      setTagInputs(val=>val-1);
+     }
+  };
+
+  const decrementNutritionInputs = () => {
+    if(numNutritionInputs > 0)
+    {
+     setNutritionInputs(val=>val-1);
+    }
+ };
+
+  const decrementStepInputs = () => {
+    if(numStepInputs > 0)
+    {
+    setStepInputs(val=>val-1);
+    }
+  };
+
+  const decrementIngredientInputs = () => {
+    if(numIngredientInputs > 0)
+    {
+    setIngredientInputs(val=>val-1);
+    }
+  };
+
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
@@ -24,14 +57,71 @@ const CreateRecipe = ({navigation, route}) =>
                   <Text style={styles.textInputTitle}>Tags</Text>
                   <TextInput style = {styles.textInputStyle} placeholderTextColor='grey' placeholder="Enter a tag"/>
 
+                  {[...Array(numTagInputs).keys()].map(key=>
+                  {
+                    return <TextInput  key={key} placeholderTextColor='grey' placeholder="Enter a tag" style={styles.textInputStyle}/>
+                  })}
+
+                  <View style={styles.buttonRow}>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>setTagInputs(val=>val+1)}>
+                          <Text style={styles.buttonRowText}>Add Tag</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>decrementTagInputs()}>
+                          <Text style={styles.buttonRowText}>Remove Tag</Text>
+                      </TouchableOpacity>
+                  </View>
+
                   <Text style={styles.textInputTitle}>Nutrition Information</Text>
                   <TextInput style = {styles.textInputStyle} placeholderTextColor='grey' placeholder="Enter nutrition info"/>
+
+                  {[...Array(numNutritionInputs).keys()].map(key=>
+                  {
+                    return <TextInput  key={key} placeholderTextColor='grey' placeholder="Enter nutrition info" style={styles.textInputStyle}/>
+                  })}
+
+                  <View style={styles.buttonRow}>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>setNutritionInputs(val=>val+1)}>
+                          <Text style={styles.buttonRowText}>Add Info</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>decrementNutritionInputs()}>
+                          <Text style={styles.buttonRowText}>Remove Info</Text>
+                      </TouchableOpacity>
+                  </View>
 
                   <Text style={styles.textInputTitle}>Recipe Steps</Text>
                   <TextInput style = {styles.textInputStyle} placeholderTextColor='grey' placeholder="Enter new step"/>
 
+                  {[...Array(numStepInputs).keys()].map(key=>
+                  {
+                    return <TextInput  key={key} placeholderTextColor='grey' placeholder="Enter new step" style={styles.textInputStyle}/>
+                  })}
+
+                  <View style={styles.buttonRow}>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>setStepInputs(val=>val+1)}>
+                          <Text style={styles.buttonRowText}>Add Step</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>decrementStepInputs()}>
+                          <Text style={styles.buttonRowText}>Remove Step</Text>
+                      </TouchableOpacity>
+                  </View>
+
+
                   <Text style={styles.textInputTitle}>Ingredients</Text>
                   <TextInput style = {styles.textInputStyle} placeholderTextColor='grey' placeholder="Enter new ingredient"/>
+
+                  {[...Array(numIngredientInputs).keys()].map(key=>
+                  {
+                    return <TextInput  key={key} placeholderTextColor='grey' placeholder="Enter new ingredient" style={styles.textInputStyle}/>
+                  })}
+
+                  <View style={styles.buttonRow}>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>setIngredientInputs(val=>val+1)}>
+                          <Text style={styles.buttonRowText}>Add Item</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonRowStyle} onPress={()=>decrementIngredientInputs()}>
+                          <Text style={styles.buttonRowText}>Remove Item</Text>
+                      </TouchableOpacity>
+                  </View>
 
                   <Text style={styles.textInputTitle}>Recipe Description</Text>
                   <TextInput style = {styles.textBottomInputStyle} placeholderTextColor='grey' placeholder="Write a recipe description"/>
@@ -87,14 +177,6 @@ message: {
     color: 'green',
     textAlign: 'center',
 },
-buttonStyle:{
-  backgroundColor:'orange',
-  width:"80%",
-  padding:8,
-  marginTop:20,
-  marginBottom:12,
-  borderRadius:20,
-},
 textInputTitle: {
   color: 'black',
   fontSize: 27,
@@ -119,6 +201,31 @@ textBottomInputStyle: {
   marginBottom: 20,
   borderRadius: 10,
   paddingLeft: 10,
+},
+buttonRow: {
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+},
+buttonRowStyle:{
+  backgroundColor:'orange',
+  width: "50%",
+  padding: 8,
+  marginTop: 0,
+  marginBottom: 30,
+  borderRadius: 20,
+},
+buttonRowText: {
+  color: 'white',
+  fontSize: 18,
+  textAlign: 'center',
+},
+buttonStyle:{
+  backgroundColor:'orange',
+  width:"80%",
+  padding:8,
+  marginTop:20,
+  marginBottom:12,
+  borderRadius:20,
 },
 buttonText: {
   color: 'white',

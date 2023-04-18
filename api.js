@@ -356,7 +356,7 @@ exports.setApp = function ( app, client )
         var ret = [];
         for(var i = 0; i < searchRecipe.length; i++){
           ret[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
-            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 60),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error};
+            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 80),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error};
         }
         
       }
@@ -376,6 +376,15 @@ exports.setApp = function ( app, client )
     
     res.status(200).json(ret);
   });
+
+  function truncate(str, num) {
+    if (num > str.length){
+      return str;
+    } else{
+      str = str.substring(0,num);
+      return str+"...";
+    }
+  }
 
   app.post('/api/updaterecipe', async (req, res, next) =>
   {

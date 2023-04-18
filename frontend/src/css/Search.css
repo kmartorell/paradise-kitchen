@@ -211,6 +211,7 @@
     border-radius: 30px;
     font-size: 1.2em;
     cursor: pointer;
+    visibility: hidden;
 }
 #PopupEditButton:hover{
     background: rgb(255, 98, 0);
@@ -230,6 +231,7 @@
     border-radius: 30px;
     font-size: 1.2em;
     cursor: pointer;
+    visibility: hidden;
 }
 #PopupDeleteButton:hover{
     background: rgb(255, 98, 0);

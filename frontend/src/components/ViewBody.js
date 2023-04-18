@@ -62,6 +62,19 @@ function ViewPage()
         console.log(error);
     }); 
    
+    const buttontoggle = async event => {
+
+        var _ud = localStorage.getItem('user_data');
+        var ud = JSON.parse(_ud);
+  
+        var ButtonToggleUserID = (GlobalDataInput[GlobalID].createdby).toString(16);
+        console.log("--" + ButtonToggleUserID + ":  " + ud.id);
+  
+        if(ButtonToggleUserID == ud.id){
+           document.getElementById("Popup1EditButton").style.visibility = 'visible';
+           document.getElementById("Popup1DeleteButton").style.visibility = 'visible';
+        }
+     }
 
 
    const depopulatetable = async event => {
@@ -119,6 +132,7 @@ function ViewPage()
                           // Data[e.currentTarget.id] to get the object of the recipe
 
         GlobalID = e.currentTarget.id;
+        buttontoggle();
         document.getElementById("RecipeName").innerHTML = "";
         document.getElementById("RecipeName").innerHTML = data[e.currentTarget.id].name;
 
@@ -227,6 +241,43 @@ function ViewPage()
 
     }
 
+    function EditRecipe(){
+       
+        //GlobalID;  <--- This is the ID index for the recipe (that was clicked on) in the array.
+        //GlobalDataInput; <--- This is the array of recipes shown by search.
+
+        const recipeInfo = GlobalDataInput[GlobalID];
+        let jsonRecipeInfo = JSON.stringify(recipeInfo);
+        localStorage.setItem('specificrecipe',jsonRecipeInfo);
+        //GlobalDataInput[GlobalID] gets you the info of the specific recipe of the button you just pressed.
+        window.location.href = '/edit';
+        //You could take these as parameters to the edit recipe page and use that for the editing information.
+
+    }
+
+
+    function DeleteRecipe(){
+
+        if (window.confirm('Are you sure you wish to delete this Recipe?')) {
+
+            var obj = {id: GlobalDataInput[GlobalID].id};
+            var js = JSON.stringify(obj);
+            var config =
+            {
+                method: 'post',
+                url: bp.buildPath('api/deleterecipe'),
+                headers:
+                {
+                'Content-Type': 'application/json'
+                },
+                data: js
+            };
+            axios(config)
+
+            window.location.reload();
+        }
+    }   
+
    return(
         <center className='SearchPageBox'>
             <h1 id="SearchPageWords">
@@ -283,6 +334,8 @@ function ViewPage()
                                             </div>}
                 handleClose2={togglePopup}
                 RemoveRecipe2={UnFavoriteRecipe}
+                EditRecipe2={EditRecipe}
+                DeleteRecipe2={DeleteRecipe}
 
                 />}
             </div>
@@ -291,4 +344,5 @@ function ViewPage()
    );
 };
 export default ViewPage;
+
 

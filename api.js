@@ -90,10 +90,11 @@ exports.setApp = function ( app, client )
     var fn = '';
     var ln = '';
     var email = '';
+    var login = '';
     var fav = [];
 
-    const { id } = req.body;
-    const user = await User.findOne({_id:id});
+    const { userId } = req.body;
+    const user = await User.findOne({_id:userId});
     console.log(user);
     if(user){
       id = user._id;
@@ -102,6 +103,7 @@ exports.setApp = function ( app, client )
       email = user.email;
       ln = user.lastName;
       fav = user.favorites;
+      login = user.login;
       error = "Success!";
       try
       {

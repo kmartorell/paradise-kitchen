@@ -1,41 +1,24 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
 const SearchRecipes = ({navigation, route}) =>
 { 
     const [search, onChangeSearch] = React.useState('');
-    const [initiallySearched, onChangeInitialSearch] = useState(0);
     const [results, setResults] = React.useState('');
 
-    const renderCard = (card, index) => {
-      return(
-        <Card>
-          <Card.Body>
-            <Card.Title>
-              {card.title}
-            </Card.Title>
-            <Card.Text>
-              {card.text}
-            </Card.Text>
-          </Card.Body>
-        </Card>
-      );
-    };
-    
-    useEffect(() => {
-      const doSearch = async(text) =>
-      {
-        console.log("Doing Search");
-        fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
+
+    const doSearch = async (search) =>
+    {
+      fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              text: text,
+              text: search,
           })
         })    
         .then(response => response.json())
@@ -45,13 +28,47 @@ const SearchRecipes = ({navigation, route}) =>
         .catch(error => {
           console.error(error);
         });
+    };
+
+    const renderCard = (card, index) => {
+      return(
+        <View>
+            <Text>
+              {card.name}
+            </Text>
+            <Text>
+              {card.description}
+            </Text>
+        </View>
+      );
+    };
     
-        console.log("Results");
-        console.log(results);
-        onChangeInitialSearch(1);
-      };
-      doSearch(' ');
-    }, []);
+    useEffect(() => {
+      const doSearch = navigation.addListener('focus',() =>
+      {
+        console.log("Doing Search");
+        fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              text: ' ',
+          })
+        })    
+        .then(response => response.json())
+        .then(json => {
+            setResults(json);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      });
+      return doSearch;
+    }, [navigation]);
+
+    console.log("Results:",results);
 
 
     return(
@@ -68,46 +85,28 @@ const SearchRecipes = ({navigation, route}) =>
                         value={search}
                         placeholder="Type in a Name, Description, Ingredient or Tag here."
                     />
-                    <View style={styles.submitButton}>
-                        <Button style={styles.login} color="white" title="Search" onPress={() => doSearch({navigation}, search)}/>
-                    </View>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch(search)}>
+                        <Text style={styles.buttonText}>Search</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonStyle}>
+                        <Text style={styles.buttonText}>Reset</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                        <Text style={styles.buttonText}>Home</Text>
+                    </TouchableOpacity>
                 </View>
 
                 <View style={styles.recipeList}>
                   <Text style={styles.subheader}>Recipe List</Text>
-                    <View style={styles.recipeCard}>
-                    </View>
+                    { results && 
+                      results.map(renderCard)
+                    }
                 </View>
             </SafeAreaView>
           </ScrollView>
       </ImageBackground>
   );
 };
-
-    {/* return(
-      <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
-          <SafeAreaView style={styles.container}>
-              <Image source={Images.logo} style={styles.logo} />
-              <View style={styles.mainLanding}>
-                  <View style={styles.buttonHolder}>
-                    <Text style={styles.header}>Search Recipes Here!</Text>
-                      <TextInput style = {styles.searchRecipeText} placeholderTextColor='grey' placeholder="Search Name, Description, Ingredient or Tag."/>
-                      <TouchableOpacity style={styles.buttonStyle}>
-                          <Text style={styles.buttonText}>Search</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonStyle}>
-                          <Text style={styles.buttonText}>Reset</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
-                          <Text style={styles.buttonText}>Home</Text>
-                      </TouchableOpacity>
-                  </View>
-              </View>
-          </SafeAreaView>
-    </ImageBackground> */}
-
-
-
 const styles = StyleSheet.create({
   input: {
       height: 50,
@@ -116,6 +115,44 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       padding: 10,
       borderRadius:10,
+  },
+  buttonStyle:{
+    backgroundColor:'orange',
+    width:"80%",
+    padding:8,
+    marginTop:12,
+    marginBottom:6,
+    borderRadius:20,
+  },
+  textInputTitle: {
+    color: 'black',
+    fontSize: 27,
+    fontWeight: 'bold',
+  },
+  textInputStyle: {
+    color: 'black',
+    fontSize: 15,
+    borderWidth: 1,
+    height: 50,
+    width: '100%',
+    marginBottom: 30,
+    borderRadius: 10,
+    paddingLeft: 10,
+  },
+  textBottomInputStyle: {
+    color: 'black',
+    fontSize: 15,
+    borderWidth: 1,
+    height: 50,
+    width: '100%',
+    marginBottom: 20,
+    borderRadius: 10,
+    paddingLeft: 10,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 20,
+    textAlign: 'center',
   },
   container: {
       alignItems: 'center',

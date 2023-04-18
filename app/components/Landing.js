@@ -24,16 +24,17 @@ const Landing = ({navigation, route}) =>
               <View style={styles.mainLanding}>
                   <Text style={styles.header}>Welcome {firstName}</Text>
                   <View style={styles.buttonHolder}>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes', {firstName: route.params.firstName})}>
+                  <Text style={styles.errorMessage}>{route.params.message}</Text>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes', {user: route.params})}>
                       <Text style={styles.buttonText}>Search Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {user: route.params})}>
                       <Text style={styles.buttonText}>Your Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe', {user: route.params})}>
                       <Text style={styles.buttonText}>Create Recipe</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {user: route.params})}>
                       <Text style={styles.buttonText}>Profile Page</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonStyle} onPress={doLogout}>
@@ -84,6 +85,11 @@ const styles = StyleSheet.create({
   searchRecipeText: {
     color: 'white',
     fontSize: 30,
+    textAlign: 'center',
+  },
+  errorMessage: {
+    fontSize: 20,
+    color: 'red',
     textAlign: 'center',
   },
   buttonText: {

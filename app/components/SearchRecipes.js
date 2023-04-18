@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -7,7 +7,8 @@ const SearchRecipes = ({navigation, route}) =>
 { 
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
-
+    const [user, setUser] = React.useState('');
+    
 
     const doSearch = async (search) =>
     {
@@ -32,14 +33,24 @@ const SearchRecipes = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <View>
-            <Text>
-              {card.name}
-            </Text>
-            <Text>
-              {card.description}
-            </Text>
-        </View>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card, user:user})}>
+              <View style={styles.cardInfo}>
+                <Text style={styles.cardTitle}>
+                  {card.name.toUpperCase()}
+                </Text>
+                <Text style={styles.cardTags}>
+                  {card.tags.map(i => '+' + i).slice(0,4).join('\n')}
+                </Text>
+                <Text style={styles.cardDescription}>
+                  {card.shortDescription}
+                </Text>
+              </View>
+              <View style={styles.cardButton}>
+                <View>
+                  <Image source={Images.recipeClickIcon} style={styles.buttonIcon} />
+                </View>
+              </View>
+        </TouchableOpacity>
       );
     };
     
@@ -54,12 +65,31 @@ const SearchRecipes = ({navigation, route}) =>
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              text: ' ',
+              text: '',
           })
         })    
         .then(response => response.json())
         .then(json => {
             setResults(json);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+        // Grab user info
+        fetch('https://paradise-kitchen.herokuapp.com/api/login', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              login: route.params.user.login,
+              password: route.params.user.password,
+          })
+        })    
+        .then(response => response.json())
+        .then(json => {
+            setUser(json);
         })
         .catch(error => {
           console.error(error);
@@ -88,7 +118,7 @@ const SearchRecipes = ({navigation, route}) =>
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch(search)}>
                         <Text style={styles.buttonText}>Search</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch('')}>
                         <Text style={styles.buttonText}>Reset</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
@@ -169,7 +199,7 @@ const styles = StyleSheet.create({
   recipeList: {
     width:'90%',
     backgroundColor:'white',
-    alignItems:'center',
+    alignItems:'left',
     padding:22,
     borderRadius:20,
     marginTop:30,
@@ -197,7 +227,7 @@ const styles = StyleSheet.create({
       fontSize: 20,
       textAlign: 'center',
       fontWeight:'bold',
-      width:"90%",
+      width:"100%",
       marginTop:20,
   },
   message: {
@@ -245,5 +275,45 @@ const styles = StyleSheet.create({
   scrollView: {
     height:'100%'
   },
+  cardMain: {
+    flex:1,
+    flexDirection:'row',
+    height:160,
+    overflow:'hidden',
+    margin:6,
+    textAlign:'left',
+    borderLeftColor:'orange',
+    borderLeftWidth:5,
+    padding:12,
+  },  
+  cardTitle: {
+    textAlign:'left',
+    fontWeight:'bold',
+    fontSize:16,
+
+  },
+  cardDescription: {
+    textAlign:'left',
+  },
+  cardInfo: {
+    flex:15,
+    width:'90%'
+  },  
+  cardButton: {
+    flex:1,
+    justifyContent:'center',
+    paddingLeft:6
+  },  
+  cardTags: {
+    color:'grey',
+    width:'100%',
+    paddingTop:4,
+    paddingBottom:4
+  },  
+  buttonIcon:{
+    marginTop:'auto',
+    width:30,
+    height:30
+  }
 });
 export default SearchRecipes;

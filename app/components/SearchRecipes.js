@@ -76,15 +76,15 @@ const SearchRecipes = ({navigation, route}) =>
           console.error(error);
         });
         // Grab user info
-        fetch('https://paradise-kitchen.herokuapp.com/api/login', {
+        console.log("Trying to get login info with: ",route.params.user);
+        fetch('https://paradise-kitchen.herokuapp.com/api/getUserInfo', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              login: route.params.user.login,
-              password: route.params.user.password,
+              id: route.params.user.id,
           })
         })    
         .then(response => response.json())

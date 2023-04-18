@@ -81,6 +81,57 @@ exports.setApp = function ( app, client )
     res.status(200).json(ret);
   });
 
+  app.post('/api/getUser', async (req, res, next) => 
+  {
+    // incoming: login, password
+    // outgoing: id, firstName, lastName, error, favorited recipes, created recipes
+    var error = '';
+    var id = -1;
+    var fn = '';
+    var ln = '';
+    var email = '';
+    var fav = [];
+
+    const { id } = req.body;
+    const user = await User.findOne({_id:id});
+    console.log(user);
+    if(user){
+      id = user._id;
+      console.log("Id from login is: "+id);
+      fn = user.firstName;
+      email = user.email;
+      ln = user.lastName;
+      fav = user.favorites;
+      error = "Success!";
+      try
+      {
+        const token = require("./createJWT.js");
+        ret = token.createToken( fn, ln, id, email, fav );
+      }
+      catch(e)
+      {
+        //ret = {error:e.message};
+        ret = res.status(500);
+      }
+
+    }
+
+    var ret = { id:id, firstName:fn, lastName:ln, email:email, login: login, favorites:fav, error:error};
+    
+
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+    
+    res.status(200).json(ret);
+  });
+
   app.post('/api/register', async (req, res, next) => 
   {
     // incoming: firstName, lastName, email, login, password, createdRecipes, favoriteRecipes

@@ -356,7 +356,7 @@ exports.setApp = function ( app, client )
         var ret = [];
         for(var i = 0; i < searchRecipe.length; i++){
           ret[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
-            description: searchRecipe[i].Description, ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error};
+            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 60),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error};
         }
         
       }

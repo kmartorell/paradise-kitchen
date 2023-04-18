@@ -80,6 +80,10 @@ function ForgotPassword()
         });
     }
 
+    function GoBack(){
+        window.location.href = 'javascript:history.back()';
+    }
+
 
 return(
     <div class="register-app">
@@ -102,7 +106,8 @@ return(
                     </div>
                 </div>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Send Email" onClick={doForgotPassword} />
+                        <button type="button" id="SendEmailButton" class="buttons" onClick={doForgotPassword}> Send Email</button>
+                        <button type="button" id="ReturnXButton" class="buttons" onClick={GoBack}> Return</button>
                 </div>
             </div>
         </div>

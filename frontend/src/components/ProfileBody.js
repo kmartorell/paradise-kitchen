@@ -1,5 +1,6 @@
 import React from 'react';
 import '../css/Profile.css'
+import { userInfo } from 'os';
 
 function PageTitle()
 {
@@ -9,14 +10,21 @@ function PageTitle()
     var email = ud.email;
     var firstName = ud.firstName;
     var lastName = ud.lastName;
+    
+
+    console.log(ud);
 
    return(
-        <center className='HomePageBox'>
+        <center className='ProfilePageBox'>
                 <h1 id="HomePageWords">
-                    {firstName} {lastName}
+                    Welcome to your profile!
                 </h1>
-                <br></br>
+                <br/>
+                <br/>
+                <br/>
+                <h3>Name: {firstName} {lastName}</h3>
                 <h3>Email: {email}</h3>
+                <h3>Username: ********</h3>
 
         </center>
    );

@@ -384,8 +384,6 @@ exports.setApp = function ( app, client )
       'GET, POST, PATCH, DELETE, OPTIONS'
     );
     
-    
-    //console.log(JSON.stringify(req.body));
     const regex = {"$regex": text, "$options": "i"};
     const searchRecipe = await Recipe.find({$or:[
         {Name:regex},
@@ -555,7 +553,51 @@ exports.setApp = function ( app, client )
 
     
     res.status(200).json(ret);
-  })
+  });
+
+  app.post('/api/showCreated', async (req, res, next) =>
+  {
+    const {userId, jwtToken} = req.body;
+    
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+    
+    const createdRecipes = await Recipe.find({createdBy:userId});
+    var error = '';
+    try
+    {
+      if(createdRecipes.length > 0){
+        error = "created pull success";
+        var ret = [];
+        for(var i = 0; i < createdRecipes.length; i++){
+          ret[i] = {id: createdRecipes[i]._id, name: createdRecipes[i].Name, minutes: createdRecipes[i].Minutes, submitted: createdRecipes[i].Submitted, tags: createdRecipes[i].Tags, nutrition: createdRecipes[i].Nutrition, n_steps: createdRecipes[i].N_Steps, steps: createdRecipes[i].Steps, 
+            description: createdRecipes[i].Description, createdRecipes:truncate(createdRecipes[i].Description, 80),  ingredients: createdRecipes[i].Ingredients, n_ingredients: createdRecipes[i].N_Ingredients, createdby: createdRecipes[i].CreatedBy, error: error};
+        }
+        
+      }
+      else{
+        error = "created pull fail";
+        var ret = {error:error};
+      }
+    }
+    catch(e)
+    {
+      error = e.toString();
+      var ret = { error: error, jwtToken: refreshedToken };
+    }
+
+    var refreshedToken = null;
+
+    
+    res.status(200).json(ret);
+  });
 
   app.post('/api/addfavorite', async (req, res, next) =>
   {

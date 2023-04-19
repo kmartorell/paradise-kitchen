@@ -8,30 +8,6 @@ const SearchRecipes = ({navigation, route}) =>
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
     const [user, setUser] = React.useState('');
-    
-
-    const doSearch = async (search) =>
-    {
-      if(search == '')
-        onChangeSearch('');
-      fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              text: search,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setResults(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    };
 
     const renderCard = (card, index) => {
       return(
@@ -57,16 +33,16 @@ const SearchRecipes = ({navigation, route}) =>
     };
     
     useEffect(() => {
-      const doSearch = navigation.addListener('focus',() =>
+      const doCreatedPull = navigation.addListener('focus',() =>
       {
-        fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
+        fetch('https://paradise-kitchen.herokuapp.com/api/showCreated', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-              text: '',
+              userId: route.params.user.id,
           })
         })    
         .then(response => response.json())
@@ -95,7 +71,8 @@ const SearchRecipes = ({navigation, route}) =>
           console.error(error);
         });
       });
-      return doSearch;
+      console.log(results);
+      return doCreatedPull;
     }, [navigation]);
 
     return(

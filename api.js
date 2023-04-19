@@ -303,14 +303,7 @@ exports.setApp = function ( app, client )
     }
     */
 
-    var bighexValue = createdby;
-    console.log("Big hexvalue is: "+bighexValue);
-    var bignumValue = bigInt(bighexValue, 16);
-    var bigNumValueOf = bignumValue.valueOf();
-    console.log("Big num value is: "+bigNumValueOf);
-    var returnValue = bigNumValueOf.toString(16);
-    console.log("return value is: "+returnValue);
-    const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:bigNumValueOf});
+    const newRecipe = new Recipe({Name:name, Minutes:minutes, Submitted:submitted, Tags:tags, Nutrition:nutrition, N_Steps:n_steps, Steps:steps, Description:description, Ingredients:ingredients, N_Ingredients:n_ingredients, CreatedBy:createdby});
     var error = '';
     console.log("New recipe is: "+newRecipe);
 

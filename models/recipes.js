@@ -46,7 +46,7 @@ N_Ingredients: {
   required: true
 },
 CreatedBy: {
-  type: Number,
+  type: String,
   required: true
 },
 });

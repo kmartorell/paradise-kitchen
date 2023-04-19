@@ -75,7 +75,7 @@ function PageTitle()
       var _ud = localStorage.getItem('user_data');
       var ud = JSON.parse(_ud);
 
-      var ButtonToggleUserID = GlobalDataInput[GlobalID].createdby.toString(16);
+      var ButtonToggleUserID = GlobalDataInput[GlobalID].createdby;
       console.log("--" + ButtonToggleUserID + ":  " + ud.id);
 
       if(ButtonToggleUserID == ud.id){

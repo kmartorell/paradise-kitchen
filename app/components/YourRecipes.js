@@ -44,7 +44,7 @@ const SearchRecipes = ({navigation, route}) =>
           body: JSON.stringify({
               userId: route.params.user.id,
           })
-        })    
+        })
         .then(response => response.json())
         .then(json => {
             setResults(json);
@@ -102,10 +102,10 @@ const SearchRecipes = ({navigation, route}) =>
                 { results && 
                 <View style={styles.recipeList}>
                   <Text style={styles.subheader}>Recipe List</Text>
-                    { results.error != "search fail" && 
+                    { results.error != "created pull fail" && 
                       results.map(renderCard)
                     }
-                    { results.error == "search fail" && 
+                    { results.error == "created pull fail" && 
                     <View style={styles.noResultsDiv} >
                       <Text style={styles.noResults}>No Results Found</Text>
                     </View>

@@ -568,8 +568,7 @@ exports.setApp = function ( app, client )
       'Access-Control-Allow-Methods',
       'GET, POST, PATCH, DELETE, OPTIONS'
     );
-    
-    const createdRecipes = await Recipe.find({createdBy:userId});
+    const createdRecipes = await Recipe.find({CreatedBy:userId});
     var error = '';
     try
     {

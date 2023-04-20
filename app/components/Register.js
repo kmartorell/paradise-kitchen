@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, ImageBackground, Image, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, ImageBackground, Image, ScrollView, Keyboard, TouchableWithoutFeedback, TouchableOpacity } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -208,6 +208,9 @@ const Register = ({navigation}) =>
                                 <View style={styles.submitButton}>
                                     <Button style={styles.login} color="white" title="Register" onPress={() => showEmailForm({navigation}, firstName, lastName, email, username, password, confirmPassword)}/>
                                 </View>
+                                <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Login')}>
+                                    <Text style={styles.buttonText}>Home</Text>
+                                </TouchableOpacity>
                             </View>
                             }
 
@@ -259,6 +262,19 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height:'100%'
     },
+    buttonStyle:{
+        backgroundColor:'orange',
+        width:"80%",
+        padding:8,
+        marginTop:20,
+        marginBottom:12,
+        borderRadius:20,
+      },
+      buttonText: {
+        color: 'white',
+        fontSize: 25,
+        textAlign: 'center',
+      },
     scrollView: {
         height:'100%'
     },

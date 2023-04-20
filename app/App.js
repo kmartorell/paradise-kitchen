@@ -10,6 +10,7 @@ import SearchRecipes from './components/SearchRecipes'
 import YourRecipes from './components/YourRecipes'
 import ViewRecipe from './components/ViewRecipe'
 import CreateRecipe from './components/CreateRecipe'
+import EditRecipe from './components/EditRecipe'
 import ProfilePage from './components/ProfilePage'
 import ViewYourRecipes from './components/ViewYourRecipes'
 import YourFavorites from './components/YourFavorites'
@@ -24,18 +25,19 @@ const App = () => {
         screenOptions={{
           headerShown: false
         }}>
-        <Stack.Screen name="Login" component={Login}/>
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Forgot Password" component={ForgotPassword} />
-        <Stack.Screen name="Landing" component={Landing} />
-        <Stack.Screen name="SearchRecipes" component={SearchRecipes} />
-        <Stack.Screen name="ViewRecipe" component={ViewRecipe} />
-        <Stack.Screen name="YourRecipes" component={YourRecipes} />
-        <Stack.Screen name="ViewYourRecipes" component={ViewYourRecipes} />
-        <Stack.Screen name="YourFavorites" component={YourFavorites} />
-        <Stack.Screen name="ViewYourFavorites" component={ViewYourFavorites} />
-        <Stack.Screen name="CreateRecipe" component={CreateRecipe} />
-        <Stack.Screen name="ProfilePage" component={ProfilePage} />
+        <Stack.Screen name="Login" component={Login} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="Register" component={Register} options={{gestureEnabled: false}} />
+        <Stack.Screen name="Forgot Password" component={ForgotPassword} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="Landing" component={Landing} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="SearchRecipes" component={SearchRecipes} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="ViewRecipe" component={ViewRecipe} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="YourRecipes" component={YourRecipes} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="ViewYourRecipes" component={ViewYourRecipes} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="YourFavorites" component={YourFavorites} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="ViewYourFavorites" component={ViewYourFavorites} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="CreateRecipe" component={CreateRecipe} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="EditRecipe" component={EditRecipe} options={{gestureEnabled: false}}/>
+        <Stack.Screen name="ProfilePage" component={ProfilePage} options={{gestureEnabled: false}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

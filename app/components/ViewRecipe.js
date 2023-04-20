@@ -59,23 +59,32 @@ const ViewRecipe = ({navigation, route}) =>
 
     const deleteRecipe = async (recipeId) =>
     {
-      fetch('https://paradise-kitchen.herokuapp.com/api/deleteRecipe', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              id: recipeId,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setDeleteData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      Alert.alert('Confirm Delete', 'Are you sure you want to delete this record?', [
+        {text: 'OK', onPress: () => 
+            fetch('https://paradise-kitchen.herokuapp.com/api/deleteRecipe', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  id: recipeId,
+              })
+            })    
+            .then(response => response.json())
+            .then(json => {
+                setDeleteData(json);
+            })
+            .catch(error => {
+              console.error(error);
+            })
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ]);
     };
 
     useEffect(() => {
@@ -103,6 +112,11 @@ const ViewRecipe = ({navigation, route}) =>
           setFavorited(false);
       }, [data]);
 
+
+      useEffect(() => {
+        if(deleteData.error == "delete success")
+            navigation.navigate('Landing', {successmessage:"Delete successful"})
+      }, [deleteData]);
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} contentInsetAdjustmentBehavior="automatic">
@@ -131,7 +145,7 @@ const ViewRecipe = ({navigation, route}) =>
                   </View>
                   {created &&
                   <View style={styles.controls}>
-                    <TouchableOpacity style={styles.controlButton} onPress={() => navigation.navigate('SearchRecipes',{user: route.params.user})}>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => navigation.navigate('EditRecipe',{user: route.params.user, recipe:recipe})}>
                       <Image source={Images.edit} style={styles.editIcon} />
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.controlButton} onPress={() => deleteRecipe(recipe.id)}>

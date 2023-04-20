@@ -11,7 +11,7 @@ const YourRecipes = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourRecipes', {recipe: card, user:user})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card, user:user})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}

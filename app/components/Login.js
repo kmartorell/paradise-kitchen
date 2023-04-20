@@ -134,6 +134,20 @@ const styles = StyleSheet.create({
         marginTop:30,
         marginBottom:250,
     },
+    buttonStyle:{
+        backgroundColor:'orange',
+        width:"80%",
+        padding:8,
+        marginTop:20,
+        marginBottom:12,
+        borderRadius:20,
+      },
+      buttonText: {
+        color: 'black',
+        fontSize: 18,
+        textAlign: 'center',
+        margin:8
+      },
     logo: {
         width:125,
         height:125

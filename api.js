@@ -525,8 +525,9 @@ exports.setApp = function ( app, client )
     for(var i = 0; i < favoriteIds.length; i++){
       favorites.push(await Recipe.findById(favoriteIds[i]));
     }
-    favorites
+
     var error = '';
+    
     try
     {
       if(favorites.length > 0){
@@ -534,7 +535,7 @@ exports.setApp = function ( app, client )
         var ret = [];
         for(var i = 0; i < favorites.length; i++){
           ret[i] = {id: favorites[i]._id, name: favorites[i].Name, minutes: favorites[i].Minutes, submitted: favorites[i].Submitted, tags: favorites[i].Tags, nutrition: favorites[i].Nutrition, n_steps: favorites[i].N_Steps, steps: favorites[i].Steps, 
-            description: favorites[i].Description, ingredients: favorites[i].Ingredients, n_ingredients: favorites[i].N_Ingredients, createdby: favorites[i].CreatedBy, error: error};
+            description: favorites[i].Description, shortDescription: truncate(favorites[i].Description, 80), ingredients: favorites[i].Ingredients, n_ingredients: favorites[i].N_Ingredients, createdby: favorites[i].CreatedBy, error: error};
         }
         
       }
@@ -577,7 +578,7 @@ exports.setApp = function ( app, client )
         var ret = [];
         for(var i = 0; i < createdRecipes.length; i++){
           ret[i] = {id: createdRecipes[i]._id, name: createdRecipes[i].Name, minutes: createdRecipes[i].Minutes, submitted: createdRecipes[i].Submitted, tags: createdRecipes[i].Tags, nutrition: createdRecipes[i].Nutrition, n_steps: createdRecipes[i].N_Steps, steps: createdRecipes[i].Steps, 
-            description: createdRecipes[i].Description, createdRecipes:truncate(createdRecipes[i].Description, 80),  ingredients: createdRecipes[i].Ingredients, n_ingredients: createdRecipes[i].N_Ingredients, createdby: createdRecipes[i].CreatedBy, error: error};
+            description: createdRecipes[i].Description, shortDescription: truncate(createdRecipes[i].Description, 80),  ingredients: createdRecipes[i].Ingredients, n_ingredients: createdRecipes[i].N_Ingredients, createdby: createdRecipes[i].CreatedBy, error: error};
         }
         
       }

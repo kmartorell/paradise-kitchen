@@ -11,6 +11,8 @@ import YourRecipes from './components/YourRecipes'
 import ViewRecipe from './components/ViewRecipe'
 import CreateRecipe from './components/CreateRecipe'
 import ProfilePage from './components/ProfilePage'
+import ViewYourRecipes from './components/ViewYourRecipes'
+import YourFavorites from './components/YourFavorites'
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +30,8 @@ const App = () => {
         <Stack.Screen name="SearchRecipes" component={SearchRecipes} />
         <Stack.Screen name="ViewRecipe" component={ViewRecipe} />
         <Stack.Screen name="YourRecipes" component={YourRecipes} />
+        <Stack.Screen name="ViewYourRecipes" component={ViewYourRecipes} />
+        <Stack.Screen name="YourFavorites" component={YourFavorites} />
         <Stack.Screen name="CreateRecipe" component={CreateRecipe} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
       </Stack.Navigator>

@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Ale
 import Images from './Images';
 import axios from 'axios';
 
-const SearchRecipes = ({navigation, route}) =>
+const YourFavorites = ({navigation, route}) =>
 { 
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
@@ -33,9 +33,9 @@ const SearchRecipes = ({navigation, route}) =>
     };
     
     useEffect(() => {
-      const doCreatedPull = navigation.addListener('focus',() =>
+      const doFavoritesPull = navigation.addListener('focus',() =>
       {
-        fetch('https://paradise-kitchen.herokuapp.com/api/showCreated', {
+        fetch('https://paradise-kitchen.herokuapp.com/api/showfavorites', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
@@ -72,7 +72,7 @@ const SearchRecipes = ({navigation, route}) =>
         });
       });
       console.log(results);
-      return doCreatedPull;
+      return doFavoritesPull;
     }, [navigation]);
 
     return(
@@ -295,4 +295,4 @@ const styles = StyleSheet.create({
   }  
 
 });
-export default SearchRecipes;
+export default YourFavorites;

@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Ale
 import Images from './Images';
 import axios from 'axios';
 
-const SearchRecipes = ({navigation, route}) =>
+const YourRecipes = ({navigation, route}) =>
 { 
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
@@ -295,4 +295,4 @@ const styles = StyleSheet.create({
   }  
 
 });
-export default SearchRecipes;
+export default YourRecipes;

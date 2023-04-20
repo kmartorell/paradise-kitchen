@@ -243,7 +243,7 @@ function PageTitle()
 }
 
    return(
-        <center className='HomePageBox'>
+        <center className='HomePageBox1'>
                 <h1 id="HomePageWords">
                     Edit the Recipe!
                 </h1>

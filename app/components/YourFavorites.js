@@ -11,7 +11,7 @@ const YourFavorites = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourRecipes', {recipe: card, user:user})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourFavorites', {recipe: card, user:user})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -82,7 +82,7 @@ const YourFavorites = ({navigation, route}) =>
                 <Image source={Images.logo} style={styles.logo} />
                 <Text style={styles.header}>Paradise Kitchen</Text>
                 <View style={styles.mainLanding}>
-                  <Text style={styles.subheader}>View Your Created Recipes Here!</Text>
+                  <Text style={styles.subheader}>View Your Favorite Recipes Here!</Text>
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>

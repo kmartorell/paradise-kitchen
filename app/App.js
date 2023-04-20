@@ -13,6 +13,7 @@ import CreateRecipe from './components/CreateRecipe'
 import ProfilePage from './components/ProfilePage'
 import ViewYourRecipes from './components/ViewYourRecipes'
 import YourFavorites from './components/YourFavorites'
+import ViewYourFavorites from './components/ViewYourFavorites'
 
 const Stack = createNativeStackNavigator();
 
@@ -32,6 +33,7 @@ const App = () => {
         <Stack.Screen name="YourRecipes" component={YourRecipes} />
         <Stack.Screen name="ViewYourRecipes" component={ViewYourRecipes} />
         <Stack.Screen name="YourFavorites" component={YourFavorites} />
+        <Stack.Screen name="ViewYourFavorites" component={ViewYourFavorites} />
         <Stack.Screen name="CreateRecipe" component={CreateRecipe} />
         <Stack.Screen name="ProfilePage" component={ProfilePage} />
       </Stack.Navigator>

@@ -45,6 +45,11 @@
     border: none;
     cursor: pointer;
     margin: 10px;
+    color:white;
+}
+
+.increase:hover{
+    background: rgb(255, 98, 0);
 }
 
 .decrease{
@@ -55,4 +60,25 @@
     border: none;
     cursor: pointer;
     margin:10px;
+    color:white;
+}
+
+.decrease:hover{
+    background: rgb(255, 98, 0);
+}
+
+.AddRecipeButton{
+    background-color: orange;
+    border-radius: 20px; 
+    height: 50px;
+    width: 250px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin:10px;
+    color:white;
+}
+
+.AddRecipeButton:hover{
+    background: rgb(255, 98, 0);
 }

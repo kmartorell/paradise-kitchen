@@ -141,7 +141,6 @@ function PageTitle()
                           // Data[e.currentTarget.id] to get the object of the recipe
 
         GlobalID = e.currentTarget.id;
-        buttontoggle();
         document.getElementById("RecipeName").innerHTML = "";
         document.getElementById("RecipeName").innerHTML = data[e.currentTarget.id].name;
 

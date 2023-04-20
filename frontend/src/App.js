@@ -11,6 +11,7 @@ import ViewRecipes from './pages/ViewRecipesPage';
 import ViewProfile from './pages/ViewProfilePage';
 import CreateRecipes from './pages/CreateRecipesPage';
 import EditRecipes from './pages/EditRecipesPage';
+import FavoriteRecipes from './pages/FavoritesPage';
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
         <Route path="/profile" index element={<ViewProfile />} />
         <Route path="/view" index element={<ViewRecipes />} />
         <Route path="/edit" index element={<EditRecipes />} />
+        <Route path="/favorites" index element={<FavoriteRecipes />} />
       </Routes>
     </BrowserRouter>
   );

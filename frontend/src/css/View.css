@@ -181,7 +181,7 @@
     cursor: pointer;
 }
 
-#PopupButton:hover{
+#Popup1Button:hover{
     background: rgb(255, 98, 0);
 }
 
@@ -201,7 +201,7 @@
     cursor: pointer;
     visibility: hidden;
 }
-#PopupEditButton:hover{
+#Popup1EditButton:hover{
     background: rgb(255, 98, 0);
 }
 
@@ -221,7 +221,7 @@
     cursor: pointer;
     visibility: hidden;
 }
-#PopupDeleteButton:hover{
+#Popup1DeleteButton:hover{
     background: rgb(255, 98, 0);
 }
 
@@ -241,7 +241,7 @@
     cursor: pointer;
 }
 
-#PopupCloseButton:hover{
+#Popup1CloseButton:hover{
     background: rgb(255, 98, 0);
 }
 

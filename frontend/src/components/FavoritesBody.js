@@ -230,7 +230,6 @@ function ViewPage()
          .then(function (response)
          {
              var res = response.data;
-             alert("Recipe has been removed from favorites! ")
      
              window.location.reload();
          }).catch(function (error)
@@ -343,5 +342,6 @@ function ViewPage()
    );
 };
 export default ViewPage;
+
 
 

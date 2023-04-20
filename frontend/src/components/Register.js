@@ -201,6 +201,11 @@ function Register()
             });
     }
 
+
+    function GoBack(){
+        window.location.href = 'javascript:history.back()';
+    }
+
     return(
 
     <div class="register-app">
@@ -257,7 +262,9 @@ function Register()
                         </div>
                     </div>
                     <div id="registerButtonBox">
-                            <input type="submit" value="Confirm Email" onClick={doVerifyEmail} />
+                            <button type="button" id="ConfirmButton" class="buttons" onClick={doVerifyEmail}> Confirm Email</button>
+
+                            <button type="button" id="ReturnButton" class="buttons" onClick={GoBack}> Return</button>
                     </div>
                 </div>
             </div>
@@ -265,7 +272,7 @@ function Register()
                 <div id="form-container" class="form-container">
                     <span class="text" id="emailResult">Email confirmed! Click below to finish register.</span>
                     <div id="registerButtonBox">
-                            <input type="submit" value="Register" onClick={doRegister} />
+                             <button type="button" id="Register1Button" class="buttons" onClick={doRegister}> Register</button>
                     </div>
                 </div>
             </div>

@@ -43,14 +43,14 @@
 #YourRecipesWords{
   font-weight: bold;
   position:relative;
-  left:160px;
-  top: 32px;
+  left:-160px;
+  top: 121px;
 }
 
 #YourRecipesButton{
   position:relative;
-  left:160px;
-  top: 52px;
+  left:-160px;
+  top: 141px;
   height: 50px;
   width: 20%;
   background: orange;
@@ -68,14 +68,14 @@
 #CreateRecipesWords{
   font-weight: bold;
   position:relative;
-  left:-160px;
-  top: 121px;
+  left:160px;
+  top: 32px;
 }
 
 #CreateRecipesButton{
   position:relative;
-  left:-160px;
-  top: 141px;
+  left:160px;
+  top: 52px;
   height: 50px;
   width: 20%;
   background: orange;
@@ -89,20 +89,42 @@
   background: rgb(255, 98, 0);
 }
 
-
-
-
-#YourProfileWords{
+#FavoriteRecipesWords{
   font-weight: bold;
   position:relative;
   left:160px;
   top: 52px;
 }
 
-#YourprofileButton{
+#FavoriteRecipesButton{
   position:relative;
   left:160px;
   top: 72px;
+  height: 50px;
+  width: 20%;
+  background: orange;
+  border: none;
+  color: white;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+
+#FavoriteRecipesButton:hover{
+  background: rgb(255, 98, 0);
+}
+
+
+#YourProfileWords{
+  font-weight: bold;
+  position:relative;
+  top: 112px;
+}
+
+#YourprofileButton{
+  position:relative;
+  top: 132px;
   height: 50px;
   width: 20%;
   background: orange;

@@ -54,10 +54,11 @@ function PageTitle()
             console.log(data);
 
             if(data.error == "search fail"){
-                alert("No recipes found!");
+                document.getElementById("SearchXPageWords").innerText = "No recipes found, try again!";
                 return;
             }
 
+            document.getElementById("SearchXPageWords").innerText = "Search Recipes Here!";
             depopulatetable();
             populatetable();
         }
@@ -88,6 +89,7 @@ function PageTitle()
       $("#RecipeBoxes tbody tr").remove(); 
    }
    const RemoveInput = async event=> {
+    document.getElementById("SearchXPageWords").innerText = "Search Recipes Here!";
     $("#SearchInput").val('');
    }
 
@@ -240,8 +242,6 @@ function PageTitle()
          {
              var res = response.data;
              console.log("Response is: " , response);
-             alert("Recipe has been added to favorites! ")
-     
              
          }).catch(function (error)
          {
@@ -291,7 +291,7 @@ function PageTitle()
 
    return(
         <center className='SearchPageBox'>
-            <h1 id="SearchPageWords">
+            <h1 id="SearchXPageWords">
                 Search Recipes Here!
             </h1>
             <div className="SearchInputArea">

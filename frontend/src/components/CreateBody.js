@@ -310,7 +310,8 @@ function PageTitle()
                     </div>
                 </div>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Add Recipe" onClick={doAddRecipe} />
+                        <button type="button" class="AddRecipeButton"onClick={doAddRecipe}>Add Recipe</button>
+                    
                 </div>
 
         </center>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import '../css/View.css'
 import axios from 'axios';
 import $ from 'jquery';
-import Popup from './ViewRecipePopup.js'
+import Popup from './SearchRecipePopup.js'
 
 var GlobalID;
 var GlobalDataInput;
@@ -19,48 +19,65 @@ function ViewPage()
    var ud = JSON.parse(_ud);
    var userID = ud.id;
 
-    var obj = {userId: userID};
-    var js = JSON.stringify(obj);
-    var config =
-    {
-        method: 'post',
-        url: bp.buildPath('api/showfavorites'),
-        headers:
-        {
-        'Content-Type': 'application/json'
-        },
-        data: js
-    };
+   var obj = {text: ''};
 
-    axios(config)
-    .then(function (response)
-    {
-        console.log(response);
-        var res = response.data;
-       
-        if (res.status == 500)
-        {
-            setMessage('incorrect');
-        }
-        else if(res.id == -1){
-            console.log("Here");
-            setMessage('incorrect');
-        }
-        else{
-            
-            data = res;
-            GlobalDataInput = data;
-            console.log(data);
+   var js = JSON.stringify(obj);
+   var config =
+   {
+       method: 'post',
+       url: bp.buildPath('api/searchrecipe'),
+       headers:
+       {
+       'Content-Type': 'application/json'
+       },
+       data: js
+   };
+   axios(config)
+   .then(function (response)
+   {
+       var res = response.data;
+      
+       if (res.status == 500)
+       {
+           setMessage('incorrect');
+       }
+       else if(res.id == -1){
+           console.log("Here");
+           setMessage('incorrect');
+       }
+       else{
+           
+           data = res;
+           GlobalDataInput = data;
+           console.log(data);
 
-            depopulatetable();
-            populatetable();
-        }
+           if(data.error == "search fail"){
+               alert("No recipes found!");
+               return;
+           }
+
+            var createdbydata =[];
+
+            console.log(data.length);
+            for(var i =0; i<data.length; i++ ){
+                if(data[i].createdby == ud.id){
+                   createdbydata.push(data[i]);
+                }
+            }
+            GlobalDataInput = createdbydata;
+            data = createdbydata;
+            console.log(createdbydata);
+
+           depopulatetable();
+           populatetable();
+       }
 
 
-    }).catch(function (error)
-    {
-        console.log(error);
-    }); 
+   }).catch(function (error)
+   {
+       console.log(error);
+   });
+  
    
     const buttontoggle = async event => {
 
@@ -71,8 +88,8 @@ function ViewPage()
         console.log("--" + ButtonToggleUserID + ":  " + ud.id);
   
         if(ButtonToggleUserID == ud.id){
-           document.getElementById("Popup1EditButton").style.visibility = 'visible';
-           document.getElementById("Popup1DeleteButton").style.visibility = 'visible';
+           document.getElementById("PopupEditButton").style.visibility = 'visible';
+           document.getElementById("PopupDeleteButton").style.visibility = 'visible';
         }
      }
 
@@ -209,7 +226,7 @@ function ViewPage()
 
 
     //GlobalID takes the ID in the array of data of the button that was just pressed.
-    function UnFavoriteRecipe(){
+    function SaveRecipe(){
 
         var _ud = localStorage.getItem('user_data');
         var ud = JSON.parse(_ud);
@@ -220,7 +237,7 @@ function ViewPage()
         var config =
             {
             method: 'post',
-            url: bp.buildPath('api/removefavorite'),
+            url: bp.buildPath('api/addfavorite'),
             headers:
                 {
                 'Content-Type': 'application/json'
@@ -231,9 +248,10 @@ function ViewPage()
          .then(function (response)
          {
              var res = response.data;
-             alert("Recipe has been removed from favorites! ")
+             console.log("Response is: " , response);
+             alert("Recipe has been added to favorites! ")
      
-             window.location.reload();
+             
          }).catch(function (error)
          {
              console.log(error);
@@ -281,7 +299,7 @@ function ViewPage()
    return(
         <center className='SearchPageBox'>
             <h1 id="SearchPageWords">
-                View Your Favorite Recipes Here!
+                View Your Created Recipes Here!
             </h1>
             <div id="RecipeTable">
                 <table id="RecipeBoxes">
@@ -332,10 +350,10 @@ function ViewPage()
 
                                                 </div>    
                                             </div>}
-                handleClose2={togglePopup}
-                RemoveRecipe2={UnFavoriteRecipe}
-                EditRecipe2={EditRecipe}
-                DeleteRecipe2={DeleteRecipe}
+                handleClose={togglePopup}
+                AddRecipe={SaveRecipe}
+                EditRecipe1={EditRecipe}
+                DeleteRecipe1={DeleteRecipe}
 
                 />}
             </div>

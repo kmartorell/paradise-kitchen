@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Touchable, TouchableOpacity } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Touchable, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -60,41 +60,43 @@ const Login = ({navigation, route}) =>
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
             <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
-                <SafeAreaView style={styles.container}>
-                    <Image source={Images.logo} style={styles.logo} />
-                    <Text style={styles.header}>Paradise Kitchen</Text>
-                    <View style={styles.mainLogin}>
-                        <View style={styles.formButtons}>
-                            <View style={styles.loginBox}>
-                                <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <SafeAreaView style={styles.container}>
+                        <Image source={Images.logo} style={styles.logo} />
+                        <Text style={styles.header}>Paradise Kitchen</Text>
+                        <View style={styles.mainLogin}>
+                            <View style={styles.formButtons}>
+                                <View style={styles.loginBox}>
+                                    <Button color="white" title="Login" onPress={() => navigation.navigate('Login')}/>
+                                </View>
+                                    <TouchableOpacity style={styles.registerBox} color="black" onPress={() =>navigation.navigate('Register')}>
+                                        <Text style={styles.buttonText}>Register</Text>
+                                    </TouchableOpacity>
                             </View>
-                                <TouchableOpacity style={styles.registerBox} color="black" onPress={() =>navigation.navigate('Register')}>
-                                    <Text style={styles.buttonText}>Register</Text>
-                                </TouchableOpacity>
+                            {/*Commented out because it messes with view <Text style={styles.message}>{route.params.message}</Text>*/}
+                            {/*<Text style={styles.errorMessage}>{errorMessage}</Text>*/}
+                            <Text style={styles.subheader}>Username</Text>
+                            <TextInput
+                                style={[styles.input, {borderColor:getBorderColor()}]}
+                                onChangeText={onChangeUserName}
+                                value={username}
+                                placeholder="User Name"
+                            />
+                            <Text style={styles.subheader}>Password</Text>
+                            <TextInput
+                                style={[styles.input, {borderColor:getBorderColor()}]}
+                                onChangeText={onChangePassword}
+                                value={password}
+                                placeholder="Password"
+                                secureTextEntry={true}
+                            />
+                            <Button style={styles.forgotPassword} color="red"  title="Forgot Password?"onPress={() => navigation.navigate('Forgot Password')}/>
+                            <TouchableOpacity style={styles.submitButton} title="Login"onPress={() => doLogin({navigation}, username,password)}>
+                                <Text style={styles.loginButtonText}>Login</Text>
+                            </TouchableOpacity>
                         </View>
-                        {/*Commented out because it messes with view <Text style={styles.message}>{route.params.message}</Text>*/}
-                        {/*<Text style={styles.errorMessage}>{errorMessage}</Text>*/}
-                        <Text style={styles.subheader}>Username</Text>
-                        <TextInput
-                            style={[styles.input, {borderColor:getBorderColor()}]}
-                            onChangeText={onChangeUserName}
-                            value={username}
-                            placeholder="User Name"
-                        />
-                        <Text style={styles.subheader}>Password</Text>
-                        <TextInput
-                            style={[styles.input, {borderColor:getBorderColor()}]}
-                            onChangeText={onChangePassword}
-                            value={password}
-                            placeholder="Password"
-                            secureTextEntry={true}
-                        />
-                        <Button style={styles.forgotPassword} color="red"  title="Forgot Password?"onPress={() => navigation.navigate('Forgot Password')}/>
-                        <TouchableOpacity style={styles.submitButton} title="Login"onPress={() => doLogin({navigation}, username,password)}>
-                            <Text style={styles.loginButtonText}>Login</Text>
-                        </TouchableOpacity>
-                    </View>
-                </SafeAreaView>
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
             </ScrollView>
       </ImageBackground>
     );

@@ -8,7 +8,9 @@ const ViewRecipe = ({navigation, route}) =>
     const [recipe, setRecipe] = React.useState('');
     const [user, setUser] = React.useState('');
     const [favorited, setFavorited] = React.useState('');
+    const [created, setCreated] = React.useState('');
     const [data, setData] = React.useState('');
+    const [deleteData, setDeleteData] = React.useState('');
 
 
     const favoriteRecipe = async (userId, recipeId) =>
@@ -55,6 +57,27 @@ const ViewRecipe = ({navigation, route}) =>
         });
     };
 
+    const deleteRecipe = async (recipeId) =>
+    {
+      fetch('https://paradise-kitchen.herokuapp.com/api/deleteRecipe', {
+          method: 'POST',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+              id: recipeId,
+          })
+        })    
+        .then(response => response.json())
+        .then(json => {
+            setDeleteData(json);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    };
+
     useEffect(() => {
         
         const setRecipeConst = navigation.addListener('focus',() =>
@@ -66,6 +89,8 @@ const ViewRecipe = ({navigation, route}) =>
                 setRecipe(route.params.recipe);
                 if(route.params.user.favorites.includes(route.params.recipe.id))
                   setFavorited(true);
+                if(route.params.recipe.createdby.includes(route.params.user.id))
+                  setCreated(true);
             }
         });
         return setRecipeConst;
@@ -93,17 +118,27 @@ const ViewRecipe = ({navigation, route}) =>
                     </View>
                     <View style={styles.favorite}>
                       {favorited &&
-                      <TouchableOpacity style={styles.favoriteButton} onPress={() => unFavoriteRecipe(user.id, recipe.id)}>
-                          <Image source={Images.filledStar} style={styles.starIcon} />
+                      <TouchableOpacity onPress={() => unFavoriteRecipe(user.id, recipe.id)}>
+                          <Image source={Images.filledStar} style={styles.icon} />
                       </TouchableOpacity>
                       }
                       {!favorited &&
-                      <TouchableOpacity style={styles.favoriteButton} onPress={() => favoriteRecipe(user.id, recipe.id)}>
-                          <Image source={Images.unfilledStar} style={styles.starIcon} />
+                      <TouchableOpacity onPress={() => favoriteRecipe(user.id, recipe.id)}>
+                          <Image source={Images.unfilledStar} style={styles.icon} />
                       </TouchableOpacity>
                       }
                     </View>
                   </View>
+                  {created &&
+                  <View style={styles.controls}>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => navigation.navigate('SearchRecipes',{user: route.params.user})}>
+                      <Image source={Images.edit} style={styles.editIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => deleteRecipe(recipe.id)}>
+                      <Image source={Images.delete} style={styles.deleteIcon} />
+                    </TouchableOpacity>
+                  </View>
+                  }
                   <Text style={styles.header}>{recipe.name}</Text>
                   <View style={styles.tagsMain}>
                     <Text style={styles.subHeader}>Tags:</Text>
@@ -175,6 +210,9 @@ const styles = StyleSheet.create({
     shadowColor:'black',
     shadowRadius:10,
     width:'100%',
+  },
+  controls: {
+    marginLeft:'auto'
   },
   backBox:{
     backgroundColor:'orange',
@@ -314,7 +352,7 @@ const styles = StyleSheet.create({
     paddingTop:10,
     paddingBottom:10
   },
-  starIcon: {
+  icon: {
     width:40,
     height:40,
   },
@@ -329,5 +367,20 @@ backButtonText: {
   color: 'white',
   fontSize: 25,
 },
+deleteIcon: {
+  height:35,
+  width:30,
+  marginTop:10
+},
+editIcon:{
+  height:35,
+  width:35,
+},
+controlButton:{
+  marginLeft:10,
+  marginBottom:10,
+  marginRight:8,
+  marginTop:-8
+}
 });
 export default ViewRecipe;

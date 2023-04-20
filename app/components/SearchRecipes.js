@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -101,42 +101,44 @@ const SearchRecipes = ({navigation, route}) =>
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
           <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
-            <SafeAreaView style={styles.container}>
-                <Image source={Images.logo} style={styles.logo} />
-                <Text style={styles.header}>Paradise Kitchen</Text>
-                <View style={styles.mainLanding}>
-                  <Text style={styles.subheader}>Search Recipes Here!</Text>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={onChangeSearch}
-                        value={search}
-                        placeholder="Type in a Name, Description, Ingredient or Tag here."
-                    />
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch(search)}>
-                        <Text style={styles.buttonText}>Search</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch('')}>
-                        <Text style={styles.buttonText}>Reset</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
-                        <Text style={styles.buttonText}>Home</Text>
-                    </TouchableOpacity>
-                </View>
-                { results && 
-                <View style={styles.recipeList}>
-                  <Text style={styles.subheader}>Recipe List</Text>
-                    { results.error != "search fail" && 
-                      results.map(renderCard)
-                    }
-                    { results.error == "search fail" && 
-                    <View style={styles.noResultsDiv} >
-                      <Text style={styles.noResults}>No Results Found</Text>
-                    </View>
-                    }
-                </View>
-                }
-                
-            </SafeAreaView>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+              <SafeAreaView style={styles.container}>
+                  <Image source={Images.logo} style={styles.logo} />
+                  <Text style={styles.header}>Paradise Kitchen</Text>
+                  <View style={styles.mainLanding}>
+                    <Text style={styles.subheader}>Search Recipes Here!</Text>
+                      <TextInput
+                          style={styles.input}
+                          onChangeText={onChangeSearch}
+                          value={search}
+                          placeholder="Type in a Name, Description, Ingredient or Tag here."
+                      />
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch(search)}>
+                          <Text style={styles.buttonText}>Search</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch('')}>
+                          <Text style={styles.buttonText}>Reset</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                          <Text style={styles.buttonText}>Home</Text>
+                      </TouchableOpacity>
+                  </View>
+                  { results && 
+                  <View style={styles.recipeList}>
+                    <Text style={styles.subheader}>Recipe List</Text>
+                      { results.error != "search fail" && 
+                        results.map(renderCard)
+                      }
+                      { results.error == "search fail" && 
+                      <View style={styles.noResultsDiv} >
+                        <Text style={styles.noResults}>No Results Found</Text>
+                      </View>
+                      }
+                  </View>
+                  }
+                  
+              </SafeAreaView>
+            </TouchableWithoutFeedback>
           </ScrollView>
       </ImageBackground>
   );

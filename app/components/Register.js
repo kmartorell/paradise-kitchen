@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, ImageBackground, Image, ScrollView } from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, ImageBackground, Image, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -145,100 +145,101 @@ const Register = ({navigation}) =>
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
             <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
-                
-                <SafeAreaView style={styles.container}>
-                        <Image source={Images.logo} style={styles.logo} />
-                        <Text style={styles.header}>Paradise Kitchen</Text>
-                        {/* Register Form */}
-                        { showRegister && 
-                        <View style={styles.mainLogin}>
-                            <View style={styles.formButtons}>
-                                <View style={styles.loginBox}>
-                                    <Button color="black" title="Login" onPress={() => navigation.navigate('Login')}/>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}> 
+                    <SafeAreaView style={styles.container}>
+                            <Image source={Images.logo} style={styles.logo} />
+                            <Text style={styles.header}>Paradise Kitchen</Text>
+                            {/* Register Form */}
+                            { showRegister && 
+                            <View style={styles.mainLogin}>
+                                <View style={styles.formButtons}>
+                                    <View style={styles.loginBox}>
+                                        <Button color="black" title="Login" onPress={() => navigation.navigate('Login')}/>
+                                    </View>
+                                    <View style={styles.registerBox}>
+                                        <Button color="white" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
+                                    </View>
                                 </View>
-                                <View style={styles.registerBox}>
-                                    <Button color="white" fontWeight="bold" title="Register"onPress={() =>navigation.navigate('Register')}/>
+                                <Text style={styles.message}>{message}</Text>
+                                <Text style={styles.subheader}>First Name</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangeFirstName}
+                                    value={firstName}
+                                    placeholder="First Name"
+                                />
+                                <Text style={styles.subheader}>Last Name</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangeLastName}
+                                    value={lastName}
+                                    placeholder="Last Name"
+                                />
+                                <Text style={styles.subheader}>Email</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangeEmail}
+                                    value={email}
+                                    placeholder="Email"
+                                />
+                                <Text style={styles.subheader}>Username</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangeUserName}
+                                    value={username}
+                                    placeholder="Username"
+                                />
+                                <Text style={styles.subheader}>Password</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangePassword}
+                                    value={password}
+                                    placeholder="Password"
+                                    secureTextEntry={true}
+                                />
+                                <Text style={styles.subheader}>Confirm Password</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangeConfirmPassword}
+                                    value={confirmPassword}
+                                    placeholder="Confirm Password"
+                                    secureTextEntry={true}
+                                />
+                                <View style={styles.submitButton}>
+                                    <Button style={styles.login} color="white" title="Register" onPress={() => showEmailForm({navigation}, firstName, lastName, email, username, password, confirmPassword)}/>
                                 </View>
                             </View>
-                            <Text style={styles.message}>{message}</Text>
-                            <Text style={styles.subheader}>First Name</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangeFirstName}
-                                value={firstName}
-                                placeholder="First Name"
-                            />
-                            <Text style={styles.subheader}>Last Name</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangeLastName}
-                                value={lastName}
-                                placeholder="Last Name"
-                            />
-                            <Text style={styles.subheader}>Email</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangeEmail}
-                                value={email}
-                                placeholder="Email"
-                            />
-                            <Text style={styles.subheader}>Username</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangeUserName}
-                                value={username}
-                                placeholder="Username"
-                            />
-                            <Text style={styles.subheader}>Password</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangePassword}
-                                value={password}
-                                placeholder="Password"
-                                secureTextEntry={true}
-                            />
-                            <Text style={styles.subheader}>Confirm Password</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangeConfirmPassword}
-                                value={confirmPassword}
-                                placeholder="Confirm Password"
-                                secureTextEntry={true}
-                            />
-                            <View style={styles.submitButton}>
-                                <Button style={styles.login} color="white" title="Register" onPress={() => showEmailForm({navigation}, firstName, lastName, email, username, password, confirmPassword)}/>
-                            </View>
-                        </View>
-                        }
+                            }
 
-                        {/* Email Form */}
-                        { showEmail && 
-                        <View style={styles.emailForm}>
-                            <Text style={styles.verifyemailmessage}>An email was sent to verify your email.</Text>
-                            <Text style={styles.subheader}>Input Code From Email Below</Text>
-                            <Text style={styles.message}>{message}</Text>
-                            <TextInput
-                                style={[styles.input, {borderColor:getBorderColor()}]}
-                                onChangeText={onChangeCode}
-                                value={code}
-                                placeholder="Verification Code"
-                            />
-                            <View style={styles.submitButton}>
-                                <Button style={styles.login} color="white" title="Confirm Email" onPress={() => doVerifyEmail(code)}/>
+                            {/* Email Form */}
+                            { showEmail && 
+                            <View style={styles.emailForm}>
+                                <Text style={styles.verifyemailmessage}>An email was sent to verify your email.</Text>
+                                <Text style={styles.subheader}>Input Code From Email Below</Text>
+                                <Text style={styles.message}>{message}</Text>
+                                <TextInput
+                                    style={[styles.input, {borderColor:getBorderColor()}]}
+                                    onChangeText={onChangeCode}
+                                    value={code}
+                                    placeholder="Verification Code"
+                                />
+                                <View style={styles.submitButton}>
+                                    <Button style={styles.login} color="white" title="Confirm Email" onPress={() => doVerifyEmail(code)}/>
+                                </View>
                             </View>
-                        </View>
-                        }
+                            }
 
-                        {/* Verification Succesfull */}
-                        { showVerify && 
-                        <View style={styles.verification}>
-                            <Text style={styles.confirmedText}>Email confirmed! Click below to finish register.</Text>
-                            <View style={styles.submitButton}>
-                                <Button style={styles.login} color="white" title="Register" onPress={() => doRegister({navigation}, firstName, lastName, email, username, password, confirmPassword)}/>
+                            {/* Verification Succesfull */}
+                            { showVerify && 
+                            <View style={styles.verification}>
+                                <Text style={styles.confirmedText}>Email confirmed! Click below to finish register.</Text>
+                                <View style={styles.submitButton}>
+                                    <Button style={styles.login} color="white" title="Register" onPress={() => doRegister({navigation}, firstName, lastName, email, username, password, confirmPassword)}/>
+                                </View>
                             </View>
-                        </View>
-                        }
-                </SafeAreaView>
+                            }
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
             </ScrollView>
       </ImageBackground>
     );

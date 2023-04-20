@@ -52,7 +52,6 @@ function ViewPage()
            console.log(data);
 
            if(data.error == "search fail"){
-               alert("No recipes found!");
                return;
            }
 
@@ -249,8 +248,7 @@ function ViewPage()
          {
              var res = response.data;
              console.log("Response is: " , response);
-             alert("Recipe has been added to favorites! ")
-     
+             
              
          }).catch(function (error)
          {

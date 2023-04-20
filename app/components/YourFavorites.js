@@ -3,7 +3,7 @@ import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Ale
 import Images from './Images';
 import axios from 'axios';
 
-const YourRecipes = ({navigation, route}) =>
+const YourFavorites = ({navigation, route}) =>
 { 
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
@@ -11,7 +11,7 @@ const YourRecipes = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourRecipes', {recipe: card, user:user})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourFavorites', {recipe: card, user:user})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -33,9 +33,9 @@ const YourRecipes = ({navigation, route}) =>
     };
     
     useEffect(() => {
-      const doCreatedPull = navigation.addListener('focus',() =>
+      const doFavoritesPull = navigation.addListener('focus',() =>
       {
-        fetch('https://paradise-kitchen.herokuapp.com/api/showCreated', {
+        fetch('https://paradise-kitchen.herokuapp.com/api/showfavorites', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
@@ -72,7 +72,7 @@ const YourRecipes = ({navigation, route}) =>
         });
       });
       console.log(results);
-      return doCreatedPull;
+      return doFavoritesPull;
     }, [navigation]);
 
     return(
@@ -82,14 +82,14 @@ const YourRecipes = ({navigation, route}) =>
                 <Image source={Images.logo} style={styles.logo} />
                 <Text style={styles.header}>Paradise Kitchen</Text>
                 <View style={styles.mainLanding}>
-                  <Text style={styles.subheader}>View Your Created Recipes Here!</Text>
+                  <Text style={styles.subheader}>View Your Favorite Recipes Here!</Text>
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>
                 { results && 
                 <View style={styles.recipeList}>
-                  <Text style={styles.subheader}>Your Recipes</Text>
+                  <Text style={styles.subheader}>Recipe List</Text>
                     { results.error != "created pull fail" && 
                       results.map(renderCard)
                     }
@@ -295,4 +295,4 @@ const styles = StyleSheet.create({
   }  
 
 });
-export default YourRecipes;
+export default YourFavorites;

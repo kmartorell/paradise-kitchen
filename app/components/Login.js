@@ -72,8 +72,8 @@ const Login = ({navigation, route}) =>
                                     <Text style={styles.buttonText}>Register</Text>
                                 </TouchableOpacity>
                         </View>
-                        <Text style={styles.message}>{route.params.message}</Text>
-                        <Text style={styles.errorMessage}>{errorMessage}</Text>
+                        {/*Commented out because it messes with view <Text style={styles.message}>{route.params.message}</Text>*/}
+                        {/*<Text style={styles.errorMessage}>{errorMessage}</Text>*/}
                         <Text style={styles.subheader}>Username</Text>
                         <TextInput
                             style={[styles.input, {borderColor:getBorderColor()}]}

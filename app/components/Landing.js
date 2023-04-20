@@ -49,8 +49,11 @@ const Landing = ({navigation, route}) =>
                   <Text style={styles.header}>Welcome {user.firstName}</Text>
                   <View style={styles.buttonHolder}>
                   <Text style={styles.errorMessage}>{route.params.message}</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('SearchRecipes', {user: user})}>
+                    <TouchableOpacity style={styles.firstButtonStyle} onPress={() => navigation.navigate('SearchRecipes', {user: user})}>
                       <Text style={styles.buttonText}>Search Recipes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourFavorites', {user: user})}>
+                      <Text style={styles.buttonText}>Your Favorites</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {user: user})}>
                       <Text style={styles.buttonText}>Your Recipes</Text>
@@ -98,6 +101,13 @@ const styles = StyleSheet.create({
       color: 'green',
       textAlign: 'center',
   },
+  firstButtonStyle:{
+    backgroundColor:'orange',
+    width:"80%",
+    padding:8,
+    marginBottom:12,
+    borderRadius:20,
+  },
   buttonStyle:{
     backgroundColor:'orange',
     width:"80%",
@@ -123,7 +133,6 @@ const styles = StyleSheet.create({
   },
   buttonHolder: {
     alignItems: 'center',
-    marginTop: 10,
     width : '100%',
 },
 });

@@ -1,8 +1,9 @@
 import React, { useState, useEffect, setState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Touchable, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
 import axios from 'axios';
-
+import { useJwt } from "react-jwt";
 const sign = require('jwt-encode');
 global.jwt = "";
 
@@ -29,7 +30,7 @@ const Login = ({navigation, route}) =>
     {
         setErrorMessage('');
         setBorderColor('black');
-        fetch('https://paradise-kitchen.net/api/login', {
+        fetch('https://paradise-kitchen.herokuapp.com/api/login', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -53,24 +54,31 @@ const Login = ({navigation, route}) =>
     useEffect(() => {
         if(data){
             if(data["id"] != -1){ /* SUCCESSFUL LOGIN */
-
-                storage.storeToken(res);
-                var jwt = require('jsonwebtoken');
-                var ud = jwt.decode(storage.retrieveToken(),{complete:true});
-                var user = {};
-
-                var userId = ud.payload.userId;
-                var firstName = ud.payload.firstName;
-                var lastName = ud.payload.lastName;
-                var email = ud.payload.email;
-                var favorites = ud.payload.favorites;
-                user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites}
+                (async () => {
+                    console.log("Getting here");
+                    storage.storeToken(data);
                 
-                localStorage.setItem('user_data', JSON.stringify(user));
+                    console.log(await storage.retrieveToken())
+                    
+                    const { decodedToken, isExpired } = useJwt(await storage.retrieveToken());
+                    var ud = decodedToken;
+                    console.log(decodedToken);
+                    var user = {};
 
-                navigation.navigate('Landing');
+                    var userId = ud.payload.userId;
+                    var firstName = ud.payload.firstName;
+                    var lastName = ud.payload.lastName;
+                    var email = ud.payload.email;
+                    var favorites = ud.payload.favorites;
+                    user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites}
+                    
+                    AsyncStorage.setItem('user_data', JSON.stringify(user));
+
+                    navigation.navigate('Landing');
+                })()
             }
             else{
+                console.log("Getting here");
                 setErrorMessage('Your username or password is incorrect.\n Please try again.');
                 setBorderColor('red');
                 onChangeUserName('');

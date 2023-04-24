@@ -1,26 +1,24 @@
-exports.storeToken = function ( tok )
-{
-    try
-    {
-        localStorage.setItem('token_data', tok.accessToken);
-    }
-    catch(e)
-    {
-        console.log(e.message);
-    }
-}
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-exports.retrieveToken = function ()
-{
-    var ud;
 
-    try
-    {
-        ud = localStorage.getItem('token_data');
+  export const storeToken = async (tok) => {
+    try {
+        await AsyncStorage.setItem('token_data', tok.accessToken)
+    } catch (e) {
+      // saving error
     }
-    catch(e)
-    {
-        console.log(e.message);
+  }
+
+  export const retrieveToken = async () => {
+    try {
+      var ud = await AsyncStorage.getItem('token_data')
+      console.log("ud: ", ud);
+      if(value !== null) {
+        // value previously stored
+      }
+    } catch(e) {
+      // error reading value
     }
     return ud;
-}
+  }
+  

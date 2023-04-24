@@ -59,6 +59,8 @@ html {
 .form-container {
     background-color: white;
     border-radius: 30px;
+    padding-top: 15px;
+    padding-bottom: 15px;
     overflow: hidden;
     text-align: center;
 }
@@ -66,6 +68,9 @@ html {
     justify-content:center;
     width:50%;
     text-align:center;
+    position:relative;
+    top:-20px;
+    zoom: 95%;
 }
 .form-main-login{
     justify-content:center;
@@ -170,6 +175,43 @@ input[type = submit] {
 }
 
 #RegisterButton:hover{
+    background: rgb(255, 98, 0);
+}
+
+#ConfirmButton{
+    width: 125px;
+    height: 45px;
+    position: relative;
+    top: -10px;
+    left: -10px;
+    background: orange;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+#ConfirmButton:hover{
+    background: rgb(255, 98, 0);
+}
+
+#Register1Button{
+    width: 250px;
+    height: 50px;
+    background: orange;
+    border: none;
+    color: white;
+    font-weight: bold;
+    border-radius: 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    position: relative;
+    top: 15px;
+}
+
+#Register1Button:hover{
     background: rgb(255, 98, 0);
 }
 

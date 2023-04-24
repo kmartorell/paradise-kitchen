@@ -17,6 +17,10 @@ function ViewProfile(){
     window.location.href = '/profile';
 }
 
+function FavoriteRecipes(){
+    window.location.href = '/favorites';
+}
+
 function PageTitle()
 {
     var _ud = localStorage.getItem('user_data');
@@ -35,12 +39,15 @@ function PageTitle()
                 <button type="button" id="SearchRecipesButton" class="buttons" onClick={SearchRecipes}> Search Recipes </button>
 
 
+                <div id="CreateRecipesWords">Create your own recipes</div>
+                <button type="button" id="CreateRecipesButton" class="buttons" onClick={CreateRecipes}> Create Recipes </button>
+
                 <div id="YourRecipesWords">Check out your recipes</div>
                 <button type="button" id="YourRecipesButton" class="buttons" onClick={ViewRecipes}> Your Recipes </button>
 
 
-                <div id="CreateRecipesWords">Create your own recipes</div>
-                <button type="button" id="CreateRecipesButton" class="buttons" onClick={CreateRecipes}> Create Recipes </button>
+                <div id="FavoriteRecipesWords">View Favorite recipes</div>
+                <button type="button" id="FavoriteRecipesButton" class="buttons" onClick={FavoriteRecipes}> Favorite Recipes </button>
 
 
                 <div id="YourProfileWords">Check out your profile</div>

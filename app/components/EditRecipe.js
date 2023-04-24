@@ -3,34 +3,8 @@ import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, 
 import Images from './Images';
 import axios from 'axios';
 
-const CreateRecipe = ({navigation, route}) =>
+const EditRecipe = ({navigation, route}) =>
 {
-
-  const [timer1, setTimer1] = React.useState('');
-
-  useEffect(() => {
-        
-    const createPage = navigation.addListener('focus',() =>
-    {
-      jwtTimeout();
-    });
-    return createPage;
-  }, [navigation]);
-
-  const doLogout = () => {
-    jwt = '';
-    clearTimeout(timer1);
-    navigation.navigate('Login');
-  };
-  
-  const jwtTimeout = () => {
-    const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-    setTimer1(id1);
-  };
-  
-  const clearTimers = () => {
-    clearTimeout(timer1);
-  };
     const [name, onChangeName] = React.useState('');
     const [description, onChangeDescription] = React.useState('');
     const [minutes, onChangeMintues] = React.useState('');
@@ -40,18 +14,22 @@ const CreateRecipe = ({navigation, route}) =>
     const [ingredients, onChangeIngredients] = React.useState('');
     const [data, setData] = React.useState('');
     const [user, setUser] = React.useState('');
+    const [favorited, setFavorited] = React.useState('');
+    const [created, setCreated] = React.useState('');
+    const [recipe, setRecipe] = React.useState('');
+
     
 
-    const doCreate = async (name, description, minutes, tags, nutrition, steps, ingredients) =>
+    const doEdit = async (name, description, minutes, tags, nutrition, steps, ingredients) =>
     {
       let n_steps;
       let n_ingredients;
       let createdBy;
       let submitted;
       console.log(user);
+      name = name.trim();
       tags = tags.replaceAll("\n", "").split(",");
       steps = steps.replaceAll("\n", "").split(",");
-      minutes = parseInt(minutes);
       n_steps = steps.length;
       nutrition = nutrition.replaceAll("\n", "").split(",");
       for(let i=0;i<nutrition.length;i++)
@@ -75,13 +53,14 @@ const CreateRecipe = ({navigation, route}) =>
             });
 
             console.log(recipe);
-      fetch('https://paradise-kitchen.herokuapp.com/api/addRecipe', {
+      fetch('https://paradise-kitchen.herokuapp.com/api/updaterecipe', {
           method: 'POST',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+              id: route.params.recipe.id,
               name: name,
               description: description,
               minutes: minutes,
@@ -105,8 +84,29 @@ const CreateRecipe = ({navigation, route}) =>
     };
     
     useEffect(() => {
-      const startCreate = navigation.addListener('focus',() =>
+      const startEdit = navigation.addListener('focus',() =>
       {
+        let tempRecipe = route.params.recipe;
+        console.log(tempRecipe);
+        tempRecipe.tags = tempRecipe.tags.join(",\n");
+        tempRecipe.minutes = tempRecipe.minutes.toString();
+        tempRecipe.steps = tempRecipe.steps.join(",\n");
+        for(let i=0;i<tempRecipe.nutrition.length;i++)
+          tempRecipe.nutrition[i] = tempRecipe.nutrition[i].toString();
+        tempRecipe.nutrition = tempRecipe.nutrition.join(",");
+        tempRecipe.ingredients = tempRecipe.ingredients.join(",\n");
+
+
+        if(!route.params.recipe){
+            navigation.navigate('Landing', {errormessage:"ERROR: Recipe does not exist anymore"})
+        }else{
+            setRecipe(route.params.recipe);
+            if(route.params.user.favorites.includes(route.params.recipe.id))
+              setFavorited(true);
+            if(route.params.recipe.createdby.includes(route.params.user.id))
+              setCreated(true);
+        }
+
         // Grab user info
         fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
           method: 'POST',
@@ -126,20 +126,33 @@ const CreateRecipe = ({navigation, route}) =>
           console.error(error);
         });
       });
-      return startCreate;
+
+      return startEdit;
     }, [navigation]);
 
     useEffect(() => {
       if(data){
-          if(data.error == 'success'){
-              navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"Added Recipe Successful!", errormessage:""});
+          if(data.error == 'update success'){
+              navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"Edit Recipe Successful!", errormessage:""});
           }
           else{
-            navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"", errormessage:"Error Adding Recipe, Please try again."});
+            navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"", errormessage:"Error Editing Recipe, Please try again."});
 
           }
       }
     }, [data]);
+
+    useEffect(() => {
+      onChangeName(recipe.name);
+      onChangeDescription(recipe.description);
+      onChangeTags(recipe.tags);
+      onChangeMintues(recipe.minutes);
+      onChangeNutrition(recipe.nutrition);
+      onChangeSteps(recipe.steps);
+      onChangeIngredients(recipe.ingredients);
+    }, [recipe]);
+
+
 
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -149,7 +162,7 @@ const CreateRecipe = ({navigation, route}) =>
                 <Image source={Images.logo} style={styles.logo} />
                 <View style={styles.mainLanding}>
                   <View style={styles.buttonHolder}>
-                    <Text style={styles.header}>Create New Recipe!</Text>
+                    <Text style={styles.header}>Edit Recipe!</Text>
 
                     <Text style={styles.textInputTitle}>Recipe Name</Text>
                     <TextInput 
@@ -177,6 +190,7 @@ const CreateRecipe = ({navigation, route}) =>
                       placeholderTextColor='grey' 
                       onChangeText={onChangeMintues}
                       value={minutes}
+                      keyboardType="numeric"
                       placeholder="Enter time in minutes"/>
 
                     <Text style={styles.textInputTitle}>Tags</Text>
@@ -221,8 +235,8 @@ const CreateRecipe = ({navigation, route}) =>
                       value={ingredients} 
                       placeholder="Enter Ingredients"/>
 
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doCreate(name, description, minutes, tags, nutrition, steps, ingredients)}>
-                        <Text style={styles.buttonText}>Add Recipe</Text>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doEdit(name, description, minutes, tags, nutrition, steps, ingredients)}>
+                        <Text style={styles.buttonText}>Save</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
@@ -372,4 +386,4 @@ buttonHolder: {
   width : '100%',
 },
 });
-export default CreateRecipe;
+export default EditRecipe;

@@ -12,7 +12,7 @@ const YourRecipes = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => {clearTimers(); navigation.navigate('ViewYourRecipes', {recipe: card, user:user})}}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card, user:user})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -108,7 +108,7 @@ const YourRecipes = ({navigation, route}) =>
                 </View>
                 { results && 
                 <View style={styles.recipeList}>
-                  <Text style={styles.subheader}>Recipe List</Text>
+                  <Text style={styles.subheader}>Your Recipes</Text>
                     { results.error != "created pull fail" && 
                       results.map(renderCard)
                     }

@@ -74,6 +74,11 @@
     top: 15px;
 }
 
+#SearchXPageWords{
+    position:relative;
+    top: 15px;
+}
+
 #SearchInput{
     width: 600px;
     height: 35px;
@@ -367,3 +372,4 @@
     font-weight:normal;
     max-width: 600px;
 }
+

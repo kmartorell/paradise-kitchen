@@ -478,6 +478,19 @@ exports.setApp = function ( app, client )
     //console.log(JSON.stringify(req.body));
 
     const deleteRecipe = await Recipe.findByIdAndRemove(id);
+    const usersFavorited = await User.find({favorites : id});
+    console.log(usersFavorited);
+
+    if(usersFavorited.length>0){
+      for(let i=0;i<usersFavorited.length;i++){
+        const removeFavorite = await User.findByIdAndUpdate(usersFavorited[i]._id, {$pull: {favorites: id}});
+        if(removeFavorite){
+          console.log('Remove Favorite Successful');
+        }else{
+          console.log('Remove Favorite Unsuccessful');
+        }
+      }
+    } 
     var error = '';
 
     if(deleteRecipe)
@@ -485,6 +498,7 @@ exports.setApp = function ( app, client )
       try
       {
         //console.log();
+
         error = "delete success";
         var ret = {error: error, jwtToken: refreshedToken};
       }

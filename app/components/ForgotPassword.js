@@ -1,5 +1,5 @@
 import React, { useState, useEffect, setState } from 'react';
-import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView} from 'react-native';
+import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import Images from './Images';
 import axios from 'axios';
 
@@ -61,36 +61,38 @@ const ForgotPassword = ({navigation}) =>
     return(
         <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
             <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
-                <SafeAreaView style={styles.container}>
-                    <Image source={Images.logo} style={styles.logo} />
-                    <Text style={styles.header}>Forgot Password</Text>
-                    <View style={styles.mainLogin}>
-                        <View style={styles.formButtons}>
-                            <View style={styles.backBox}>
-                                <Button color="white" title="Back" onPress={() => navigation.navigate('Login')}/>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    <SafeAreaView style={styles.container}>
+                        <Image source={Images.logo} style={styles.logo} />
+                        <Text style={styles.header}>Forgot Password</Text>
+                        <View style={styles.mainLogin}>
+                            <View style={styles.formButtons}>
+                                <View style={styles.backBox}>
+                                    <Button color="white" title="Back" onPress={() => navigation.navigate('Login')}/>
+                                </View>
+                            </View>
+                            <Text style={styles.message}>{message}</Text>
+                            <Text style={styles.subheader}>Email</Text>
+                            <TextInput
+                                style={[styles.input, {borderColor:getBorderColor()}]}
+                                onChangeText={onChangeEmail}
+                                value={email}
+                                placeholder="Email"
+                            />
+                            <Text style={styles.subheader}>Login</Text>
+                            <TextInput
+                                style={[styles.input, {borderColor:getBorderColor()}]}
+                                onChangeText={onChangeLogin}
+                                value={login}
+                                placeholder="Login"
+                            />
+                            <View style={styles.submitButton}>
+                                <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email, login, styles)}/>
                             </View>
                         </View>
-                        <Text style={styles.message}>{message}</Text>
-                        <Text style={styles.subheader}>Email</Text>
-                        <TextInput
-                            style={[styles.input, {borderColor:getBorderColor()}]}
-                            onChangeText={onChangeEmail}
-                            value={email}
-                            placeholder="Email"
-                        />
-                        <Text style={styles.subheader}>Login</Text>
-                        <TextInput
-                            style={[styles.input, {borderColor:getBorderColor()}]}
-                            onChangeText={onChangeLogin}
-                            value={login}
-                            placeholder="Login"
-                        />
-                        <View style={styles.submitButton}>
-                            <Button style={styles.login} color="white" title="Login"onPress={() => doForgotPassword({navigation}, email, login, styles)}/>
-                        </View>
-                    </View>
-                    
-                </SafeAreaView>
+                        
+                    </SafeAreaView>
+                </TouchableWithoutFeedback>
             </ScrollView>
       </ImageBackground>
     );

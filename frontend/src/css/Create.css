@@ -22,6 +22,17 @@
     position: relative; top: 20px; left: 10px;
 }
 
+.HomePageBox1{
+  margin: 10px;
+  margin-right:350px;
+  margin-left:350px;
+  justify-content: center;
+  padding-bottom: 1%;
+  box-shadow: 0.2px 0.2px 2px 2px rgba(0, 0, 0, 0.188) , -0.2px -0.2px 2px 2px rgba(0, 0, 0, 0.188);
+  background-color:white;
+  border-radius: 30px;
+}
+
 #recipeDescription{
     width: 150%;
 }
@@ -34,6 +45,11 @@
     border: none;
     cursor: pointer;
     margin: 10px;
+    color:white;
+}
+
+.increase:hover{
+    background: rgb(255, 98, 0);
 }
 
 .decrease{
@@ -44,4 +60,25 @@
     border: none;
     cursor: pointer;
     margin:10px;
+    color:white;
+}
+
+.decrease:hover{
+    background: rgb(255, 98, 0);
+}
+
+.AddRecipeButton{
+    background-color: orange;
+    border-radius: 20px; 
+    height: 50px;
+    width: 250px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    margin:10px;
+    color:white;
+}
+
+.AddRecipeButton:hover{
+    background: rgb(255, 98, 0);
 }

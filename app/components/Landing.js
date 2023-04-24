@@ -61,6 +61,8 @@ const Landing = ({navigation, route}) =>
                   <Text style={styles.header}>Welcome {user.firstName}</Text>
                   <View style={styles.buttonHolder}>
                   <Text style={styles.errorMessage}>{route.params.message}</Text>
+                  <Text style={styles.errorMessage}>{route.params.errormessage}</Text>
+                  <Text style={styles.successMessage}>{route.params.successmessage}</Text>
                     <TouchableOpacity style={styles.firstButtonStyle} onPress={() => {clearTimers(); navigation.navigate('SearchRecipes', {user: user})}}>
                       <Text style={styles.buttonText}>Search Recipes</Text>
                     </TouchableOpacity>
@@ -138,6 +140,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'red',
     textAlign: 'center',
+    marginTop:10,
+  },
+  successMessage: {
+    marginTop:-20,
+    fontSize: 20,
+    color: 'green',
+    textAlign: 'center',
+    marginBottom:20,
   },
   buttonText: {
     color: 'white',

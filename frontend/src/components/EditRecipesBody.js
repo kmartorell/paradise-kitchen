@@ -231,7 +231,7 @@ function PageTitle()
             {
                 storage.storeToken(res);
                 console.log("User successfully edited recipe.");
-                window.location.href = '/search';
+                window.location.href = '/view';
             }
         })
 
@@ -243,13 +243,14 @@ function PageTitle()
 }
 
    return(
-        <center className='HomePageBox'>
+        <center className='HomePageBox1'>
                 <h1 id="HomePageWords">
                     Edit the Recipe!
                 </h1>
                 <span class="text" id="addRecipeResult"></span>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Load Information" onClick={displayFields} />
+                     <br/>
+                     <button type="button" class="AddRecipeButton"onClick={displayFields}>Load Information</button>
                 </div>
                 <div id="register" class="input-group register-input" action="">
                     <div className='RecipeName'>
@@ -334,7 +335,7 @@ function PageTitle()
                     </div>
                 </div>
                 <div id="registerButtonBox">
-                        <input type="submit" value="Edit Recipe" onClick={doEditRecipe} />
+                        <button type="button" class="AddRecipeButton"onClick={doEditRecipe}>Edit Recipe</button>
                 </div>
 
         </center>

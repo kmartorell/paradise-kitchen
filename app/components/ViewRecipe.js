@@ -151,12 +151,12 @@ const ViewRecipe = ({navigation, route}) =>
                     </View>
                     <View style={styles.favorite}>
                       {favorited &&
-                      <TouchableOpacity onPress={() => unFavoriteRecipe(user.id, recipe.id)}>
+                      <TouchableOpacity onPress={() => {clearTimers(); unFavoriteRecipe(user.id, recipe.id)}}>
                           <Image source={Images.filledStar} style={styles.icon} />
                       </TouchableOpacity>
                       }
                       {!favorited &&
-                      <TouchableOpacity onPress={() => favoriteRecipe(user.id, recipe.id)}>
+                      <TouchableOpacity onPress={() => {clearTimers(); favoriteRecipe(user.id, recipe.id)}}>
                           <Image source={Images.unfilledStar} style={styles.icon} />
                       </TouchableOpacity>
                       }
@@ -164,10 +164,10 @@ const ViewRecipe = ({navigation, route}) =>
                   </View>
                   {created &&
                   <View style={styles.controls}>
-                    <TouchableOpacity style={styles.controlButton} onPress={() => navigation.navigate('EditRecipe',{user: route.params.user, recipe:recipe})}>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => {clearTimers(); navigation.navigate('EditRecipe',{user: route.params.user, recipe:recipe})}}>
                       <Image source={Images.edit} style={styles.editIcon} />
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.controlButton} onPress={() => deleteRecipe(recipe.id)}>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => {clearTimers(); deleteRecipe(recipe.id)}}>
                       <Image source={Images.delete} style={styles.deleteIcon} />
                     </TouchableOpacity>
                   </View>

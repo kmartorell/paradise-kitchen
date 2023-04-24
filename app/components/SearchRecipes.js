@@ -132,10 +132,10 @@ const SearchRecipes = ({navigation, route}) =>
                           value={search}
                           placeholder="Type in a Name, Description, Ingredient or Tag here."
                       />
-                      <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch(search)}>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doSearch(search)}}>
                           <Text style={styles.buttonText}>Search</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch('')}>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doSearch('')}}>
                           <Text style={styles.buttonText}>Reset</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>

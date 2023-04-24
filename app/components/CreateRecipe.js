@@ -8,15 +8,6 @@ const CreateRecipe = ({navigation, route}) =>
 
   const [timer1, setTimer1] = React.useState('');
 
-  useEffect(() => {
-        
-    const createPage = navigation.addListener('focus',() =>
-    {
-      jwtTimeout();
-    });
-    return createPage;
-  }, [navigation]);
-
   const doLogout = () => {
     jwt = '';
     clearTimeout(timer1);
@@ -108,6 +99,7 @@ const CreateRecipe = ({navigation, route}) =>
       const startCreate = navigation.addListener('focus',() =>
       {
         // Grab user info
+        jwtTimeout();
         fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
           method: 'POST',
           headers: {
@@ -221,11 +213,11 @@ const CreateRecipe = ({navigation, route}) =>
                       value={ingredients} 
                       placeholder="Enter Ingredients"/>
 
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doCreate(name, description, minutes, tags, nutrition, steps, ingredients)}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doCreate(name, description, minutes, tags, nutrition, steps, ingredients)}}>
                         <Text style={styles.buttonText}>Add Recipe</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
                         <Text style={styles.buttonText}>Cancel</Text>
                     </TouchableOpacity>
 

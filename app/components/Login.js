@@ -22,13 +22,14 @@ const Login = ({navigation, route}) =>
     const testUser = "KruseM";
     const testPass = "password";
 
+    var storage = require('../tokenStorage.js');
 
 
     const doLogin = async ({navigation}, username,password) =>
     {
         setErrorMessage('');
         setBorderColor('black');
-        fetch('https://paradise-kitchen.herokuapp.com/api/login', {
+        fetch('https://paradise-kitchen.net/api/login', {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',
@@ -53,14 +54,21 @@ const Login = ({navigation, route}) =>
         if(data){
             if(data["id"] != -1){ /* SUCCESSFUL LOGIN */
 
-                const dataBody = {
-                    username, password
-                };
-        
-                jwt = sign(dataBody, secret);
-                console.log(jwt);
+                storage.storeToken(res);
+                var jwt = require('jsonwebtoken');
+                var ud = jwt.decode(storage.retrieveToken(),{complete:true});
+                var user = {};
 
-                navigation.navigate('Landing', {id:data['id'], firstName:data['firstName'], lastName:data['lastName'], email:data['email'], login:data['login'], favorites:data['favorites']});
+                var userId = ud.payload.userId;
+                var firstName = ud.payload.firstName;
+                var lastName = ud.payload.lastName;
+                var email = ud.payload.email;
+                var favorites = ud.payload.favorites;
+                user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites}
+                
+                localStorage.setItem('user_data', JSON.stringify(user));
+
+                navigation.navigate('Landing');
             }
             else{
                 setErrorMessage('Your username or password is incorrect.\n Please try again.');

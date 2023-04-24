@@ -11,7 +11,7 @@ function NavBar() {
   const doLogout = event => 
   {
   event.preventDefault();
-      localStorage.removeItem("user_data")
+      localStorage.removeItem("user_data");
       window.location.href = '/';
   };    
 

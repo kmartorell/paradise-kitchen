@@ -3,9 +3,6 @@ import { useJwt } from "react-jwt";
 import axios from 'axios'
 import Logo from '../images/logoNoBackground.png'
 import '../css/login.css'
-import { login } from './loginAnimation';
-import { register } from './loginAnimation';
-import Register from './Register_old';
 import ForgotPassword from './ForgotPassword';
 
 function Login()
@@ -17,7 +14,6 @@ function Login()
     const [message,setMessage] = useState('');
     const doLogin = async event =>
     {
-        console.log("checking");
         console.log("In DO login");
 
         const user = { /* Gathers User input to Register */
@@ -81,16 +77,13 @@ function Login()
                 var jwt = require('jsonwebtoken');
                 var ud = jwt.decode(storage.retrieveToken(),{complete:true});
                 var user = {};
-                if(ud){
-                    var userId = ud.payload.userId;
-                    console.log("user id type is: "+typeof(userId));
-                    var firstName = ud.payload.firstName;
-                    var lastName = ud.payload.lastName;
-                    user = {firstName:firstName,lastName:lastName,id:userId}
-                }else{
-                    user = {firstName:res.firstName,lastName:res.lastName,id:res.id, email:res.email, login: res.login}
-                    console.log("user id type is: "+typeof(user.id));
-                }
+
+                var userId = ud.payload.userId;
+                var firstName = ud.payload.firstName;
+                var lastName = ud.payload.lastName;
+                var email = ud.payload.email;
+                var favorites = ud.payload.favorites;
+                user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites}
                 
                 localStorage.setItem('user_data', JSON.stringify(user));
                 window.location.href = '/landing';

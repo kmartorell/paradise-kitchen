@@ -62,10 +62,11 @@ exports.setApp = function ( app, client )
         //ret = {error:e.message};
         ret = res.status(500);
       }
-
+    }else{
+      ret = {error:"Login/Password incorrect"};
     }
 
-    var ret = { id:id, firstName:fn, lastName:ln, email:email, login: login, favorites:fav, error:error};
+    // var ret = { id:id, firstName:fn, lastName:ln, email:email, login: login, favorites:fav, error:error};
     
 
     res.setHeader('Access-Control-Allow-Origin', '*');

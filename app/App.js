@@ -15,6 +15,7 @@ import ViewYourRecipes from './components/ViewYourRecipes'
 import YourFavorites from './components/YourFavorites'
 import ViewYourFavorites from './components/ViewYourFavorites'
 
+
 const Stack = createNativeStackNavigator();
 
 const App = () => {

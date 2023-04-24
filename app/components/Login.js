@@ -3,6 +3,9 @@ import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, 
 import Images from './Images';
 import axios from 'axios';
 
+const sign = require('jwt-encode');
+global.jwt = "";
+
 const Login = ({navigation, route}) =>
 {
     if(!route.params){
@@ -14,6 +17,13 @@ const Login = ({navigation, route}) =>
     const [errorMessage, setErrorMessage] = React.useState('');
     const [inputBorderColor, setBorderColor] = React.useState('black');
     const [data, setData] = React.useState('');
+
+    const secret = "777kitchen";
+    const testUser = "KruseM";
+    const testPass = "password";
+
+
+
     const doLogin = async ({navigation}, username,password) =>
     {
         setErrorMessage('');
@@ -41,7 +51,15 @@ const Login = ({navigation, route}) =>
 
     useEffect(() => {
         if(data){
-            if(data["id"] != -1){
+            if(data["id"] != -1){ /* SUCCESSFUL LOGIN */
+
+                const dataBody = {
+                    username, password
+                };
+        
+                jwt = sign(dataBody, secret);
+                console.log(jwt);
+
                 navigation.navigate('Landing', {id:data['id'], firstName:data['firstName'], lastName:data['lastName'], email:data['email'], login:data['login'], favorites:data['favorites']});
             }
             else{

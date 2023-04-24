@@ -7,6 +7,31 @@ const ProfilePage = ({navigation, route}) =>
 {
 
 const curUser = route.params.user;
+const [timer1, setTimer1] = React.useState('');
+
+useEffect(() => {
+        
+  const profPage = navigation.addListener('focus',() =>
+  {
+    jwtTimeout();
+  });
+  return profPage;
+}, [navigation]);
+
+const doLogout = () => {
+  jwt = '';
+  clearTimeout(timer1);
+  navigation.navigate('Login');
+};
+
+const jwtTimeout = () => {
+  const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
+  setTimer1(id1);
+};
+
+const clearTimers = () => {
+  clearTimeout(timer1);
+};
 
   return(
     <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -18,7 +43,7 @@ const curUser = route.params.user;
                   <Text style={styles.profileSubheader}>Name: {curUser.firstName} {curUser.lastName}</Text>
                   <Text style={styles.profileSubheader}>Email: {curUser.email}</Text>
                   <Text style={styles.profileSubheader}>Username: {curUser.login}</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {user: curUser})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {user: curUser})}}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

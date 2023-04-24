@@ -6,6 +6,32 @@ import axios from 'axios';
 const CreateRecipe = ({navigation, route}) =>
 {
 
+  const [timer1, setTimer1] = React.useState('');
+
+  useEffect(() => {
+        
+    const createPage = navigation.addListener('focus',() =>
+    {
+      jwtTimeout();
+    });
+    return createPage;
+  }, [navigation]);
+
+  const doLogout = () => {
+    jwt = '';
+    clearTimeout(timer1);
+    navigation.navigate('Login');
+  };
+  
+  const jwtTimeout = () => {
+    const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
+    setTimer1(id1);
+  };
+  
+  const clearTimers = () => {
+    clearTimeout(timer1);
+  };
+
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
@@ -36,11 +62,11 @@ const CreateRecipe = ({navigation, route}) =>
                   <Text style={styles.textInputTitle}>Recipe Description</Text>
                   <TextInput style = {styles.textBottomInputStyle} placeholderTextColor='grey' placeholder="Write a recipe description"/>
 
-                  <TouchableOpacity style={styles.buttonStyle}>
+                  <TouchableOpacity style={styles.buttonStyle} onPress={() => clearTimers()}>
                       <Text style={styles.buttonText}>Add Recipe</Text>
                   </TouchableOpacity>
 
-                  <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                  <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
                       <Text style={styles.buttonText}>Home</Text>
                   </TouchableOpacity>
 

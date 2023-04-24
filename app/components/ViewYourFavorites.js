@@ -9,6 +9,7 @@ const ViewRecipe = ({navigation, route}) =>
     const [user, setUser] = React.useState('');
     const [favorited, setFavorited] = React.useState('');
     const [data, setData] = React.useState('');
+    const [timer1, setTimer1] = React.useState('');
 
 
     const favoriteRecipe = async (userId, recipeId) =>
@@ -59,6 +60,8 @@ const ViewRecipe = ({navigation, route}) =>
         
         const setRecipeConst = navigation.addListener('focus',() =>
         {
+          jwtTimeout();
+
             setUser(route.params.user);
             if(!route.params.recipe){
                 navigation.navigate('Landing', {message:"ERROR: Recipe does not exist anymore"})
@@ -78,6 +81,21 @@ const ViewRecipe = ({navigation, route}) =>
           setFavorited(false);
       }, [data]);
 
+      const doLogout = () => {
+        jwt = '';
+        clearTimeout(timer1);
+        navigation.navigate('Login');
+      };
+    
+      const jwtTimeout = () => {
+        const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
+        setTimer1(id1);
+      };
+    
+      const clearTimers = () => {
+        clearTimeout(timer1);
+      };
+
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} contentInsetAdjustmentBehavior="automatic">
@@ -87,18 +105,18 @@ const ViewRecipe = ({navigation, route}) =>
                 <View style={styles.buttonHolder}>
                   <View style={styles.formButtons}>
                     <View style={styles.backDiv}>
-                      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('YourFavorites',{user: route.params.user})}>
+                      <TouchableOpacity style={styles.backButton} onPress={() => {clearTimers(); navigation.navigate('YourFavorites',{user: route.params.user})}}>
                             <Text style={styles.backButtonText}>Back</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.favorite}>
                       {favorited &&
-                      <TouchableOpacity style={styles.favoriteButton} onPress={() => unFavoriteRecipe(user.id, recipe.id)}>
+                      <TouchableOpacity style={styles.favoriteButton} onPress={() => {clearTimers(); unFavoriteRecipe(user.id, recipe.id)}}>
                           <Image source={Images.filledStar} style={styles.starIcon} />
                       </TouchableOpacity>
                       }
                       {!favorited &&
-                      <TouchableOpacity style={styles.favoriteButton} onPress={() => favoriteRecipe(user.id, recipe.id)}>
+                      <TouchableOpacity style={styles.favoriteButton} onPress={() => {clearTimers(); favoriteRecipe(user.id, recipe.id)}}>
                           <Image source={Images.unfilledStar} style={styles.starIcon} />
                       </TouchableOpacity>
                       }
@@ -149,7 +167,7 @@ const ViewRecipe = ({navigation, route}) =>
                     }
                   </View>
 
-                  <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                  <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
                       <Text style={styles.buttonText}>Home</Text>
                   </TouchableOpacity>
 

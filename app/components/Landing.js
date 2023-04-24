@@ -7,17 +7,15 @@ const Landing = ({navigation, route}) =>
 {
 
   const [user, setUser] = React.useState('');
-
-  const doLogout = event => 
-  {
-  event.preventDefault();
-      localStorage.removeItem("user_data")
-      window.location.href = '/';
-  };
+  const [testText, setTestText] = React.useState('NOT changed')
+  const [timer1, setTimer1] = React.useState('');
 
   useEffect(() => {
     const openLanding = navigation.addListener('focus',() =>
     {
+
+      jwtTimeout();
+
       // Grab user info
       fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
         method: 'POST',
@@ -40,6 +38,20 @@ const Landing = ({navigation, route}) =>
     return openLanding;
   }, [navigation]);
 
+  const doLogout = () => {
+    jwt = '';
+    clearTimeout(timer1);
+    navigation.navigate('Login');
+  };
+
+  const jwtTimeout = () => {
+    const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
+    setTimer1(id1);
+  };
+
+  const clearTimers = () => {
+    clearTimeout(timer1);
+  };
  
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -49,24 +61,25 @@ const Landing = ({navigation, route}) =>
                   <Text style={styles.header}>Welcome {user.firstName}</Text>
                   <View style={styles.buttonHolder}>
                   <Text style={styles.errorMessage}>{route.params.message}</Text>
-                    <TouchableOpacity style={styles.firstButtonStyle} onPress={() => navigation.navigate('SearchRecipes', {user: user})}>
+                    <TouchableOpacity style={styles.firstButtonStyle} onPress={() => {clearTimers(); navigation.navigate('SearchRecipes', {user: user})}}>
                       <Text style={styles.buttonText}>Search Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourFavorites', {user: user})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('YourFavorites', {user: user})}}>
                       <Text style={styles.buttonText}>Your Favorites</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('YourRecipes', {user: user})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('YourRecipes', {user: user})}}>
                       <Text style={styles.buttonText}>Your Recipes</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('CreateRecipe', {user: user})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('CreateRecipe', {user: user})}}>
                       <Text style={styles.buttonText}>Create Recipe</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('ProfilePage', {user: user})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('ProfilePage', {user: user})}}>
                       <Text style={styles.buttonText}>Profile Page</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {doLogout()}}>
                       <Text style={styles.buttonText}>Log Out</Text>
                     </TouchableOpacity>
+                    <Text>{jwt}</Text>
                   </View>
               </View>
           </SafeAreaView>

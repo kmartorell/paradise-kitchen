@@ -8,6 +8,7 @@ const YourFavorites = ({navigation, route}) =>
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
     const [user, setUser] = React.useState('');
+    const [timer1, setTimer1] = React.useState('');
 
     const renderCard = (card, index) => {
       return(
@@ -35,6 +36,9 @@ const YourFavorites = ({navigation, route}) =>
     useEffect(() => {
       const doFavoritesPull = navigation.addListener('focus',() =>
       {
+
+        jwtTimeout();
+
         fetch('https://paradise-kitchen.herokuapp.com/api/showfavorites', {
           method: 'POST',
           headers: {
@@ -75,6 +79,21 @@ const YourFavorites = ({navigation, route}) =>
       return doFavoritesPull;
     }, [navigation]);
 
+    const doLogout = () => {
+      jwt = '';
+      clearTimeout(timer1);
+      navigation.navigate('Login');
+    };
+  
+    const jwtTimeout = () => {
+      const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
+      setTimer1(id1);
+    };
+  
+    const clearTimers = () => {
+      clearTimeout(timer1);
+    };
+
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
           <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
@@ -83,7 +102,7 @@ const YourFavorites = ({navigation, route}) =>
                 <Text style={styles.header}>Paradise Kitchen</Text>
                 <View style={styles.mainLanding}>
                   <Text style={styles.subheader}>View Your Favorite Recipes Here!</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

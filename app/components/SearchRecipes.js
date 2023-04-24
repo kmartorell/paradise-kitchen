@@ -8,6 +8,7 @@ const SearchRecipes = ({navigation, route}) =>
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
     const [user, setUser] = React.useState('');
+    const [timer1, setTimer1] = React.useState('');
     
 
     const doSearch = async (search) =>
@@ -35,7 +36,7 @@ const SearchRecipes = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card, user:user})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => {clearTimers(); navigation.navigate('ViewRecipe', {recipe: card, user:user})}}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -59,6 +60,9 @@ const SearchRecipes = ({navigation, route}) =>
     useEffect(() => {
       const doSearch = navigation.addListener('focus',() =>
       {
+
+        jwtTimeout();
+
         fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
           method: 'POST',
           headers: {
@@ -98,6 +102,21 @@ const SearchRecipes = ({navigation, route}) =>
       return doSearch;
     }, [navigation]);
 
+    const doLogout = () => {
+      jwt = '';
+      clearTimeout(timer1);
+      navigation.navigate('Login');
+    };
+  
+    const jwtTimeout = () => {
+      const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
+      setTimer1(id1);
+    };
+  
+    const clearTimers = () => {
+      clearTimeout(timer1);
+    };
+
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
           <ScrollView style={styles.scrollView} contentInsetAdjustmentBehavior="automatic">
@@ -112,13 +131,13 @@ const SearchRecipes = ({navigation, route}) =>
                         value={search}
                         placeholder="Type in a Name, Description, Ingredient or Tag here."
                     />
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch(search)}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doSearch(search)}}>
                         <Text style={styles.buttonText}>Search</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doSearch('')}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doSearch('')}}>
                         <Text style={styles.buttonText}>Reset</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

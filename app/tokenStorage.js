@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
   export const retrieveToken = async () => {
     try {
       var ud = await AsyncStorage.getItem('token_data')
-      console.log("ud: ", ud);
       if(value !== null) {
         // value previously stored
       }

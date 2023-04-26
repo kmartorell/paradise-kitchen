@@ -1,6 +1,7 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired, refresh } from "react-jwt";
 import axios from 'axios';
 
 const EditRecipe = ({navigation, route}) =>
@@ -18,113 +19,92 @@ const EditRecipe = ({navigation, route}) =>
     const [created, setCreated] = React.useState('');
     const [recipe, setRecipe] = React.useState('');
 
-    
+    var storage = require('../tokenStorage.js');
 
     const doEdit = async (name, description, minutes, tags, nutrition, steps, ingredients) =>
     {
-      let n_steps;
-      let n_ingredients;
-      let createdBy;
-      let submitted;
-      console.log(user);
-      name = name.trim();
-      tags = tags.replaceAll("\n", "").split(",");
-      steps = steps.replaceAll("\n", "").split(",");
-      n_steps = steps.length;
-      nutrition = nutrition.replaceAll("\n", "").split(",");
-      for(let i=0;i<nutrition.length;i++)
-        nutrition[i] = parseInt(nutrition[i])
-      ingredients = ingredients.replaceAll("\n", "").split(",");
-      n_ingredients = ingredients.length;
-      createdby = user.id;
-      submitted = new Date();
-      let recipe = JSON.stringify({
-                name: name,
-                description: description,
-                minutes: minutes,
-                tags: tags,
-                nutrition: nutrition,
-                steps: steps,
-                ingredients: ingredients,
-                n_ingredients: n_ingredients,
-                n_steps: n_steps,
-                createdby: createdby,
-                submitted: submitted,
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+          doLogout();
+        }else{
+          var user = decodeToken(await storage.retrieveToken());
+          let n_steps;
+          let n_ingredients;
+          let createdby;
+          let submitted;
+          console.log(user);
+          name = name.trim();
+          tags = tags.replaceAll("\n", "").split(",");
+          steps = steps.replaceAll("\n", "").split(",");
+          n_steps = steps.length;
+          nutrition = nutrition.replaceAll("\n", "").split(",");
+          for(let i=0;i<nutrition.length;i++)
+            nutrition[i] = parseInt(nutrition[i])
+          ingredients = ingredients.replaceAll("\n", "").split(",");
+          n_ingredients = ingredients.length;
+          createdby = user.id;
+          submitted = new Date();
+          fetch('https://paradise-kitchen.herokuapp.com/api/updaterecipe', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  id: route.params.recipe.id,
+                  name: name,
+                  description: description,
+                  minutes: minutes,
+                  tags: tags,
+                  nutrition: nutrition,
+                  steps: steps,
+                  ingredients: ingredients,
+                  n_ingredients: n_ingredients,
+                  n_steps: n_steps,
+                  createdby: createdby,
+                  submitted: submitted,
+                  jwtToken: token_data,
+              })
+            })    
+            .then(response => response.json())
+            .then(json => {
+                setData(json);
+            })
+            .catch(error => {
+              console.error(error);
             });
-
-            console.log(recipe);
-      fetch('https://paradise-kitchen.herokuapp.com/api/updaterecipe', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              id: route.params.recipe.id,
-              name: name,
-              description: description,
-              minutes: minutes,
-              tags: tags,
-              nutrition: nutrition,
-              steps: steps,
-              ingredients: ingredients,
-              n_ingredients: n_ingredients,
-              n_steps: n_steps,
-              createdby: createdby,
-              submitted: submitted,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          }
+        })();      
     };
     
     useEffect(() => {
       const startEdit = navigation.addListener('focus',() =>
       {
-        let tempRecipe = route.params.recipe;
-        console.log(tempRecipe);
-        tempRecipe.tags = tempRecipe.tags.join(",\n");
-        tempRecipe.minutes = tempRecipe.minutes.toString();
-        tempRecipe.steps = tempRecipe.steps.join(",\n");
-        for(let i=0;i<tempRecipe.nutrition.length;i++)
-          tempRecipe.nutrition[i] = tempRecipe.nutrition[i].toString();
-        tempRecipe.nutrition = tempRecipe.nutrition.join(",");
-        tempRecipe.ingredients = tempRecipe.ingredients.join(",\n");
+        (async () => {
+          var user = decodeToken(await storage.retrieveToken());
+          let tempRecipe = route.params.recipe;
+          console.log(tempRecipe);
+          tempRecipe.tags = tempRecipe.tags.join(",\n");
+          tempRecipe.minutes = tempRecipe.minutes.toString();
+          tempRecipe.steps = tempRecipe.steps.join(",\n");
+          for(let i=0;i<tempRecipe.nutrition.length;i++)
+            tempRecipe.nutrition[i] = tempRecipe.nutrition[i].toString();
+          tempRecipe.nutrition = tempRecipe.nutrition.join(",");
+          tempRecipe.ingredients = tempRecipe.ingredients.join(",\n");
 
 
-        if(!route.params.recipe){
-            navigation.navigate('Landing', {errormessage:"ERROR: Recipe does not exist anymore"})
-        }else{
-            setRecipe(route.params.recipe);
-            if(route.params.user.favorites.includes(route.params.recipe.id))
-              setFavorited(true);
-            if(route.params.recipe.createdby.includes(route.params.user.id))
-              setCreated(true);
-        }
-
-        // Grab user info
-        fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: route.params.user.id,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setUser(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          if(!route.params.recipe){
+              navigation.navigate('Landing', {errormessage:"ERROR: Recipe does not exist anymore"})
+          }else{
+              setRecipe(route.params.recipe);
+              if(user.favorites.includes(route.params.recipe.id))
+                setFavorited(true);
+              if(route.params.recipe.createdby.includes(user.id))
+                setCreated(true);
+          }
+        })();  
       });
 
       return startEdit;
@@ -132,12 +112,12 @@ const EditRecipe = ({navigation, route}) =>
 
     useEffect(() => {
       if(data){
+          storage.storeToken(data.jwtToken);
           if(data.error == 'update success'){
               navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"Edit Recipe Successful!", errormessage:""});
           }
           else{
             navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"", errormessage:"Error Editing Recipe, Please try again."});
-
           }
       }
     }, [data]);

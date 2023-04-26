@@ -2,29 +2,23 @@ import React, { useState, useEffect, setState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Touchable, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired } from "react-jwt";
 import axios from 'axios';
-import { useJwt } from "react-jwt";
-const sign = require('jwt-encode');
-global.jwt = "";
 
 const Login = ({navigation, route}) =>
 {
-    if(!route.params){
+    if(!route.params){ 
         route.params = {message:''};
     }
+
     
     const [username, onChangeUserName] = React.useState('');
     const [password, onChangePassword] = React.useState('');
     const [errorMessage, setErrorMessage] = React.useState('');
     const [inputBorderColor, setBorderColor] = React.useState('black');
     const [data, setData] = React.useState('');
-
-    const secret = "777kitchen";
-    const testUser = "KruseM";
-    const testPass = "password";
-
     var storage = require('../tokenStorage.js');
-
+    
 
     const doLogin = async ({navigation}, username,password) =>
     {
@@ -53,32 +47,14 @@ const Login = ({navigation, route}) =>
 
     useEffect(() => {
         if(data){
-            if(data["id"] != -1){ /* SUCCESSFUL LOGIN */
-                (async () => {
-                    console.log("Getting here");
-                    storage.storeToken(data);
-                
-                    console.log(await storage.retrieveToken())
-                    
-                    const { decodedToken, isExpired } = useJwt(await storage.retrieveToken());
-                    var ud = decodedToken;
-                    console.log(decodedToken);
-                    var user = {};
-
-                    var userId = ud.payload.userId;
-                    var firstName = ud.payload.firstName;
-                    var lastName = ud.payload.lastName;
-                    var email = ud.payload.email;
-                    var favorites = ud.payload.favorites;
-                    user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites}
-                    
-                    AsyncStorage.setItem('user_data', JSON.stringify(user));
-
+            if(data["error"] != "Login/Password incorrect"){ /* SUCCESSFUL LOGIN */
+                (async () => { 
+                    await storage.storeToken(data);
                     navigation.navigate('Landing');
-                })()
+                })();
+                
             }
             else{
-                console.log("Getting here");
                 setErrorMessage('Your username or password is incorrect.\n Please try again.');
                 setBorderColor('red');
                 onChangeUserName('');
@@ -86,6 +62,29 @@ const Login = ({navigation, route}) =>
             }
         }
     }, [data]);
+
+    useEffect(() => {
+        const openLogin = navigation.addListener('focus',() =>
+        {
+          (async () => {
+            // Grab user info
+            const token_data = await storage.retrieveToken();
+            if(!token_data){
+                onChangeUserName('');
+                onChangePassword('');
+            }else{
+                if(isExpired(token_data)){
+                    AsyncStorage.removeItem("user_data");
+                    AsyncStorage.removeItem("token_data");
+                    navigation.navigate('Login');
+                }else{
+                    navigation.navigate('Landing');
+                }
+            }
+          })();
+        });
+        return openLogin;
+      }, []);
 
     const getBorderColor = () =>{
         return inputBorderColor;
@@ -107,8 +106,8 @@ const Login = ({navigation, route}) =>
                                         <Text style={styles.buttonText}>Register</Text>
                                     </TouchableOpacity>
                             </View>
-                            {/*Commented out because it messes with view <Text style={styles.message}>{route.params.message}</Text>*/}
-                            {/*<Text style={styles.errorMessage}>{errorMessage}</Text>*/}
+                            <Text style={styles.message}>{route.params.message}</Text>
+                            <Text style={styles.errorMessage}>{errorMessage}</Text>
                             <Text style={styles.subheader}>Username</Text>
                             <TextInput
                                 style={[styles.input, {borderColor:getBorderColor()}]}

@@ -1,18 +1,18 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired, refresh } from "react-jwt";
 import axios from 'axios';
 
 const YourFavorites = ({navigation, route}) =>
 { 
-    const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
-    const [user, setUser] = React.useState('');
-    const [timer1, setTimer1] = React.useState('');
+
+    var storage = require('../tokenStorage.js');
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card, user:user})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -36,63 +36,39 @@ const YourFavorites = ({navigation, route}) =>
     useEffect(() => {
       const doFavoritesPull = navigation.addListener('focus',() =>
       {
-
-        jwtTimeout();
-
-        fetch('https://paradise-kitchen.herokuapp.com/api/showfavorites', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: route.params.user.id,
+        (async () => {
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+            doLogout();
+        }else{
+          var user = decodeToken(await storage.retrieveToken());
+          fetch('https://paradise-kitchen.herokuapp.com/api/showfavorites', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                jwtToken:token_data,
+            })
           })
-        })
-        .then(response => response.json())
-        .then(json => {
-            setResults(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-        // Grab user info
-        fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: route.params.user.id,
+          .then(response => response.json())
+          .then(json => {
+              setResults(json);
           })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setUser(json);
-        })
-        .catch(error => {
-          console.error(error);
+          .catch(error => {
+            console.error(error);
+          });
+        }
         });
       });
-      console.log(results);
       return doFavoritesPull;
     }, [navigation]);
 
-    const doLogout = () => {
-      jwt = '';
-      clearTimeout(timer1);
-      navigation.navigate('Login');
-    };
-  
-    const jwtTimeout = () => {
-      const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-      setTimer1(id1);
-    };
-  
-    const clearTimers = () => {
-      clearTimeout(timer1);
-    };
+    useEffect(() => {
+      storage.storeToken(results[0].jwtToken);
+    }, [results]);
 
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -102,7 +78,7 @@ const YourFavorites = ({navigation, route}) =>
                 <Text style={styles.header}>Paradise Kitchen</Text>
                 <View style={styles.mainLanding}>
                   <Text style={styles.subheader}>View Your Favorite Recipes Here!</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

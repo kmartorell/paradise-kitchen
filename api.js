@@ -276,7 +276,7 @@ exports.setApp = function ( app, client )
   {
     // incoming: userId, color
     // outgoing: error
-    const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby} = req.body;
+    const { name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken} = req.body;
    // name = req.body.name;
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
@@ -320,7 +320,7 @@ exports.setApp = function ( app, client )
       error = e.toString();
     }
 
-    /*
+
     var refreshedToken = null;
 
     try
@@ -332,8 +332,8 @@ exports.setApp = function ( app, client )
       console.log(e.message);
     }
 
-    */
-    var ret = { error: error};
+ 
+    var ret = { error: error, jwtToken: refreshedToken};
     res.status(200).json(ret);
   });
 
@@ -458,7 +458,15 @@ exports.setApp = function ( app, client )
     const updateRecipe = await Recipe.findByIdAndUpdate(id, {$set: {Name: name, Minutes: minutes, Submitted: submitted, Tags: tags, Nutrition: nutrition, N_Steps: n_steps, 
       Steps: steps, Description: description, Ingredients: ingredients, N_Ingredients: n_ingredients, CreatedBy: createdby}}, {new: true});
     var error = '';
-
+    var refreshedToken = null;
+    try
+    {
+      refreshedToken = token.refresh(jwtToken);
+    }
+    catch(e)
+    {
+      console.log(e.message);
+    }
     if(updateRecipe != null)
     {
       try
@@ -466,7 +474,7 @@ exports.setApp = function ( app, client )
         //console.log();
         error = "update success";
         var ret = {id: updateRecipe._id, name: updateRecipe.Name, minutes: updateRecipe.Minutes, submitted: updateRecipe.Submitted, tags: updateRecipe.Tags, nutrition: updateRecipe.Nutrition, n_steps: updateRecipe.N_Steps, steps: updateRecipe.Steps, 
-          description: updateRecipe.Description, ingredients: updateRecipe.Ingredients, n_ingredients: updateRecipe.N_Ingredients, createdby: updateRecipe.CreatedBy, error: error};
+          description: updateRecipe.Description, ingredients: updateRecipe.Ingredients, n_ingredients: updateRecipe.N_Ingredients, createdby: updateRecipe.CreatedBy, error: error, jwtToken: refreshedToken};
       }
       catch(e)
       {
@@ -485,11 +493,9 @@ exports.setApp = function ( app, client )
   app.post('/api/deleterecipe', async (req, res, next) =>
   {
     const {id, jwtToken } = req.body;
-    //console.log(JSON.stringify(req.body));
 
     const deleteRecipe = await Recipe.findByIdAndRemove(id);
     const usersFavorited = await User.find({favorites : id});
-    console.log(usersFavorited);
 
     if(usersFavorited.length>0){
       for(let i=0;i<usersFavorited.length;i++){
@@ -502,6 +508,9 @@ exports.setApp = function ( app, client )
       }
     } 
     var error = '';
+    var getUser = token.decode(jwtToken).payload;
+    var refreshedToken = token.createToken(getUser.firstName, getUser.lastName, getUser._id, getUser.email, getUser.favorites);
+
 
     if(deleteRecipe)
     {
@@ -552,6 +561,16 @@ exports.setApp = function ( app, client )
 
     var error = '';
     
+    var refreshedToken = null;
+    try
+    {
+      refreshedToken = token.refresh(jwtToken);
+    }
+    catch(e)
+    {
+      console.log(e.message);
+    }
+
     try
     {
       if(favorites.length > 0){
@@ -559,13 +578,13 @@ exports.setApp = function ( app, client )
         var ret = [];
         for(var i = 0; i < favorites.length; i++){
           ret[i] = {id: favorites[i]._id, name: favorites[i].Name, minutes: favorites[i].Minutes, submitted: favorites[i].Submitted, tags: favorites[i].Tags, nutrition: favorites[i].Nutrition, n_steps: favorites[i].N_Steps, steps: favorites[i].Steps, 
-            description: favorites[i].Description, shortDescription: truncate(favorites[i].Description, 80), ingredients: favorites[i].Ingredients, n_ingredients: favorites[i].N_Ingredients, createdby: favorites[i].CreatedBy, error: error};
+            description: favorites[i].Description, shortDescription: truncate(favorites[i].Description, 80), ingredients: favorites[i].Ingredients, n_ingredients: favorites[i].N_Ingredients, createdby: favorites[i].CreatedBy, error: error, jwtToken:refreshedToken};
         }
         
       }
       else{
         error = "show favorites fail";
-        var ret = {error:error};
+        var ret = {error:error, jwtToken:refreshedToken};
       }
     }
     catch(e)
@@ -595,6 +614,17 @@ exports.setApp = function ( app, client )
     );
     const createdRecipes = await Recipe.find({CreatedBy:userId});
     var error = '';
+
+    var refreshedToken = null;
+    try
+    {
+      refreshedToken = token.refresh(jwtToken);
+    }
+    catch(e)
+    {
+      console.log(e.message);
+    }
+
     try
     {
       if(createdRecipes.length > 0){
@@ -602,13 +632,13 @@ exports.setApp = function ( app, client )
         var ret = [];
         for(var i = 0; i < createdRecipes.length; i++){
           ret[i] = {id: createdRecipes[i]._id, name: createdRecipes[i].Name, minutes: createdRecipes[i].Minutes, submitted: createdRecipes[i].Submitted, tags: createdRecipes[i].Tags, nutrition: createdRecipes[i].Nutrition, n_steps: createdRecipes[i].N_Steps, steps: createdRecipes[i].Steps, 
-            description: createdRecipes[i].Description, shortDescription: truncate(createdRecipes[i].Description, 80),  ingredients: createdRecipes[i].Ingredients, n_ingredients: createdRecipes[i].N_Ingredients, createdby: createdRecipes[i].CreatedBy, error: error};
+            description: createdRecipes[i].Description, shortDescription: truncate(createdRecipes[i].Description, 80),  ingredients: createdRecipes[i].Ingredients, n_ingredients: createdRecipes[i].N_Ingredients, createdby: createdRecipes[i].CreatedBy, error: error, jwtToken:refreshedToken};
         }
         
       }
       else{
         error = "created pull fail";
-        var ret = {error:error};
+        var ret = {error:error, jwtToken:refreshedToken};
       }
     }
     catch(e)
@@ -639,6 +669,8 @@ exports.setApp = function ( app, client )
     );
 
     const addFavorite = await User.findByIdAndUpdate(userId, {$addToSet: {favorites: recipeId}});
+    const getUser = await User.findById(userId);
+    var refreshedToken = token.createToken(getUser.firstName, getUser.lastName, getUser._id, getUser.email, getUser.favorites);
     var error = '';
     if(recipeId != null)
     {
@@ -681,6 +713,9 @@ exports.setApp = function ( app, client )
     );
 
     const removeFavorite = await User.findByIdAndUpdate(userId, {$pull: {favorites: recipeId}});
+    const getUser = await User.findById(userId);
+    var refreshedToken = token.createToken(getUser.firstName, getUser.lastName, getUser._id, getUser.email, getUser.favorites);
+
     var error = '';
     if(recipeId != null)
     {

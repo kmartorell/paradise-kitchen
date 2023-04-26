@@ -1,42 +1,51 @@
 import React, { useState, useEffect, setState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired, refresh } from "react-jwt";
 import axios from 'axios';
+
 
 const SearchRecipes = ({navigation, route}) =>
 { 
     const [search, onChangeSearch] = React.useState('');
     const [results, setResults] = React.useState('');
-    const [user, setUser] = React.useState('');
-    const [timer1, setTimer1] = React.useState('');
     
+    var storage = require('../tokenStorage.js');
 
     const doSearch = async (search) =>
     {
-      if(search == '')
-        onChangeSearch('');
-      fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              text: search,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setResults(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+            doLogout();
+        }else{
+            fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  text: search,
+                  jwtToken:token_data,
+              })
+            })    
+            .then(response => response.json())
+            .then(json => {
+                setResults(json);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        }
+      })();
     };
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => {clearTimers(); navigation.navigate('ViewRecipe', {recipe: card, user:user})}}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => {navigation.navigate('ViewRecipe', {recipe: card})}}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -58,63 +67,46 @@ const SearchRecipes = ({navigation, route}) =>
     };
     
     useEffect(() => {
-      const doSearch = navigation.addListener('focus',() =>
-      {
-
-        jwtTimeout();
-
-        fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              text: '',
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setResults(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-        // Grab user info
-        fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: route.params.user.id,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setUser(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      const openSearch = navigation.addListener('focus',() =>
+      {         
+        (async () => {
+          // Grab user info
+          const token_data = await storage.retrieveToken();
+          if(!token_data){
+              doLogout();
+          }else{
+              fetch('https://paradise-kitchen.herokuapp.com/api/searchrecipe', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    text: '',
+                    jwtToken:token_data
+                })
+              })    
+              .then(response => response.json())
+              .then(json => {
+                  setResults(json);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+        })();
       });
-      return doSearch;
+      return openSearch;
     }, [navigation]);
 
+    useEffect(() => {
+      storage.storeToken(results.jwtToken);
+    }, [results]);
+
     const doLogout = () => {
-      jwt = '';
-      clearTimeout(timer1);
+      AsyncStorage.removeItem("user_data");
+      AsyncStorage.removeItem("token_data");
       navigation.navigate('Login');
-    };
-  
-    const jwtTimeout = () => {
-      const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-      setTimer1(id1);
-    };
-  
-    const clearTimers = () => {
-      clearTimeout(timer1);
     };
 
     return(
@@ -132,13 +124,13 @@ const SearchRecipes = ({navigation, route}) =>
                           value={search}
                           placeholder="Type in a Name, Description, Ingredient or Tag here."
                       />
-                      <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doSearch(search)}}>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => {doSearch(search)}}>
                           <Text style={styles.buttonText}>Search</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doSearch('')}}>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => {doSearch('')}}>
                           <Text style={styles.buttonText}>Reset</Text>
                       </TouchableOpacity>
-                      <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                      <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing')}>
                           <Text style={styles.buttonText}>Home</Text>
                       </TouchableOpacity>
                   </View>

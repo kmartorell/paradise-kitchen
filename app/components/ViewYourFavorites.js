@@ -1,6 +1,7 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired, refresh } from "react-jwt";
 import axios from 'axios';
 
 const ViewRecipe = ({navigation, route}) =>
@@ -11,90 +12,99 @@ const ViewRecipe = ({navigation, route}) =>
     const [data, setData] = React.useState('');
     const [timer1, setTimer1] = React.useState('');
 
+    var storage = require('../tokenStorage.js');
 
-    const favoriteRecipe = async (userId, recipeId) =>
+
+    const favoriteRecipe = async (recipeId) =>
     {
-      fetch('https://paradise-kitchen.herokuapp.com/api/addfavorite', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: userId,
-              recipeId: recipeId,
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+          doLogout();
+        }else{
+          var user = decodeToken(await storage.retrieveToken());
+          fetch('https://paradise-kitchen.herokuapp.com/api/addfavorite', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                recipeId: recipeId,
+                jwtToken: token_data
+            })
+          })    
+          .then(response => response.json())
+          .then(json => {
+              setData(json);
           })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          .catch(error => {
+            console.error(error);
+          });
+        }
+      })();
     };
 
-    const unFavoriteRecipe = async (userId, recipeId) =>
+    const unFavoriteRecipe = async (recipeId) =>
     {
-      fetch('https://paradise-kitchen.herokuapp.com/api/removefavorite', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: userId,
-              recipeId: recipeId,
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+          doLogout();
+        }else{
+          var user = decodeToken(await storage.retrieveToken());
+          fetch('https://paradise-kitchen.herokuapp.com/api/removefavorite', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                recipeId: recipeId,
+                jwtToken: token_data,
+            })
+          })    
+          .then(response => response.json())
+          .then(json => {
+              setData(json);
           })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          .catch(error => {
+            console.error(error);
+          });
+        }
+      })();
     };
 
     useEffect(() => {
         
         const setRecipeConst = navigation.addListener('focus',() =>
-        {
-          jwtTimeout();
-
-            setUser(route.params.user);
-            if(!route.params.recipe){
-                navigation.navigate('Landing', {message:"ERROR: Recipe does not exist anymore"})
-            }else{
-                setRecipe(route.params.recipe);
-                if(route.params.user.favorites.includes(route.params.recipe.id))
-                  setFavorited(true);
-            }
+        {         
+          (async () => {   
+          var user = decodeToken(await storage.retrieveToken());
+          if(!route.params.recipe){
+              navigation.navigate('Landing', {message:"ERROR: Recipe does not exist anymore"})
+          }else{
+              setRecipe(route.params.recipe);
+              if(user.favorites.includes(route.params.recipe.id))
+                setFavorited(true);
+          }
+          })();
         });
         return setRecipeConst;
       }, [navigation]);
 
       useEffect(() => {
+        storage.storeToken(data.jwtToken);
         if(data.error == "add favorite success")
           setFavorited(true);
         else if(data.error == "remove favorite success")
           setFavorited(false);
       }, [data]);
 
-      const doLogout = () => {
-        jwt = '';
-        clearTimeout(timer1);
-        navigation.navigate('Login');
-      };
-    
-      const jwtTimeout = () => {
-        const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-        setTimer1(id1);
-      };
-    
-      const clearTimers = () => {
-        clearTimeout(timer1);
-      };
 
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>

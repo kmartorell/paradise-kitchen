@@ -75,26 +75,13 @@ const ViewRecipe = ({navigation, route}) =>
       }, [navigation]);
 
       useEffect(() => {
+        storage.storeToken(data.jwtToken);
         if(data.error == "add favorite success")
           setFavorited(true);
         else if(data.error == "remove favorite success")
           setFavorited(false);
       }, [data]);
 
-      const doLogout = () => {
-        jwt = '';
-        clearTimeout(timer1);
-        navigation.navigate('Login');
-      };
-    
-      const jwtTimeout = () => {
-        const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-        setTimer1(id1);
-      };
-    
-      const clearTimers = () => {
-        clearTimeout(timer1);
-      };
 
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>

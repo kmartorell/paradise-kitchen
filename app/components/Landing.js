@@ -1,39 +1,50 @@
 import React, { useState, useEffect, setState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired} from "react-jwt";
 import axios from 'axios';
 
 const Landing = ({navigation, route}) =>
 {
 
+  const [firstName, onChangeFirstName] = React.useState('');
+  var storage = require('../tokenStorage.js')
+
+  if(!route.params){
+    route.params = {message:''};
+  }
+
   useEffect(() => {
     const openLanding = navigation.addListener('focus',() =>
     {
-
-      jwtTimeout();
-
-      // Grab user info
-      var _ud = localStorage.getItem('user_data');
-      var ud = JSON.parse(_ud);
-      var userId = ud.id;
-      var firstName = ud.firstName;
-      var lastName = ud.lastName;
-      var email = ud.email;
-      var favorites = ud.favorites;
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        console.log(token_data);
+        if(!token_data){
+            doLogout();
+        }else{
+            var user = decodeToken(await storage.retrieveToken());
+            onChangeFirstName(user.firstName);
+        }
+      })();
     });
     return openLanding;
   }, [navigation]);
 
   const doLogout = () => {
-    localStorage.removeItem("user_data");
+    AsyncStorage.removeItem("user_data");
+    AsyncStorage.removeItem("token_data");
     navigation.navigate('Login');
   };
+
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
           <SafeAreaView style={styles.container}>
               <Image source={Images.logo} style={styles.logo} />
               <View style={styles.mainLanding}>
-                  <Text style={styles.header}>Welcome {user.firstName}</Text>
+                  <Text style={styles.header}>Welcome {firstName}</Text>
                   <View style={styles.buttonHolder}>
                   <Text style={styles.errorMessage}>{route.params.message}</Text>
                   <Text style={styles.errorMessage}>{route.params.errormessage}</Text>

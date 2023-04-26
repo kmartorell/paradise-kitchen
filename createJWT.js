@@ -55,3 +55,8 @@ exports.refresh = function( token )
   var favorites = ud.payload.favorites;
   return _createToken( firstName, lastName, userId, email, favorites);
 }
+
+exports.decode = function( token )
+{
+  return jwt.decode(token,{complete:true});
+}

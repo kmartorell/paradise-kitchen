@@ -138,11 +138,14 @@ const ViewYourRecipes = ({navigation, route}) =>
       }, [navigation]);
 
       useEffect(() => {
-        storage.storeToken(data.jwtToken);
-        if(data.error == "add favorite success")
-          setFavorited(true);
-        else if(data.error == "remove favorite success")
-          setFavorited(false);
+        if(data){
+          storage.storeToken(data.jwtToken.accessToken);
+          if(data.error == "add favorite success")
+            setFavorited(true);
+          else if(data.error == "remove favorite success")
+            setFavorited(false);
+        }
+
       }, [data]);
 
       const doLogout = () => {
@@ -153,7 +156,7 @@ const ViewYourRecipes = ({navigation, route}) =>
 
       useEffect(() => {
         if(deleteData.error == "delete success"){
-            storage.storeToken(deleteData.jwtToken);
+          storage.storeToken(deleteData.jwtToken.accessToken);
             navigation.navigate('Landing', {successmessage:"Delete successful"});
         }
       }, [deleteData]);

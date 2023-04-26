@@ -9,7 +9,7 @@ const Landing = ({navigation, route}) =>
 {
 
   const [firstName, onChangeFirstName] = React.useState('');
-  var storage = require('../tokenStorage.js')
+  var storage = require('../tokenStorage.js');
 
   if(!route.params){
     route.params = {message:''};

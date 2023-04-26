@@ -111,10 +111,7 @@ const EditRecipe = ({navigation, route}) =>
 
     useEffect(() => {
       if(data){
-          storage.storeToken(data.jwtToken);
-          var user = decodeToken(data.jwtToken);
-          console.log("Update User:");
-          console.log(user);
+          storage.storeToken(data.jwtToken.accessToken);
           if(data.error == 'update success'){
               navigation.navigate('Landing', {successmessage:"Edit Recipe Successful!", errormessage:""});
           }

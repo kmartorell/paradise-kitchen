@@ -1,27 +1,12 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired, refresh } from "react-jwt";
 import axios from 'axios';
 
 const CreateRecipe = ({navigation, route}) =>
 {
 
-  const [timer1, setTimer1] = React.useState('');
-
-  const doLogout = () => {
-    jwt = '';
-    clearTimeout(timer1);
-    navigation.navigate('Login');
-  };
-  
-  const jwtTimeout = () => {
-    const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-    setTimer1(id1);
-  };
-  
-  const clearTimers = () => {
-    clearTimeout(timer1);
-  };
     const [name, onChangeName] = React.useState('');
     const [description, onChangeDescription] = React.useState('');
     const [minutes, onChangeMintues] = React.useState('');
@@ -30,104 +15,75 @@ const CreateRecipe = ({navigation, route}) =>
     const [steps, onChangeSteps] = React.useState('');
     const [ingredients, onChangeIngredients] = React.useState('');
     const [data, setData] = React.useState('');
-    const [user, setUser] = React.useState('');
+
+    var storage = require('../tokenStorage.js');
     
 
     const doCreate = async (name, description, minutes, tags, nutrition, steps, ingredients) =>
     {
-      let n_steps;
-      let n_ingredients;
-      let createdBy;
-      let submitted;
-      console.log(user);
-      tags = tags.replaceAll("\n", "").split(",");
-      steps = steps.replaceAll("\n", "").split(",");
-      minutes = parseInt(minutes);
-      n_steps = steps.length;
-      nutrition = nutrition.replaceAll("\n", "").split(",");
-      for(let i=0;i<nutrition.length;i++)
-        nutrition[i] = parseInt(nutrition[i])
-      ingredients = ingredients.replaceAll("\n", "").split(",");
-      n_ingredients = ingredients.length;
-      createdby = user.id;
-      submitted = new Date();
-      let recipe = JSON.stringify({
-                name: name,
-                description: description,
-                minutes: minutes,
-                tags: tags,
-                nutrition: nutrition,
-                steps: steps,
-                ingredients: ingredients,
-                n_ingredients: n_ingredients,
-                n_steps: n_steps,
-                createdby: createdby,
-                submitted: submitted,
-            });
-
-            console.log(recipe);
-      fetch('https://paradise-kitchen.herokuapp.com/api/addRecipe', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              name: name,
-              description: description,
-              minutes: minutes,
-              tags: tags,
-              nutrition: nutrition,
-              steps: steps,
-              ingredients: ingredients,
-              n_ingredients: n_ingredients,
-              n_steps: n_steps,
-              createdby: createdby,
-              submitted: submitted,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    };
-    
-    useEffect(() => {
-      const startCreate = navigation.addListener('focus',() =>
-      {
+      
+      (async () => {
         // Grab user info
-        jwtTimeout();
-        fetch('https://paradise-kitchen.herokuapp.com/api/getUser', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: route.params.user.id,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setUser(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-      });
-      return startCreate;
-    }, [navigation]);
-
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+          doLogout();
+        }else{
+          var user = decodeToken(await storage.retrieveToken());let n_steps;
+          let n_ingredients;
+          let createdby;
+          let submitted;
+          console.log(user);
+          tags = tags.replaceAll("\n", "").split(",");
+          steps = steps.replaceAll("\n", "").split(",");
+          minutes = parseInt(minutes);
+          n_steps = steps.length;
+          nutrition = nutrition.replaceAll("\n", "").split(",");
+          for(let i=0;i<nutrition.length;i++)
+            nutrition[i] = parseInt(nutrition[i])
+          ingredients = ingredients.replaceAll("\n", "").split(",");
+          n_ingredients = ingredients.length;
+          createdby = user.userId;
+          submitted = new Date();
+          fetch('https://paradise-kitchen.herokuapp.com/api/addRecipe', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  name: name,
+                  description: description,
+                  minutes: minutes,
+                  tags: tags,
+                  nutrition: nutrition,
+                  steps: steps,
+                  ingredients: ingredients,
+                  n_ingredients: n_ingredients,
+                  n_steps: n_steps,
+                  createdby: createdby,
+                  submitted: submitted,
+                  jwtToken: token_data,
+              })
+            })    
+            .then(response => response.json())
+            .then(json => {
+                setData(json);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+      })();  
+    };
+  
     useEffect(() => {
       if(data){
+        storage.storeToken(data.jwtToken.accessToken);
           if(data.error == 'success'){
-              navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"Added Recipe Successful!", errormessage:""});
+              navigation.navigate('Landing', {successmessage:"Create Recipe Successful!", errormessage:""});
           }
           else{
-            navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"", errormessage:"Error Adding Recipe, Please try again."});
+            navigation.navigate('Landing', {successmessage:"", errormessage:"Error Creating Recipe, Please try again."});
 
           }
       }
@@ -213,11 +169,11 @@ const CreateRecipe = ({navigation, route}) =>
                       value={ingredients} 
                       placeholder="Enter Ingredients"/>
 
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); doCreate(name, description, minutes, tags, nutrition, steps, ingredients)}}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => doCreate(name, description, minutes, tags, nutrition, steps, ingredients)}>
                         <Text style={styles.buttonText}>Add Recipe</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing')}>
                         <Text style={styles.buttonText}>Cancel</Text>
                     </TouchableOpacity>
 

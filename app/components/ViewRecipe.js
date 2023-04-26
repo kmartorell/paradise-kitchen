@@ -153,7 +153,7 @@ const ViewRecipe = ({navigation, route}) =>
 
       useEffect(() => {
         if(deleteData.error == "delete success"){
-            storage.storeToken(deleteData.jwtToken);
+          storage.storeToken(deleteData.jwtToken.accessToken);
             navigation.navigate('Landing', {successmessage:"Delete successful"});
         }
       }, [deleteData]);

@@ -68,8 +68,7 @@ const YourRecipes = ({navigation, route}) =>
     }, [navigation]);
 
     useEffect(() => {
-      console.log(results);
-      // storage.storeToken(results[0].jwtToken);
+
     }, [results]);
 
     return(

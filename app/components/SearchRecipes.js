@@ -100,7 +100,8 @@ const SearchRecipes = ({navigation, route}) =>
     }, [navigation]);
 
     useEffect(() => {
-      // storage.storeToken(results.jwtToken);
+      if(results.length > 0)
+        storage.storeToken(results[0].jwtToken.accessToken);
     }, [results]);
 
     const doLogout = () => {

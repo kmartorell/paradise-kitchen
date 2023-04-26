@@ -42,6 +42,7 @@ const YourFavorites = ({navigation, route}) =>
             doLogout();
         }else{
           var user = decodeToken(await storage.retrieveToken());
+          console.log(user);
           fetch('https://paradise-kitchen.herokuapp.com/api/showfavorites', {
             method: 'POST',
             headers: {
@@ -67,7 +68,9 @@ const YourFavorites = ({navigation, route}) =>
     }, [navigation]);
 
     useEffect(() => {
-      // storage.storeToken(results[0].jwtToken);
+      console.log(results);
+      // if(results[0].jwtToken)
+      //   storage.storeToken(results[0].jwtToken);
     }, [results]);
 
     return(

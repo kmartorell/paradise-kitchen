@@ -1,37 +1,45 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired} from "react-jwt";
 import axios from 'axios';
 
 const ProfilePage = ({navigation, route}) =>
 {
+  const [firstName, onChangeFirstName] = React.useState('');
+  const [lastName, onChangeLastName] = React.useState('');
+  const [email, onChangeEmail] = React.useState('');
+  const [login, onChangeLogin] = React.useState('');
+  var storage = require('../tokenStorage.js');
 
-const curUser = route.params.user;
-const [timer1, setTimer1] = React.useState('');
+  useEffect(() => {
+          
+    const profPage = navigation.addListener('focus',() =>
+    {
+        (async () => {
+          // Grab user info
+          const token_data = await storage.retrieveToken();
+          if(!token_data){
+              doLogout();
+          }else{
+              var user = decodeToken(await storage.retrieveToken());
+              console.log(user);
+              onChangeFirstName(user.firstName);
+              onChangeLastName(user.lastName);
+              onChangeEmail(user.email);
+              onChangeLogin(user.login);
+          }
+        })();
+    });
+    return profPage;
+  }, [navigation]);
 
-useEffect(() => {
-        
-  const profPage = navigation.addListener('focus',() =>
-  {
-    jwtTimeout();
-  });
-  return profPage;
-}, [navigation]);
+  const doLogout = () => {
+    AsyncStorage.removeItem("user_data");
+    AsyncStorage.removeItem("token_data");
+    navigation.navigate('Login');
+  };
 
-const doLogout = () => {
-  jwt = '';
-  clearTimeout(timer1);
-  navigation.navigate('Login');
-};
-
-const jwtTimeout = () => {
-  const id1 = setTimeout(() => doLogout(), 1000 * 60 * 30); /* 1000 milliseconds * 60 seconds in a minute * 30 minutes */
-  setTimer1(id1);
-};
-
-const clearTimers = () => {
-  clearTimeout(timer1);
-};
 
   return(
     <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
@@ -40,10 +48,10 @@ const clearTimers = () => {
             <View style={styles.mainLanding}>
                 <View style={styles.buttonHolder}>
                   <Text style={styles.header}>Profile Page!</Text>
-                  <Text style={styles.profileSubheader}>Name: {curUser.firstName} {curUser.lastName}</Text>
-                  <Text style={styles.profileSubheader}>Email: {curUser.email}</Text>
-                  <Text style={styles.profileSubheader}>Username: {curUser.login}</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {user: curUser})}}>
+                  <Text style={styles.profileSubheader}>Name: {firstName} {lastName}</Text>
+                  <Text style={styles.profileSubheader}>Email: {email}</Text>
+                  <Text style={styles.profileSubheader}>Username: {login}</Text>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing')}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

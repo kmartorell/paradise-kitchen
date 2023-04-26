@@ -6,6 +6,8 @@ const User = require("./models/user.js");
 const Recipe = require("./models/recipes.js");
 const { response } = require('express');
 const nodemailer = require('nodemailer');
+const token = require("./createJWT.js");
+
 const { ObjectId } = require('mongoose/lib/schema.js');
 var bigInt = require("big-integer");
 
@@ -54,7 +56,6 @@ exports.setApp = function ( app, client )
       error = "Success!";
       try
       {
-        const token = require("./createJWT.js");
         ret = token.createToken( fn, ln, id, email, fav );
       }
       catch(e)
@@ -108,7 +109,6 @@ exports.setApp = function ( app, client )
       error = "Success!";
       try
       {
-        const token = require("./createJWT.js");
         ret = token.createToken( fn, ln, id, email, fav );
       }
       catch(e)
@@ -394,20 +394,32 @@ exports.setApp = function ( app, client )
       ]});
     console.log(searchRecipe);
     var error = '';
+
+    var refreshedToken = null;
+
+    try
+    {
+      refreshedToken = token.refresh(jwtToken);
+    }
+    catch(e)
+    {
+      console.log(e.message);
+    }
+
     try
     {
       if(searchRecipe.length > 0){
         error = "search success";
-        var ret = [];
+        var ret = { error: error, jwtToken: refreshedToken, recipes:[] };
         for(var i = 0; i < searchRecipe.length; i++){
-          ret[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
-            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 80),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error};
+          ret.recipes[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
+            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 80),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy};
         }
         
       }
       else{
         error = "search fail";
-        var ret = {error:error};
+      var ret = { error: error, jwtToken: refreshedToken };
       }
     }
     catch(e)
@@ -415,8 +427,6 @@ exports.setApp = function ( app, client )
       error = e.toString();
       var ret = { error: error, jwtToken: refreshedToken };
     }
-
-    var refreshedToken = null;
 
     
     res.status(200).json(ret);

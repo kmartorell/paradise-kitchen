@@ -41,6 +41,7 @@ exports.setApp = function ( app, client )
     var fn = '';
     var ln = '';
     var email = '';
+    var username = '';
     var fav = [];
 
     const { login, password } = req.body;
@@ -51,13 +52,13 @@ exports.setApp = function ( app, client )
       console.log("Id from login is: "+id);
       fn = user.firstName;
       email = user.email;
-      login = user.login;
+      username = user.login;
       ln = user.lastName;
       fav = user.favorites;
       error = "Success!";
       try
       {
-        ret = token.createToken( fn, ln, id, email, fav, login );
+        ret = token.createToken( fn, ln, id, email, fav, username );
       }
       catch(e)
       {

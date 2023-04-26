@@ -34,7 +34,6 @@ const EditRecipe = ({navigation, route}) =>
           let n_ingredients;
           let createdby;
           let submitted;
-          console.log(user);
           name = name.trim();
           tags = tags.replaceAll("\n", "").split(",");
           steps = steps.replaceAll("\n", "").split(",");
@@ -44,8 +43,9 @@ const EditRecipe = ({navigation, route}) =>
             nutrition[i] = parseInt(nutrition[i])
           ingredients = ingredients.replaceAll("\n", "").split(",");
           n_ingredients = ingredients.length;
-          createdby = user.id;
+          createdby = user.userId;
           submitted = new Date();
+          console.log("Token: ",token_data);
           fetch('https://paradise-kitchen.herokuapp.com/api/updaterecipe', {
               method: 'POST',
               headers: {
@@ -85,7 +85,6 @@ const EditRecipe = ({navigation, route}) =>
         (async () => {
           var user = decodeToken(await storage.retrieveToken());
           let tempRecipe = route.params.recipe;
-          console.log(tempRecipe);
           tempRecipe.tags = tempRecipe.tags.join(",\n");
           tempRecipe.minutes = tempRecipe.minutes.toString();
           tempRecipe.steps = tempRecipe.steps.join(",\n");
@@ -101,7 +100,7 @@ const EditRecipe = ({navigation, route}) =>
               setRecipe(route.params.recipe);
               if(user.favorites.includes(route.params.recipe.id))
                 setFavorited(true);
-              if(route.params.recipe.createdby.includes(user.id))
+              if(route.params.recipe.createdby.includes(user.userId))
                 setCreated(true);
           }
         })();  
@@ -113,11 +112,14 @@ const EditRecipe = ({navigation, route}) =>
     useEffect(() => {
       if(data){
           storage.storeToken(data.jwtToken);
+          var user = decodeToken(data.jwtToken);
+          console.log("Update User:");
+          console.log(user);
           if(data.error == 'update success'){
-              navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"Edit Recipe Successful!", errormessage:""});
+              navigation.navigate('Landing', {successmessage:"Edit Recipe Successful!", errormessage:""});
           }
           else{
-            navigation.navigate('Landing', {id:user.id, firstName:user.firstName, lastName:user.lastName, email:user.email, login:user.login, favorites:user.favorites, successmessage:"", errormessage:"Error Editing Recipe, Please try again."});
+            navigation.navigate('Landing', {successmessage:"", errormessage:"Error Editing Recipe, Please try again."});
           }
       }
     }, [data]);

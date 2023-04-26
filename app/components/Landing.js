@@ -21,7 +21,6 @@ const Landing = ({navigation, route}) =>
       (async () => {
         // Grab user info
         const token_data = await storage.retrieveToken();
-        console.log(token_data);
         if(!token_data){
             doLogout();
         }else{

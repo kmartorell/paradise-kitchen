@@ -83,7 +83,7 @@ const SearchRecipes = ({navigation, route}) =>
                 },
                 body: JSON.stringify({
                     text: '',
-                    jwtToken:token_data
+                    jwtToken: token_data,
                 })
               })    
               .then(response => response.json())
@@ -100,7 +100,7 @@ const SearchRecipes = ({navigation, route}) =>
     }, [navigation]);
 
     useEffect(() => {
-      storage.storeToken(results.jwtToken);
+      // storage.storeToken(results.jwtToken);
     }, [results]);
 
     const doLogout = () => {

@@ -444,7 +444,6 @@ exports.setApp = function ( app, client )
   {
     const {id, name, minutes, submitted, tags, nutrition, n_steps, steps, description, ingredients, n_ingredients, createdby, jwtToken } = req.body;
     //console.log(JSON.stringify(req.body));
-
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
       'Access-Control-Allow-Headers',

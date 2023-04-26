@@ -12,7 +12,7 @@ const YourFavorites = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourFavorites', {recipe: card})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -49,7 +49,7 @@ const YourFavorites = ({navigation, route}) =>
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: user.id,
+                userId: user.userId,
                 jwtToken:token_data,
             })
           })
@@ -61,13 +61,13 @@ const YourFavorites = ({navigation, route}) =>
             console.error(error);
           });
         }
-        });
+        })();
       });
       return doFavoritesPull;
     }, [navigation]);
 
     useEffect(() => {
-      storage.storeToken(results[0].jwtToken);
+      // storage.storeToken(results[0].jwtToken);
     }, [results]);
 
     return(
@@ -78,7 +78,7 @@ const YourFavorites = ({navigation, route}) =>
                 <Text style={styles.header}>Paradise Kitchen</Text>
                 <View style={styles.mainLanding}>
                   <Text style={styles.subheader}>View Your Favorite Recipes Here!</Text>
-                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing', {firstName: route.params.firstName})}>
+                    <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing')}>
                         <Text style={styles.buttonText}>Home</Text>
                     </TouchableOpacity>
                 </View>

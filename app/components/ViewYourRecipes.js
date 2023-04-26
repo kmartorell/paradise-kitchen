@@ -1,75 +1,138 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
+import { decodeToken, isExpired, refresh } from "react-jwt";
 import axios from 'axios';
 
-const ViewRecipe = ({navigation, route}) =>
+const ViewYourRecipes = ({navigation, route}) =>
 {
     const [recipe, setRecipe] = React.useState('');
-    const [user, setUser] = React.useState('');
+    const [created, setCreated] = React.useState('');
     const [favorited, setFavorited] = React.useState('');
     const [data, setData] = React.useState('');
-    const [timer1, setTimer1] = React.useState('');
+    const [deleteData, setDeleteData] = React.useState('');
 
-    const favoriteRecipe = async (userId, recipeId) =>
+    var storage = require('../tokenStorage.js');
+
+    const favoriteRecipe = async (recipeId) =>
     {
-      fetch('https://paradise-kitchen.herokuapp.com/api/addfavorite', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: userId,
-              recipeId: recipeId,
-          })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+          doLogout();
+        }else{
+
+            var user = decodeToken(await storage.retrieveToken());
+            fetch('https://paradise-kitchen.herokuapp.com/api/addfavorite', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  userId: user.userId,
+                  recipeId: recipeId,
+                  jwtToken: token_data
+              })
+            })    
+            .then(response => response.json())
+            .then(json => {
+                setData(json);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+      })();
     };
 
-    const unFavoriteRecipe = async (userId, recipeId) =>
+    const unFavoriteRecipe = async (recipeId) =>
     {
-      fetch('https://paradise-kitchen.herokuapp.com/api/removefavorite', {
-          method: 'POST',
-          headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-              userId: userId,
-              recipeId: recipeId,
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+          doLogout();
+        }else{
+          var user = decodeToken(await storage.retrieveToken());
+          fetch('https://paradise-kitchen.herokuapp.com/api/removefavorite', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId: user.userId,
+                recipeId: recipeId,
+                jwtToken: token_data,
+            })
+          })    
+          .then(response => response.json())
+          .then(json => {
+              setData(json);
           })
-        })    
-        .then(response => response.json())
-        .then(json => {
-            setData(json);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          .catch(error => {
+            console.error(error);
+          });
+        }
+      })();
+    };
+
+    const deleteRecipe = async (recipeId) =>
+    {
+      (async () => {
+        // Grab user info
+        const token_data = await storage.retrieveToken();
+        if(!token_data){
+            doLogout();
+        }else{
+          Alert.alert('Confirm Delete', 'Are you sure you want to delete this record?', [
+            {text: 'OK', onPress: () =>
+                fetch('https://paradise-kitchen.herokuapp.com/api/deleteRecipe', {
+                  method: 'POST',
+                  headers: {
+                      'Accept': 'application/json',
+                      'Content-Type': 'application/json',
+                  },
+                  body: JSON.stringify({
+                      id: recipeId,
+                      jwtToken: token_data,
+                  })
+                })    
+                .then(response => response.json())
+                .then(json => {
+                    setDeleteData(json);
+                })
+                .catch(error => {
+                  console.error(error);
+                })
+            },
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+          ]);
+            }
+      })();
     };
 
     useEffect(() => {
-        
         const setRecipeConst = navigation.addListener('focus',() =>
         {
-
-          jwtTimeout();
-
-            setUser(route.params.user);
+          (async () => {
+            var user = decodeToken(await storage.retrieveToken());
             if(!route.params.recipe){
                 navigation.navigate('Landing', {message:"ERROR: Recipe does not exist anymore"})
             }else{
                 setRecipe(route.params.recipe);
-                if(route.params.user.favorites.includes(route.params.recipe.id))
+                if(user.favorites.includes(route.params.recipe.id))
                   setFavorited(true);
+                if(route.params.recipe.createdby.includes(user.userId))
+                  setCreated(true);
             }
+          })();
         });
         return setRecipeConst;
       }, [navigation]);
@@ -82,7 +145,18 @@ const ViewRecipe = ({navigation, route}) =>
           setFavorited(false);
       }, [data]);
 
+      const doLogout = () => {
+        AsyncStorage.removeItem("user_data");
+        AsyncStorage.removeItem("token_data");
+        navigation.navigate('Login');
+      };
 
+      useEffect(() => {
+        if(deleteData.error == "delete success"){
+            storage.storeToken(deleteData.jwtToken);
+            navigation.navigate('Landing', {successmessage:"Delete successful"});
+        }
+      }, [deleteData]);
     return(
       <ImageBackground source={Images.background} resizeMode="cover" style={styles.image}>
         <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} contentInsetAdjustmentBehavior="automatic">
@@ -92,23 +166,33 @@ const ViewRecipe = ({navigation, route}) =>
                 <View style={styles.buttonHolder}>
                   <View style={styles.formButtons}>
                     <View style={styles.backDiv}>
-                      <TouchableOpacity style={styles.backButton} onPress={() => {clearTimers(); navigation.navigate('YourRecipes',{user: route.params.user})}}>
+                      <TouchableOpacity style={styles.backButton} onPress={() => navigation.navigate('YourRecipes')}>
                             <Text style={styles.backButtonText}>Back</Text>
                       </TouchableOpacity>
                     </View>
                     <View style={styles.favorite}>
                       {favorited &&
-                      <TouchableOpacity style={styles.favoriteButton} onPress={() => {clearTimers(); unFavoriteRecipe(user.id, recipe.id)}}>
-                          <Image source={Images.filledStar} style={styles.starIcon} />
+                      <TouchableOpacity onPress={() => unFavoriteRecipe(recipe.id)}>
+                          <Image source={Images.filledStar} style={styles.icon} />
                       </TouchableOpacity>
                       }
                       {!favorited &&
-                      <TouchableOpacity style={styles.favoriteButton} onPress={() => {clearTimers(); favoriteRecipe(user.id, recipe.id)}}>
-                          <Image source={Images.unfilledStar} style={styles.starIcon} />
+                      <TouchableOpacity onPress={() => favoriteRecipe(recipe.id)}>
+                          <Image source={Images.unfilledStar} style={styles.icon} />
                       </TouchableOpacity>
                       }
                     </View>
                   </View>
+                  {created &&
+                  <View style={styles.controls}>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => navigation.navigate('EditRecipe',{recipe:recipe})}>
+                      <Image source={Images.edit} style={styles.editIcon} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.controlButton} onPress={() => deleteRecipe(recipe.id)}>
+                      <Image source={Images.delete} style={styles.deleteIcon} />
+                    </TouchableOpacity>
+                  </View>
+                  }
                   <Text style={styles.header}>{recipe.name}</Text>
                   <View style={styles.tagsMain}>
                     <Text style={styles.subHeader}>Tags:</Text>
@@ -154,7 +238,7 @@ const ViewRecipe = ({navigation, route}) =>
                     }
                   </View>
 
-                  <TouchableOpacity style={styles.buttonStyle} onPress={() => {clearTimers(); navigation.navigate('Landing', {firstName: route.params.firstName})}}>
+                  <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Landing')}>
                       <Text style={styles.buttonText}>Home</Text>
                   </TouchableOpacity>
 
@@ -180,6 +264,9 @@ const styles = StyleSheet.create({
     shadowColor:'black',
     shadowRadius:10,
     width:'100%',
+  },
+  controls: {
+    marginLeft:'auto'
   },
   backBox:{
     backgroundColor:'orange',
@@ -319,7 +406,7 @@ const styles = StyleSheet.create({
     paddingTop:10,
     paddingBottom:10
   },
-  starIcon: {
+  icon: {
     width:40,
     height:40,
   },
@@ -334,5 +421,20 @@ backButtonText: {
   color: 'white',
   fontSize: 25,
 },
+deleteIcon: {
+  height:35,
+  width:30,
+  marginTop:10
+},
+editIcon:{
+  height:35,
+  width:35,
+},
+controlButton:{
+  marginLeft:10,
+  marginBottom:10,
+  marginRight:8,
+  marginTop:-8
+}
 });
-export default ViewRecipe;
+export default ViewYourRecipes;

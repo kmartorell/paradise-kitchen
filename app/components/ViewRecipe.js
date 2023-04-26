@@ -22,6 +22,7 @@ const ViewRecipe = ({navigation, route}) =>
         if(!token_data){
           doLogout();
         }else{
+
             var user = decodeToken(await storage.retrieveToken());
             fetch('https://paradise-kitchen.herokuapp.com/api/addfavorite', {
               method: 'POST',
@@ -30,7 +31,7 @@ const ViewRecipe = ({navigation, route}) =>
                   'Content-Type': 'application/json',
               },
               body: JSON.stringify({
-                  userId: user.id,
+                  userId: user.userId,
                   recipeId: recipeId,
                   jwtToken: token_data
               })
@@ -62,7 +63,7 @@ const ViewRecipe = ({navigation, route}) =>
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId: user.id,
+                userId: user.userId,
                 recipeId: recipeId,
                 jwtToken: token_data,
             })
@@ -126,10 +127,9 @@ const ViewRecipe = ({navigation, route}) =>
                 navigation.navigate('Landing', {message:"ERROR: Recipe does not exist anymore"})
             }else{
                 setRecipe(route.params.recipe);
-                console.log(user.favorites);
                 if(user.favorites.includes(route.params.recipe.id))
                   setFavorited(true);
-                if(route.params.recipe.createdby.includes(user.id))
+                if(route.params.recipe.createdby.includes(user.userId))
                   setCreated(true);
             }
           })();

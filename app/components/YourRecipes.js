@@ -12,7 +12,7 @@ const YourRecipes = ({navigation, route}) =>
 
     const renderCard = (card, index) => {
       return(
-        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewRecipe', {recipe: card})}>
+        <TouchableOpacity style={styles.cardMain} key={card.id} onPress={() => navigation.navigate('ViewYourRecipes', {recipe: card})}>
               <View style={styles.cardInfo}>
                 <Text style={styles.cardTitle}>
                   {card.name.toUpperCase()}
@@ -38,36 +38,38 @@ const YourRecipes = ({navigation, route}) =>
       {
         (async () => {
           const token_data = await storage.retrieveToken();
+          console.log("Here");
           if(!token_data){
-              doLogout();
+            doLogout();
           }else{
-          var user = decodeToken(await storage.retrieveToken());
-          fetch('https://paradise-kitchen.herokuapp.com/api/showCreated', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                userId: user.id,
-                jwtToken:token_data,
+            var user = decodeToken(await storage.retrieveToken());
+            fetch('https://paradise-kitchen.herokuapp.com/api/showCreated', {
+              method: 'POST',
+              headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  userId: user.userId,
+                  jwtToken: token_data,
+              })
             })
-          })
-          .then(response => response.json())
-          .then(json => {
-              setResults(json);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-        }
-          });
+            .then(response => response.json())
+            .then(json => {
+                setResults(json);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+          }
+        })();
       });
       return doCreatedPull;
     }, [navigation]);
 
     useEffect(() => {
-      storage.storeToken(results[0].jwtToken);
+      console.log(results);
+      // storage.storeToken(results[0].jwtToken);
     }, [results]);
 
     return(

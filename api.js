@@ -399,7 +399,8 @@ exports.setApp = function ( app, client )
 
     try
     {
-      refreshedToken = token.refresh(jwtToken);
+      if(jwtToken)
+        refreshedToken = token.refresh(jwtToken);
     }
     catch(e)
     {

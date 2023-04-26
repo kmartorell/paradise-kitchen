@@ -392,14 +392,12 @@ exports.setApp = function ( app, client )
         {Description:regex},
         {Ingredients:regex},
       ]});
-    console.log(searchRecipe);
     var error = '';
 
     var refreshedToken = null;
 
     try
     {
-      if(jwtToken)
         refreshedToken = token.refresh(jwtToken);
     }
     catch(e)
@@ -409,6 +407,7 @@ exports.setApp = function ( app, client )
 
     try
     {
+      var ret = [];
       if(searchRecipe.length > 0){
         error = "search success";
         for(var i = 0; i < searchRecipe.length; i++){

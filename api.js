@@ -181,7 +181,7 @@ exports.setApp = function ( app, client )
 
   app.post('/api/forgotPassword', async (req, res, next) => 
   {
-    console.log("Getting hre");
+    console.log("Getting here");
     // incoming: email
     // outgoing: message
     let error = '';
@@ -410,10 +410,9 @@ exports.setApp = function ( app, client )
     {
       if(searchRecipe.length > 0){
         error = "search success";
-        var ret = { error: error, jwtToken: refreshedToken, recipes:[] };
         for(var i = 0; i < searchRecipe.length; i++){
-          ret.recipes[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
-            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 80),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy};
+          ret[i] = {id: searchRecipe[i]._id, name: searchRecipe[i].Name, minutes: searchRecipe[i].Minutes, submitted: searchRecipe[i].Submitted, tags: searchRecipe[i].Tags, nutrition: searchRecipe[i].Nutrition, n_steps: searchRecipe[i].N_Steps, steps: searchRecipe[i].Steps, 
+            description: searchRecipe[i].Description, shortDescription:truncate(searchRecipe[i].Description, 80),  ingredients: searchRecipe[i].Ingredients, n_ingredients: searchRecipe[i].N_Ingredients, createdby: searchRecipe[i].CreatedBy, error: error, jwtToken: refreshedToken};
         }
         
       }

@@ -51,7 +51,7 @@ exports.setApp = function ( app, client )
       console.log("Id from login is: "+id);
       fn = user.firstName;
       email = user.email;
-      login = user.login
+      login = user.login;
       ln = user.lastName;
       fav = user.favorites;
       error = "Success!";

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Keyboard, TouchableWithoutFeedback} from 'react-native';
 import Images from './Images';
-import axios from 'axios';
+
 
 const ForgotPassword = ({navigation}) =>
 {

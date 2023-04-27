@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, ScrollView, Touchable, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
 import { decodeToken, isExpired } from "react-jwt";
-import axios from 'axios';
+
 
 const Login = ({navigation, route}) =>
 {

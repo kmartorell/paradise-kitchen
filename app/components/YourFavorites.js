@@ -2,7 +2,7 @@ import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
 import { decodeToken, isExpired, refresh } from "react-jwt";
-import axios from 'axios';
+
 
 const YourFavorites = ({navigation, route}) =>
 { 

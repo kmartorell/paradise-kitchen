@@ -2,7 +2,7 @@ import React, { useState, useEffect, setState } from 'react';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Button, Alert, Image, ImageBackground, TouchableOpacity, ScrollView } from 'react-native';
 import Images from './Images';
 import { decodeToken, isExpired, refresh } from "react-jwt";
-import axios from 'axios';
+
 
 const ViewRecipe = ({navigation, route}) =>
 {

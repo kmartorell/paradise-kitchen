@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, SafeAreaView, TextInput, Text, View, Svg, Path, Button, Alert, Card, Image, ImageBackground, TouchableOpacity, ScrollView, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import Images from './Images';
 import { decodeToken, isExpired, refresh } from "react-jwt";
-import axios from 'axios';
+
 
 
 const SearchRecipes = ({navigation, route}) =>

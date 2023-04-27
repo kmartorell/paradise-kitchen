@@ -83,7 +83,8 @@ function Login()
                 var lastName = ud.payload.lastName;
                 var email = ud.payload.email;
                 var favorites = ud.payload.favorites;
-                user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites}
+                var login = ud.payload.login;
+                user = {firstName:firstName,lastName:lastName,id:userId, email:email, favorites:favorites, login: login};
                 
                 localStorage.setItem('user_data', JSON.stringify(user));
                 window.location.href = '/landing';

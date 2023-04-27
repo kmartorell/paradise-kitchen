@@ -17,8 +17,11 @@ function ViewPage()
 
    var _ud = localStorage.getItem('user_data');
    var ud = JSON.parse(_ud);
-   var userID = ud.id;
-
+   var userID;
+   if(ud != null){
+    userID = ud.id;
+   }
+   
     var obj = {userId: userID};
     var js = JSON.stringify(obj);
     var config =

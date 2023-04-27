@@ -292,6 +292,16 @@ exports.setApp = function ( app, client )
   {
     const {id, jwtToken} = req.body;
 
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+    );
+    res.setHeader(
+      'Access-Control-Allow-Methods',
+      'GET, POST, PATCH, DELETE, OPTIONS'
+    );
+
     //console.log(JSON.stringify(req.body));
     const regex = {"$regex": id};
     const readRecipe = await Recipe.findById(id);
@@ -458,9 +468,10 @@ exports.setApp = function ( app, client )
       }
     } 
     var error = '';
+    /*
     var getUser = token.decode(jwtToken).payload;
     var refreshedToken = token.createToken(getUser.firstName, getUser.lastName, getUser._id, getUser.email, getUser.favorites, getUser.login);
-
+    */
     if(deleteRecipe)
     {
       try
@@ -468,18 +479,18 @@ exports.setApp = function ( app, client )
         //console.log();
 
         error = "delete success";
-        var ret = {error: error, jwtToken: refreshedToken};
+        var ret = {error: error};
       }
       catch(e)
       {
         error = e.toString();
-        var ret = { error: error, jwtToken: refreshedToken };
+        var ret = { error: error};
       }
   }
   else
   {
     error = "delete failed";
-    var ret = { error: error, jwtToken: refreshedToken };
+    var ret = { error: error};
   }
 
 
@@ -489,7 +500,7 @@ exports.setApp = function ( app, client )
   app.post('/api/showfavorites', async (req, res, next) =>
   {
     const {userId, jwtToken} = req.body;
-
+    console.log("userId is: "+userId);
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
       'Access-Control-Allow-Headers',
@@ -503,6 +514,7 @@ exports.setApp = function ( app, client )
     const user = await User.findById(userId);
     const favoriteIds = user.favorites;
     const favorites = [];
+    console.log("favorites is: "+favorites);
 
     for(var i = 0; i < favoriteIds.length; i++){
       favorites.push(await Recipe.findById(favoriteIds[i]));
@@ -619,6 +631,7 @@ exports.setApp = function ( app, client )
 
     const addFavorite = await User.findByIdAndUpdate(userId, {$addToSet: {favorites: recipeId}});
     const getUser = await User.findById(userId);
+    console.log("favorites updated to: "+getUser.favorites);
     var refreshedToken = token.createToken(getUser.firstName, getUser.lastName, getUser._id, getUser.email, getUser.favorites, getUser.login);
     var error = '';
     if(recipeId != null)
